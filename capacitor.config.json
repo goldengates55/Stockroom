@@ -1,0 +1,8 @@
+{
+  "appId": "com.stockroom.app",
+  "appName": "Stockroom",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
