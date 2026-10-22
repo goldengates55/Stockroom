@@ -249,7 +249,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.14", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.16", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
@@ -599,6 +599,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   RULES.push([/^All variants of (.+)$/, function (m) { return "Toutes les variantes de " + m[1]; }]);
   Object.assign(FR, {"Add variant": "Ajouter une variante", "Variant name (e.g. Red / L)": "Nom de la variante (ex. Rouge / L)", "Enter the variant name.": "Saisissez le nom de la variante.", "That variant already exists.": "Cette variante existe déjà.", "Variant added": "Variante ajoutée"});
   Object.assign(FR, {"Safari can delete the saved data of websites you have not opened for about a week. An app added to the home screen is not affected, so install it and keep a PDF backup.": "Safari peut supprimer les données des sites non ouverts depuis environ une semaine. Une application ajoutée à l'écran d'accueil n'est pas concernée : installez-la et gardez une sauvegarde PDF."});
+  Object.assign(FR, {"Share the app": "Partager l'application", "Send this message to a customer or a friend. It explains how to install the app on Android and on iPhone.": "Envoyez ce message à un client ou à un ami. Il explique comment installer l'application sur Android et sur iPhone.", "Send on WhatsApp": "Envoyer sur WhatsApp", "Message": "Message", "Share": "Partager", "Message copied": "Message copié", "Share the app with a customer": "Partager l'application avec un client", "Copy": "Copier"});
+  Object.assign(FR, {"Install QR code": "Code QR d'installation", "QR code": "Code QR", "Show this to a customer. They scan it with the phone camera and the install page opens. Save it as an image or a PDF to print or send.": "Montrez-le à un client. Il le scanne avec l'appareil photo du téléphone et la page d'installation s'ouvre. Enregistrez-le en image ou en PDF pour l'imprimer ou l'envoyer.", "Could not make the QR code": "Impossible de créer le code QR"});
   function trPart(c) { var r = FR[c]; return r !== undefined ? r : trRule(c); }
   /* keeps spaces and a leading or trailing middle dot as they are, and also translates the pieces of "a · b · c" one by one */
   function tr(s) {
@@ -1080,7 +1082,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       (S.examples && S.products.some(function (p) { return p.ex; })
         ? '<div class="banner"><span>These are example items so you can see how it works.</span><button data-act="clear-examples">Remove examples</button></div>' : "");
     saveUI();
-    $("#view").innerHTML = (tab === "home" && S.examples ? '<div class="banner"><span>New here? Read the short user manual.</span><button data-act="manual">User manual</button></div>' : "") + views[tab]() + (tab === "home" ? '<div class="about"><div class="aname">Golden Gates Stock Inventory</div><div class="atag">Designed for Travel Applicants and Factory/Warehouse owners</div><div class="alabel">WhatsApp and calls</div><div class="acon">' + CONTACT_TXT + '</div><div class="aver">Version ' + APP_VERSION + ' · <button class="plink" data-act="manual">User manual</button> · <button class="plink" data-act="privacy">Privacy and terms</button></div></div>' : "");
+    $("#view").innerHTML = (tab === "home" && S.examples ? '<div class="banner"><span>New here? Read the short user manual.</span><button data-act="manual">User manual</button></div>' : "") + views[tab]() + (tab === "home" ? '<div class="about"><div class="aname">Golden Gates Stock Inventory</div><div class="atag">Designed for Travel Applicants and Factory/Warehouse owners</div><div class="alabel">WhatsApp and calls</div><div class="acon">' + CONTACT_TXT + '</div><div class="aver">Version ' + APP_VERSION + ' · <button class="plink" data-act="manual">User manual</button> · <button class="plink" data-act="share-app">Share the app</button> · <button class="plink" data-act="qr-app">QR code</button> · <button class="plink" data-act="privacy">Privacy and terms</button></div></div>' : "");
     var qi = $("#q");
     if (qi) {
       qi.oninput = function () { q = qi.value; $("#list").innerHTML = stockList(); saveUI(); };
@@ -1843,6 +1845,216 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       if ("BarcodeDetector" in window) { try { det = new window.BarcodeDetector(); } catch (e) { det = null; } }
       tick();
     }, function (e) { fail(/NotAllowed|Permission|Security/i.test(String(e && (e.name + " " + e.message))) ? "Camera permission was refused. Allow the camera for the app in your phone settings." : "The camera could not be opened."); });
+  }
+
+  /* ---------- share the app: a ready-made install message for WhatsApp ---------- */
+  var SHARE_FALLBACK = "https://goldengates55.github.io/Stockroom/";
+  var SHARE_MSG = {en: "Hello! 👋 Welcome to *Golden Gates Stock Inventory*, the app to manage your stock, sales, debts and reports, and to build a clear record of your business. It works offline.\n\n🔗 Open this link on your phone:\n{URL}\n\n📱 *Android (Chrome)*\n1. Open the link in Chrome.\n2. Tap the menu (3 dots, top right).\n3. Tap *Install app* (or *Add to Home screen*).\n\n🍎 *iPhone (Safari only)*\n1. Open the link in Safari (not Chrome, not inside WhatsApp).\n2. Tap the Share button.\n3. Scroll down and tap *Add to Home Screen*, then *Add*.\n\nThen open the app from its new icon on your home screen. It opens full screen, like a normal app.\n\n🔑 To activate it, open Settings > Licence, copy the 6-character phone code and send it to me. I will send your activation code.\n\n💾 Tip: save a PDF backup from Settings every week. On iPhone, always use the Home Screen icon, so your data is not deleted by Safari.\n\nQuestions? WhatsApp or call: {TEL}", fr: "Bonjour ! 👋 Bienvenue sur *Golden Gates Stock Inventory*, l'application pour gérer votre stock, vos ventes, vos dettes et vos rapports, et pour garder une trace claire de votre activité. Elle fonctionne sans internet.\n\n🔗 Ouvrez ce lien sur votre téléphone :\n{URL}\n\n📱 *Android (Chrome)*\n1. Ouvrez le lien dans Chrome.\n2. Touchez le menu (3 points, en haut à droite).\n3. Touchez *Installer l'application* (ou *Ajouter à l'écran d'accueil*).\n\n🍎 *iPhone (Safari uniquement)*\n1. Ouvrez le lien dans Safari (pas Chrome, pas dans WhatsApp).\n2. Touchez le bouton Partager.\n3. Faites défiler et touchez *Sur l'écran d'accueil*, puis *Ajouter*.\n\nOuvrez ensuite l'application depuis sa nouvelle icône sur l'écran d'accueil. Elle s'ouvre en plein écran, comme une vraie application.\n\n🔑 Pour l'activer, ouvrez Réglages > Licence, copiez le code téléphone de 6 caractères et envoyez-le-moi. Je vous enverrai votre code d'activation.\n\n💾 Conseil : enregistrez une sauvegarde PDF depuis Réglages chaque semaine. Sur iPhone, utilisez toujours l'icône de l'écran d'accueil, pour que Safari n'efface pas vos données.\n\nUne question ? WhatsApp ou appel : {TEL}"};
+  function shareUrl() {
+    try { var l = window.location; if (l.protocol === "https:" && !/(^|\.)(claude\.ai|claudeusercontent\.com)$/.test(l.hostname)) return l.origin + l.pathname.replace(/index\.html$/, ""); } catch (e) {}
+    return SHARE_FALLBACK;
+  }
+  function shareText(lang) { return SHARE_MSG[lang === "fr" ? "fr" : "en"].replace("{URL}", shareUrl()).replace("{TEL}", CONTACT_TXT); }
+/* QR-BEGIN */
+  /* A small QR code writer (byte mode, error level M, versions 1 to 6: links up to 106 characters). */
+  var QR = (function () {
+    var EXP = [], LOG = [], i, x = 1;
+    for (i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 256) x ^= 0x11d; }
+    for (i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+    function gmul(a, b) { return a && b ? EXP[LOG[a] + LOG[b]] : 0; }
+    function rsGen(n) {
+      var g = [1], j, k, ng;
+      for (j = 0; j < n; j++) { ng = []; for (k = 0; k <= g.length; k++) ng[k] = 0; for (k = 0; k < g.length; k++) { ng[k] ^= g[k]; ng[k + 1] ^= gmul(g[k], EXP[j]); } g = ng; }
+      return g;
+    }
+    function rsEnc(data, n) {
+      var g = rsGen(n), r = [], k, j;
+      for (k = 0; k < n; k++) r[k] = 0;
+      data.forEach(function (d) { var f = d ^ r[0]; r.shift(); r.push(0); for (j = 0; j < n; j++) r[j] ^= gmul(g[j + 1], f); });
+      return r;
+    }
+    var VER = [null,
+      {n: 21, ec: 10, nb: 1, dp: 16, al: 0}, {n: 25, ec: 16, nb: 1, dp: 28, al: 18}, {n: 29, ec: 26, nb: 1, dp: 44, al: 22},
+      {n: 33, ec: 18, nb: 2, dp: 32, al: 26}, {n: 37, ec: 24, nb: 2, dp: 43, al: 30}, {n: 41, ec: 16, nb: 4, dp: 27, al: 34}];
+    function utf8(s) {
+      var out = [], k, c;
+      s = unescape(encodeURIComponent(String(s)));
+      for (k = 0; k < s.length; k++) { c = s.charCodeAt(k); out.push(c); }
+      return out;
+    }
+    function make(text, forceMask) {
+      var bytes = utf8(text), v, V;
+      for (v = 1; v <= 6; v++) if (bytes.length <= VER[v].nb * VER[v].dp - 2) break;
+      if (v > 6) return null;
+      V = VER[v];
+      var total = V.nb * V.dp, bits = [], k, j;
+      var put = function (val, len) { for (var b = len - 1; b >= 0; b--) bits.push((val >> b) & 1); };
+      put(4, 4); put(bytes.length, 8); bytes.forEach(function (b) { put(b, 8); });
+      for (k = 0; k < 4 && bits.length < total * 8; k++) bits.push(0);
+      while (bits.length % 8) bits.push(0);
+      var cw = [];
+      for (k = 0; k < bits.length; k += 8) { var by = 0; for (j = 0; j < 8; j++) by = (by << 1) | bits[k + j]; cw.push(by); }
+      for (k = 0; cw.length < total; k++) cw.push(k % 2 ? 0x11 : 0xec);
+      var blocks = [], ecs = [];
+      for (k = 0; k < V.nb; k++) { var d = cw.slice(k * V.dp, (k + 1) * V.dp); blocks.push(d); ecs.push(rsEnc(d, V.ec)); }
+      var all = [];
+      for (k = 0; k < V.dp; k++) for (j = 0; j < V.nb; j++) all.push(blocks[j][k]);
+      for (k = 0; k < V.ec; k++) for (j = 0; j < V.nb; j++) all.push(ecs[j][k]);
+      var stream = [];
+      all.forEach(function (b) { put2(b); });
+      function put2(b) { for (var q = 7; q >= 0; q--) stream.push((b >> q) & 1); }
+      if (v > 1) for (k = 0; k < 7; k++) stream.push(0);
+      var n = V.n, m = [], fn = [], r, c;
+      for (r = 0; r < n; r++) { m[r] = []; fn[r] = []; for (c = 0; c < n; c++) { m[r][c] = 0; fn[r][c] = false; } }
+      function setF(row, col, dark) { if (row < 0 || col < 0 || row >= n || col >= n) return; m[row][col] = dark ? 1 : 0; fn[row][col] = true; }
+      function finder(r0, c0) {
+        for (var dr = -1; dr <= 7; dr++) for (var dc = -1; dc <= 7; dc++) {
+          var on = dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6 && (dr === 0 || dr === 6 || dc === 0 || dc === 6 || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4));
+          setF(r0 + dr, c0 + dc, on);
+        }
+      }
+      finder(0, 0); finder(0, n - 7); finder(n - 7, 0);
+      for (k = 8; k < n - 8; k++) { setF(6, k, k % 2 === 0); setF(k, 6, k % 2 === 0); }
+      if (V.al) for (var ar = -2; ar <= 2; ar++) for (var ac = -2; ac <= 2; ac++) setF(V.al + ar, V.al + ac, Math.max(Math.abs(ar), Math.abs(ac)) !== 1);
+      /* reserve the format areas (written for real below) */
+      for (k = 0; k < 9; k++) if (k !== 6) { setF(8, k, false); setF(k, 8, false); }   /* row and column 6 are the timing lines and stay as they are */
+      for (k = 0; k < 8; k++) { setF(8, n - 1 - k, false); setF(n - 1 - k, 8, false); }
+      var data0 = [];
+      for (r = 0; r < n; r++) { data0[r] = []; for (c = 0; c < n; c++) data0[r][c] = 0; }
+      /* place the data bits in the zig-zag order */
+      var bi = 0, up = true, col, rr, cc2, row;
+      for (col = n - 1; col >= 1; col -= 2) {
+        if (col === 6) col = 5;
+        for (rr = 0; rr < n; rr++) {
+          row = up ? n - 1 - rr : rr;
+          for (cc2 = 0; cc2 < 2; cc2++) { c = col - cc2; if (!fn[row][c]) { data0[row][c] = bi < stream.length ? stream[bi] : 0; bi++; } }
+        }
+        up = !up;
+      }
+      var MASK = [
+        function (i, j) { return (i + j) % 2 === 0; }, function (i) { return i % 2 === 0; }, function (i, j) { return j % 3 === 0; }, function (i, j) { return (i + j) % 3 === 0; },
+        function (i, j) { return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0; }, function (i, j) { return (i * j) % 2 + (i * j) % 3 === 0; },
+        function (i, j) { return ((i * j) % 2 + (i * j) % 3) % 2 === 0; }, function (i, j) { return ((i + j) % 2 + (i * j) % 3) % 2 === 0; }];
+      function build(mask) {
+        var g = [], i2, j2;
+        for (i2 = 0; i2 < n; i2++) { g[i2] = []; for (j2 = 0; j2 < n; j2++) g[i2][j2] = fn[i2][j2] ? m[i2][j2] : (data0[i2][j2] ^ (MASK[mask](i2, j2) ? 1 : 0)); }
+        var fd = mask, rem = fd << 10, q;   /* level M is 00 */
+        for (q = 14; q >= 10; q--) if ((rem >> q) & 1) rem ^= 0x537 << (q - 10);
+        var fb = ((fd << 10) | rem) ^ 0x5412, bit = function (t) { return (fb >> t) & 1; };
+        for (q = 0; q <= 5; q++) g[q][8] = bit(q);
+        g[7][8] = bit(6); g[8][8] = bit(7); g[8][7] = bit(8);
+        for (q = 9; q < 15; q++) g[8][14 - q] = bit(q);
+        for (q = 0; q < 8; q++) g[8][n - 1 - q] = bit(q);
+        for (q = 8; q < 15; q++) g[n - 15 + q][8] = bit(q);
+        g[n - 8][8] = 1;
+        return g;
+      }
+      function penalty(g) {
+        var p = 0, i2, j2, run, dark = 0, pat1 = "10111010000", pat2 = "00001011101";
+        for (i2 = 0; i2 < n; i2++) {
+          var rs = "", cs = "";
+          for (j2 = 0; j2 < n; j2++) { rs += g[i2][j2]; cs += g[j2][i2]; dark += g[i2][j2]; }
+          [rs, cs].forEach(function (s) {
+            run = 1;
+            for (var t = 1; t <= s.length; t++) { if (t < s.length && s[t] === s[t - 1]) run++; else { if (run >= 5) p += run - 2; run = 1; } }
+            for (var u = 0; u + 11 <= s.length; u++) { var w = s.substr(u, 11); if (w === pat1 || w === pat2) p += 40; }
+          });
+        }
+        for (i2 = 0; i2 < n - 1; i2++) for (j2 = 0; j2 < n - 1; j2++) { var a = g[i2][j2]; if (a === g[i2][j2 + 1] && a === g[i2 + 1][j2] && a === g[i2 + 1][j2 + 1]) p += 3; }
+        p += Math.floor(Math.abs(dark * 100 / (n * n) - 50) / 5) * 10;
+        return p;
+      }
+      var best = null, bp = Infinity, mk;
+      for (mk = 0; mk < 8; mk++) {
+        if (forceMask != null && mk !== forceMask) continue;
+        var g2 = build(mk), pp = penalty(g2);
+        if (pp < bp) { bp = pp; best = g2; }
+      }
+      return {n: n, v: v, m: best};
+    }
+    return {make: make};
+  })();
+  /* QR-END */
+
+  /* ---------- install QR code poster: a customer points the phone camera at it and lands on the install link ---------- */
+  var QRP = {
+    en: {scan: "Scan to install the app", sub: "Point your phone camera at the square", an: "ANDROID (Chrome)", a: ["Open the link in Chrome.", "Tap the menu (3 dots, top right).", "Tap Install app (or Add to Home screen)."], io: "IPHONE (Safari only)", i: ["Open the link in Safari.", "Tap the Share button.", "Tap Add to Home Screen, then Add."], tip: "Then open the app from its new icon. It works offline.", call: "WhatsApp and calls"},
+    fr: {scan: "Scannez pour installer l'application", sub: "Dirigez l'appareil photo du téléphone vers le carré", an: "ANDROID (Chrome)", a: ["Ouvrez le lien dans Chrome.", "Touchez le menu (3 points, en haut à droite).", "Touchez Installer l'application (ou Ajouter à l'écran d'accueil)."], io: "IPHONE (Safari uniquement)", i: ["Ouvrez le lien dans Safari.", "Touchez le bouton Partager.", "Touchez Sur l'écran d'accueil, puis Ajouter."], tip: "Ouvrez ensuite l'application depuis sa nouvelle icône. Elle fonctionne sans internet.", call: "WhatsApp et appels"}
+  };
+  function qrPoster(lang) {
+    var t = QRP[lang === "fr" ? "fr" : "en"], W = 1240, H = 1754, cv = document.createElement("canvas"), g, url = shareUrl(), q;
+    cv.width = W; cv.height = H; g = cv.getContext("2d");
+    q = QR.make(url);
+    var F = '"Helvetica Neue",Helvetica,Arial,sans-serif';
+    function wrap(txt, x, y, mw, lh, font, col, al) {
+      g.font = font; g.fillStyle = col; g.textAlign = al || "left";
+      var ws = String(txt).split(" "), line = "", k;
+      for (k = 0; k < ws.length; k++) { var tt = line ? line + " " + ws[k] : ws[k]; if (g.measureText(tt).width > mw && line) { g.fillText(line, x, y); y += lh; line = ws[k]; } else line = tt; }
+      g.fillText(line, x, y); return y + lh;
+    }
+    g.fillStyle = "#fff"; g.fillRect(0, 0, W, H);
+    g.fillStyle = "#14213d"; g.fillRect(0, 0, W, 210);
+    g.fillStyle = "#fca311"; g.fillRect(0, 210, W, 10);
+    g.textAlign = "center"; g.fillStyle = "#fff"; g.font = "bold 76px " + F; g.fillText("Golden Gates", W / 2, 96);
+    g.font = "bold 50px " + F; g.fillText("Stock Inventory", W / 2, 160);
+    g.fillStyle = "#555"; wrap("Designed for Travel Applicants and Factory/Warehouse owners", W / 2, 282, 1000, 40, "30px " + F, "#555", "center");
+    g.fillStyle = "#14213d"; g.textAlign = "center"; g.font = "bold 62px " + F;
+    var y0 = wrap(t.scan, W / 2, 372, 1040, 70, "bold 62px " + F, "#14213d", "center");
+    wrap(t.sub, W / 2, y0 - 4, 1000, 38, "30px " + F, "#555", "center");
+    var qs = Math.floor(540 / q.n), qw = qs * q.n, qx = Math.round((W - qw) / 2), qy = y0 + 50, r, c;
+    g.fillStyle = "#000";
+    for (r = 0; r < q.n; r++) for (c = 0; c < q.n; c++) if (q.m[r][c]) g.fillRect(qx + c * qs, qy + r * qs, qs, qs);
+    var y = qy + qw + 70;
+    y = wrap(url, W / 2, y, 1080, 42, "bold 34px " + F, "#14213d", "center");
+    y += 6;
+    function box(x, title, steps) {
+      g.fillStyle = "#f3f4f8"; g.fillRect(x, y, 540, 290);
+      g.fillStyle = "#14213d"; g.textAlign = "left"; g.font = "bold 30px " + F; g.fillText(title, x + 26, y + 58);
+      var yy = y + 108, k; for (k = 0; k < steps.length; k++) { g.fillStyle = "#fca311"; g.beginPath(); g.arc(x + 44, yy - 10, 18, 0, 6.2832); g.fill(); g.fillStyle = "#14213d"; g.font = "bold 22px " + F; g.textAlign = "center"; g.fillText(String(k + 1), x + 44, yy - 2); yy = wrap(steps[k], x + 76, yy, 450, 30, "24px " + F, "#222", "left") + 14; }
+    }
+    box(60, t.an, t.a); box(640, t.io, t.i);
+    y += 290 + 50;
+    wrap(t.tip, W / 2, y, 1040, 36, "28px " + F, "#555", "center");
+    g.fillStyle = "#14213d"; g.fillRect(0, H - 120, W, 120);
+    g.textAlign = "center"; g.fillStyle = "#fca311"; g.font = "26px " + F; g.fillText(t.call, W / 2, H - 76);
+    g.fillStyle = "#fff"; g.font = "bold 50px " + F; g.fillText(CONTACT_TXT, W / 2, H - 26);
+    return cv;
+  }
+  function qrSheet() {
+    var lg = LANG === "fr" ? "fr" : "en", cv;
+    openSheet("Install QR code",
+      '<p style="margin:0 0 12px;color:var(--mute);font-size:14px">Show this to a customer. They scan it with the phone camera and the install page opens. Save it as an image or a PDF to print or send.</p>' +
+      '<div class="chips"><button type="button" class="chip" data-l="en">English</button><button type="button" class="chip" data-l="fr">Français</button></div>' +
+      '<div style="background:#fff;border-radius:10px;padding:6px;margin-bottom:12px"><img id="qr-img" alt="QR code" style="display:block;width:100%;height:auto"></div>' +
+      '<div class="row"><button type="button" class="btn" id="qr-png">Save image</button><button type="button" class="btn ghost" id="qr-pdf" hidden>Save PDF</button></div><div class="err" id="err"></div>',
+      function (root) {
+        function show(l) { lg = l; try { cv = qrPoster(l); $("#qr-img", root).src = cv.toDataURL("image/png"); } catch (e) { $("#err", root).textContent = "Could not make the QR code"; } root.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("on", c.dataset.l === l); }); }
+        root.querySelectorAll(".chip").forEach(function (c) { c.onclick = function () { show(c.dataset.l); }; });
+        show(lg);
+        $("#qr-png", root).onclick = function () { cv.toBlob(function (b) { if (b) saveFile("golden-gates-install-qr-" + lg + ".png", b); else toast("Could not save the file"); }, "image/png"); };
+        if (hasPDF()) { $("#qr-pdf", root).hidden = false; $("#qr-pdf", root).onclick = function () { try { var d = new window.jspdf.jsPDF({unit: "mm", format: "a4"}); d.addImage(cv.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 210, 297); saveFile("golden-gates-install-qr-" + lg + ".pdf", d.output("blob")); } catch (e) { toast("Could not make the PDF"); } }; }
+      });
+  }
+  function shareSheet() {
+    var lg = LANG === "fr" ? "fr" : "en";
+    openSheet("Share the app",
+      '<p style="margin:0 0 12px;color:var(--mute);font-size:14px">Send this message to a customer or a friend. It explains how to install the app on Android and on iPhone.</p>' +
+      '<div class="chips"><button type="button" class="chip" data-l="en">English</button><button type="button" class="chip" data-l="fr">Français</button></div>' +
+      '<textarea id="sh-t" rows="12" readonly aria-label="Message" style="margin-bottom:12px"></textarea>' +
+      '<button type="button" class="btn block" id="sh-wa" style="margin-bottom:8px">Send on WhatsApp</button>' +
+      '<div class="row"><button type="button" class="btn ghost" id="sh-cp">Copy</button><button type="button" class="btn ghost" id="sh-sh" hidden>Share</button></div><div class="err" id="err"></div>',
+      function (root) {
+        var ta = $("#sh-t", root);
+        function show(l) { lg = l; ta.value = shareText(l); root.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("on", c.dataset.l === l); }); }
+        root.querySelectorAll(".chip").forEach(function (c) { c.onclick = function () { show(c.dataset.l); }; });
+        show(lg);
+        $("#sh-wa", root).onclick = function () { openWA(waLink("", ta.value)); };
+        $("#sh-cp", root).onclick = function () {
+          var ok = function () { toast("Message copied"); }, fb = function () { try { ta.focus(); ta.select(); } catch (e) {} $("#err", root).textContent = "Selected, press Copy on your phone"; };
+          try { navigator.clipboard.writeText(ta.value).then(ok, fb); } catch (e) { fb(); }
+        };
+        if (navigator.share) { $("#sh-sh", root).hidden = false; $("#sh-sh", root).onclick = function () { navigator.share({text: ta.value}).catch(function () {}); }; }
+      });
   }
 
   /* ---------- kits: a ready-made set of items sold together at one price ---------- */
@@ -3567,7 +3779,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<label>Days to pay an invoice (0 = due when issued)<input id="s-iterms" inputmode="numeric" value="' + esc(String(S.iterms)) + '" autocomplete="off"></label>' +
       '<label>Note at the bottom of invoices<textarea id="s-inote" rows="2" maxlength="300">' + esc(S.inote) + '</textarea></label>' +
       '<label>Warn about expiry this many days ahead<input id="s-warn" inputmode="numeric" value="' + S.warn + '"></label><div class="err" id="serr"></div><button class="btn block">Save settings</button></form>' +
-      licBlock() + '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Install on your phone</h3><button type="button" class="btn ghost block" id="inst-open">Home screen icon</button>' + pinBlock() + syncBlock() +
+      licBlock() + '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Install on your phone</h3><button type="button" class="btn ghost block" id="inst-open">Home screen icon</button><button type="button" class="btn ghost block" id="sh-open" style="margin-top:8px">Share the app with a customer</button><button type="button" class="btn ghost block" id="qr-open" style="margin-top:8px">Install QR code</button>' + pinBlock() + syncBlock() +
       '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Saved in the app</h3>' +
       '<p style="margin:0 0 10px;color:var(--mute);font-size:14px">' + esc(saveStatusText()) + '</p><button type="button" class="btn ghost block" id="savenow">Save now</button>' +
       '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Backup</h3>' +
@@ -3582,7 +3794,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       function (root) {
         var sl = $("#s-lang", root); sl.value = LANG; sl.onchange = function () { setLang(sl.value); render(); };
         var so = $("#s-loc", root); so.value = LOCALE; so.onchange = function () { LOCALE = so.value; try { if (LOCALE) localStorage.setItem(LOCALE_KEY, LOCALE); else localStorage.removeItem(LOCALE_KEY); } catch (e) {} render(); };
-        $("#pv-open", root).onclick = privacySheet; $("#mn-open", root).onclick = manualSheet; $("#pv-dl", root).onclick = downloadAllData; $("#pv-all", root).onclick = eraseAll;
+        $("#sh-open", root).onclick = shareSheet; $("#qr-open", root).onclick = qrSheet; $("#pv-open", root).onclick = privacySheet; $("#mn-open", root).onclick = manualSheet; $("#pv-dl", root).onclick = downloadAllData; $("#pv-all", root).onclick = eraseAll;
         var bk = $("#bk", root); bk.value = JSON.stringify(ROOT);
         $("#s-locs", root).onclick = locsSheet; wireSyncBlock(root); wirePinBlock(root);
         if ($("#lic-open", root)) $("#lic-open", root).onclick = licSheet;
@@ -4537,7 +4749,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<p style="margin:10px 0 0;color:var(--mute);font-size:14px">If this page is open inside another app such as WhatsApp or Facebook, open it in Chrome or Safari first.</p>' +
       '<p style="margin:10px 0 0;color:var(--mute);font-size:14px">On iPhone the home screen icon keeps its own saved data, separate from Safari. Install the icon first and enter your data there, or restore a PDF backup in it.</p>' +
       '<p style="margin:10px 0 0;color:var(--mute);font-size:14px">Safari can delete the saved data of websites you have not opened for about a week. An app added to the home screen is not affected, so install it and keep a PDF backup.</p>',
-      function (root) { if (instEvt) $("#inst-now", root).onclick = function () { try { instEvt.prompt(); } catch (e) {} closeSheet(); }; });
+      function (root) { var sb = document.createElement("button"); sb.type = "button"; sb.className = "btn ghost block"; sb.style.marginTop = "14px"; sb.textContent = "Share the app with a customer"; sb.onclick = shareSheet; root.appendChild(sb); if (instEvt) $("#inst-now", root).onclick = function () { try { instEvt.prompt(); } catch (e) {} closeSheet(); }; });
   }
   installHead();
 
@@ -4554,6 +4766,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     else if (a === "lock") lockApp();
     else if (a === "privacy") privacySheet();
     else if (a === "manual") manualSheet();
+    else if (a === "share-app") shareSheet();
+    else if (a === "qr-app") qrSheet();
     else if (a === "lic") licSheet();
     else if (a === "install") installSheet();
     else if (a === "inst-hide") { try { localStorage.setItem(INST_KEY, "1"); } catch (e) {} render(); }
