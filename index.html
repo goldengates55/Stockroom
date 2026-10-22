@@ -10,6 +10,7 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Golden Gates">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -43,6 +44,12 @@ body{background:var(--bg);color:var(--ink);font:16px/1.4 var(--body);padding-inl
 .app{max-width:560px;margin-inline:auto}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
+button,a,input,select,textarea,label{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.sheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+/* iPhone: paint the strip behind the clock and battery, keep date and time fields the same height as the others, never zoom into fields */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#050b24;z-index:50;pointer-events:none}
+.tabs{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+@supports (-webkit-touch-callout:none){input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;min-height:46px;line-height:46px;text-align:left}input,select,textarea{font-size:16px}}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;letter-spacing:.02em;text-wrap:balance}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -97,7 +104,12 @@ body.locked .app,body.locked .tabs,body.locked #overlay,body.locked #toast{displ
 .pos{color:var(--ok)} .neg{color:var(--alert)}
 
 .tools{display:flex;gap:8px;margin-bottom:12px}
-.tools input{flex:1}
+.tools input{flex:1;min-width:0}
+@media (max-width:400px){.tools{flex-wrap:wrap}.tools input{flex:1 1 100%}.tools .btn{flex:1}}
+.grph{display:flex;align-items:center;gap:8px;background:var(--bg);border-top:1px solid var(--line);padding:4px 8px 4px 14px}.grph .gh{flex:1;min-width:0;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;background:none;border:0;padding:8px 0;font-size:13px;color:var(--mute)}.grph b{color:var(--ink);font-size:14px;overflow-wrap:anywhere}.grph .btn{flex:none;padding-inline:10px}
+@media (max-width:400px){.grph{flex-wrap:wrap;padding-right:14px}.grph .gh{flex:1 1 100%;padding-bottom:0}.grph .btn{margin:0 0 8px auto}}
+.vhead,.vrow{display:grid;grid-template-columns:1fr 1.1fr 64px;gap:8px;align-items:center}.vhead{font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:6px 0}.vrow{padding:7px 0;border-top:1px solid var(--line)}.vrow input{min-width:0;padding-inline:8px}.vrow b{font-size:14px;overflow-wrap:anywhere}
+.camov{position:fixed;inset:0;z-index:55;background:#000;color:#fff;display:flex;flex-direction:column}.camtop{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px}.camvid{position:relative;flex:1;min-height:0;overflow:hidden}.camvid video{width:100%;height:100%;object-fit:cover;background:#000}.camguide{position:absolute;left:8%;right:8%;top:50%;height:34%;transform:translateY(-50%);border:2px solid #ffc247;border-radius:14px;box-shadow:0 0 0 9999px rgba(0,0,0,.38);pointer-events:none}.camfoot{padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));text-align:center}.cammsg{min-height:44px;font-size:15px;margin-bottom:8px;overflow-wrap:anywhere}.cammsg.ok{color:#7dffb0}.cammsg.bad{color:#ff9d9d}
 input,select{width:100%;min-height:46px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
 label{display:block;font-size:13px;color:var(--mute);margin-bottom:12px}
 label input,label select{margin-top:5px;color:var(--ink)}
@@ -126,7 +138,7 @@ label input,label select{margin-top:5px;color:var(--ink)}
 .line select,.line input{min-height:44px;padding:0 8px;margin:0}
 .line button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--alert)}
 .err{color:var(--alert);font-size:14px;min-height:20px;margin-bottom:6px}
-textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:10px;font:12px/1.4 var(--mono)}
+textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:10px;font:16px/1.4 var(--mono)}
 .sep{height:1px;background:var(--line);margin:18px 0}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:20;max-width:90%;text-align:center}
 .cobtn{display:flex;align-items:center;gap:6px;max-width:100%;min-width:0;background:none;border:0;padding:6px 0;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit}
@@ -201,7 +213,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
 </style>
 </head><body>
 <a class="skip" href="#view">Skip to content</a>
-<noscript><p style="padding:24px;font:16px/1.4 sans-serif">Golden Gates Stock Inventory needs JavaScript. Please turn it on in your browser settings.</p></noscript>
+<noscript><p style="padding:24px;font:16px/1.4 sans-serif">Golden Gates Stock Inventory needs JavaScript. Please turn it on in your phone settings.</p></noscript>
 
 <div class="app">
   <header class="top">
@@ -237,7 +249,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.6", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.14", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
@@ -261,8 +273,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     "Everything is above its reorder level.": "Tout est au-dessus du seuil de réapprovisionnement.", "Totals": "Totaux",
     "Completed sales": "Ventes terminées", "Completed purchases": "Achats terminés", "Draft orders waiting": "Brouillons en attente",
     "Customers owe you": "Les clients vous doivent", "You owe suppliers": "Vous devez aux fournisseurs",
-    "Saved in this browser": "Enregistré dans ce navigateur", "Save now": "Enregistrer maintenant", "Not saved. This browser is blocking storage.": "Non enregistré. Ce navigateur bloque le stockage.",
-    "Your changes are not being saved. This browser may be in private mode or out of space. Save a PDF backup from Settings.": "Vos modifications ne sont pas enregistrées. Ce navigateur est peut-être en navigation privée ou manque d'espace. Enregistrez une sauvegarde PDF depuis les Réglages.",
+    "Saved in the app": "Enregistré dans l'application", "Save now": "Enregistrer maintenant", "Not saved. The app is blocked from storing data.": "Non enregistré. L'application ne peut pas stocker les données.",
+    "Your changes are not being saved. The phone may be out of space or blocking storage. Save a PDF backup from Settings.": "Vos modifications ne sont pas enregistrées. Le téléphone manque peut-être d'espace ou bloque le stockage. Enregistrez une sauvegarde PDF depuis les Réglages.",
     "These are example items so you can see how it works.": "Ce sont des articles d'exemple pour voir comment ça marche.", "Remove examples": "Retirer les exemples", "Examples removed": "Exemples retirés",
     /* stock */
     "Search name, SKU or barcode": "Rechercher un nom, une référence ou un code-barres", "Search stock": "Rechercher dans le stock", "Add item": "Ajouter un article",
@@ -319,7 +331,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     /* settings */
     "No logo": "Pas de logo", "Add logo": "Ajouter un logo", "Change logo": "Changer le logo", "Logo": "Logo", "Business name": "Nom de l'entreprise", "Town or city": "Ville",
     "Currency label (optional, e.g. USD or XAF)": "Devise (facultatif, ex. USD ou XAF)", "Save settings": "Enregistrer les réglages", "Language": "Langue",
-    "Backup": "Sauvegarde", "Your data lives only on this phone and browser. If you clear site data it is gone, so save a PDF backup now and then and keep it somewhere safe. The backup includes all your companies and logos.": "Vos données se trouvent uniquement sur ce téléphone et ce navigateur. Si vous effacez les données du site, elles disparaissent : enregistrez de temps en temps une sauvegarde PDF et gardez-la en lieu sûr. La sauvegarde contient toutes vos entreprises et leurs logos.",
+    "Backup": "Sauvegarde", "Your data lives only inside the app on this phone. If you clear the data of the app or uninstall it, it is gone, so save a PDF backup now and then and keep it somewhere safe. The backup includes all your companies and logos.": "Vos données se trouvent uniquement dans l'application, sur ce téléphone. Si vous effacez les données de l'application ou la désinstallez, elles disparaissent : enregistrez de temps en temps une sauvegarde PDF et gardez-la en lieu sûr. La sauvegarde contient toutes vos entreprises et leurs logos.",
     "Save PDF backup": "Enregistrer la sauvegarde PDF", "Upload PDF": "Importer un PDF", "Or copy and paste text": "Ou copier-coller le texte", "Backup text": "Texte de la sauvegarde", "Copy backup": "Copier la sauvegarde",
     "Restore from a backup": "Restaurer une sauvegarde", "Paste a backup here": "Collez une sauvegarde ici", "Restore backup": "Restaurer la sauvegarde",
     "Delete this company": "Supprimer cette entreprise", "Erase this company's data": "Effacer les données de cette entreprise", "Erase this company's data?": "Effacer les données de cette entreprise ?", "Erase": "Effacer",
@@ -327,10 +339,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     "This company and all its items, orders and history are removed from this phone. Other companies are not touched.": "Cette entreprise, ses articles, ses commandes et son historique sont retirés de ce téléphone. Les autres entreprises ne sont pas touchées.",
     "Restore this backup?": "Restaurer cette sauvegarde ?", "Restore": "Restaurer", "Backup restored": "Sauvegarde restaurée", "That backup could not be used": "Cette sauvegarde n'a pas pu être utilisée",
     "That is not a valid Golden Gates Stock Inventory backup.": "Ce n'est pas une sauvegarde Golden Gates Stock Inventory valide.", "Could not read that file.": "Impossible de lire ce fichier.", "This PDF is not a Golden Gates Stock Inventory backup.": "Ce PDF n'est pas une sauvegarde Golden Gates Stock Inventory.",
-    "The backup is damaged.": "La sauvegarde est endommagée.", "The backup could not be read.": "La sauvegarde n'a pas pu être lue.", "This browser cannot open compressed backups.": "Ce navigateur ne peut pas ouvrir les sauvegardes compressées.",
-    "Backup copied": "Sauvegarde copiée", "Selected, press Copy on your phone": "Sélectionné, appuyez sur Copier sur votre téléphone", "Could not save in this browser": "Impossible d'enregistrer dans ce navigateur",
+    "The backup is damaged.": "La sauvegarde est endommagée.", "The backup could not be read.": "La sauvegarde n'a pas pu être lue.", "This phone cannot open compressed backups.": "Ce téléphone ne peut pas ouvrir les sauvegardes compressées.",
+    "Backup copied": "Sauvegarde copiée", "Selected, press Copy on your phone": "Sélectionné, appuyez sur Copier sur votre téléphone", "Could not save in the app": "Impossible d'enregistrer dans l'application",
     "Could not make the backup PDF": "Impossible de créer le PDF de sauvegarde", "Could not read that picture": "Impossible de lire cette image", "Logo saved": "Logo enregistré", "Logo removed": "Logo retiré",
-    "Not saved. This browser is blocking storage, possibly because it is in private mode or out of space. Save a PDF backup below so you do not lose your work.": "Non enregistré. Ce navigateur bloque le stockage, peut-être en navigation privée ou faute d'espace. Enregistrez une sauvegarde PDF ci-dessous pour ne pas perdre votre travail.",
+    "Not saved. The app is blocked from storing data, possibly because the phone is out of space. Save a PDF backup below so you do not lose your work.": "Non enregistré. L'application ne peut pas stocker les données, peut-être faute d'espace sur le téléphone. Enregistrez une sauvegarde PDF ci-dessous pour ne pas perdre votre travail.",
     /* companies */
     "Companies": "Entreprises", "Add a company": "Ajouter une entreprise", "New company": "Nouvelle entreprise", "Company name": "Nom de l'entreprise", "Town or city (optional)": "Ville (facultatif)",
     "Currency label (optional)": "Devise (facultatif)", "Create and open": "Créer et ouvrir", "Enter a company name.": "Saisissez un nom d'entreprise.",
@@ -378,10 +390,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     "PIN lock": "Code PIN", "Set a PIN": "Définir un PIN", "Change PIN": "Changer le PIN", "Staff PIN": "PIN employé", "Change staff PIN": "Changer le PIN employé", "Remove staff PIN": "Retirer le PIN employé", "Remove PIN": "Retirer le PIN", "Lock now": "Verrouiller", "Lock": "Verrouiller",
     "A PIN keeps other people out of the app on this phone. The owner PIN opens everything. A staff PIN can sell, receive and count stock, but cannot see cost prices, profit, reports or settings, and cannot delete items. The lock is only on this phone.": "Un PIN empêche les autres d'utiliser l'application sur ce téléphone. Le PIN propriétaire ouvre tout. Un PIN employé peut vendre, recevoir et compter le stock, mais ne voit ni les prix d'achat, ni le bénéfice, ni les rapports, ni les réglages, et ne peut pas supprimer d'articles. Le verrou n'existe que sur ce téléphone.",
     "Owner PIN is on.": "Le PIN propriétaire est activé.", "Owner PIN and staff PIN are on.": "Le PIN propriétaire et le PIN employé sont activés.", "Enter your PIN": "Saisissez votre PIN", "Unlock": "Déverrouiller", "Wrong PIN.": "PIN incorrect.", "Too many tries. Wait a little and try again.": "Trop d'essais. Attendez un peu puis réessayez.", "Forgot your PIN?": "PIN oublié ?",
-    "If you forget the owner PIN, the only way back in is to clear this site's data in your browser, which erases the data on this phone. If sync is on, the data comes back from the shared copy. Save a PDF backup before you rely on a PIN.": "Si vous oubliez le PIN propriétaire, la seule façon de rentrer est d'effacer les données de ce site dans votre navigateur, ce qui efface les données de ce téléphone. Si la synchronisation est active, les données reviennent depuis la copie partagée. Faites une sauvegarde PDF avant de compter sur un PIN.",
-    "If you forget the owner PIN, the only way back in is to clear this site's data in your browser, which erases the data on this phone. Save a PDF backup first.": "Si vous oubliez le PIN propriétaire, la seule façon de rentrer est d'effacer les données de ce site dans votre navigateur, ce qui efface les données de ce téléphone. Faites d'abord une sauvegarde PDF.",
+    "If you forget the owner PIN, the only way back in is to clear the data of the app in your phone settings, which erases the data on this phone. If sync is on, the data comes back from the shared copy. Save a PDF backup before you rely on a PIN.": "Si vous oubliez le PIN propriétaire, la seule façon de rentrer est d'effacer les données de l'application dans les réglages du téléphone, ce qui efface les données de ce téléphone. Si la synchronisation est active, les données reviennent depuis la copie partagée. Faites une sauvegarde PDF avant de compter sur un PIN.",
+    "If you forget the owner PIN, the only way back in is to clear the data of the app in your phone settings, which erases the data on this phone. Save a PDF backup first.": "Si vous oubliez le PIN propriétaire, la seule façon de rentrer est d'effacer les données de l'application dans les réglages du téléphone, ce qui efface les données de ce téléphone. Faites d'abord une sauvegarde PDF.",
     "New PIN (4 to 8 digits)": "Nouveau PIN (4 à 8 chiffres)", "Repeat the PIN": "Répétez le PIN", "Save PIN": "Enregistrer le PIN", "Use 4 to 8 digits.": "Utilisez 4 à 8 chiffres.", "The two PINs do not match.": "Les deux PIN ne correspondent pas.",
-    "The staff PIN must be different from the owner PIN.": "Le PIN employé doit être différent du PIN propriétaire.", "This browser is blocking storage, so the PIN cannot be saved.": "Ce navigateur bloque le stockage, le PIN ne peut donc pas être enregistré.", "PIN saved": "PIN enregistré", "PIN removed": "PIN retiré", "Staff PIN removed": "PIN employé retiré",
+    "The staff PIN must be different from the owner PIN.": "Le PIN employé doit être différent du PIN propriétaire.", "The app is blocked from storing data, so the PIN cannot be saved.": "L'application ne peut pas stocker les données, le PIN ne peut donc pas être enregistré.", "PIN saved": "PIN enregistré", "PIN removed": "PIN retiré", "Staff PIN removed": "PIN employé retiré",
     "Remove the PIN?": "Retirer le PIN ?", "Anyone who opens the app on this phone will see everything.": "Toute personne qui ouvre l'application sur ce téléphone verra tout.", "PIN": "PIN",
     "Category": "Catégorie", "Category (optional)": "Catégorie (facultatif)", "All categories": "Toutes les catégories", "Add photo": "Ajouter une photo", "Change photo": "Changer la photo", "Remove photo": "Retirer la photo",
     "View": "Voir",
@@ -465,8 +477,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     [/^Barcode (\S.*)$/, function (m) { return "Code-barres " + m[1]; }],
     [/^(\d+)% margin from (\d+) completed (sale|sales)\. Profit is sales minus what the items cost you\.$/, function (m) { return m[1] + " % de marge sur " + plu(m[2], "vente terminée", "ventes terminées") + ". Le bénéfice est égal aux ventes moins le coût des articles."; }],
     [/^(.+) \((\d+)% margin\)$/, function (m) { return m[1] + " (" + m[2] + " % de marge)"; }],
-    [/^Your work is saved automatically every time you change something, and the app reopens on the page you left\. Last saved (.+?), (\d+) KB used\. Clearing this site's data in your browser would erase it\.$/, function (m) { return "Votre travail est enregistré automatiquement à chaque modification, et l'application se rouvre sur la page où vous étiez. Dernier enregistrement : " + (m[1] === "just now" ? "à l'instant" : m[1]) + ", " + m[2] + " Ko utilisés. Effacer les données du site dans votre navigateur les supprimerait."; }],
-    [/^Your work is saved automatically every time you change something, and the app reopens on the page you left\. Last saved just now, (\d+) KB used\. Clearing this site's data in your browser would erase it\.$/, function (m) { return "Votre travail est enregistré automatiquement à chaque modification, et l'application se rouvre sur la page où vous étiez. Dernier enregistrement : à l'instant, " + m[1] + " Ko utilisés. Effacer les données du site dans votre navigateur les supprimerait."; }],
+    [/^Your work is saved automatically every time you change something, and the app reopens on the page you left\. Last saved (.+?), (\d+) KB used\. Clearing the data of the app, or uninstalling it, would erase it\.$/, function (m) { return "Votre travail est enregistré automatiquement à chaque modification, et l'application se rouvre sur la page où vous étiez. Dernier enregistrement : " + (m[1] === "just now" ? "à l'instant" : m[1]) + ", " + m[2] + " Ko utilisés. Effacer les données de l'application, ou la désinstaller, les supprimerait."; }],
+    [/^Your work is saved automatically every time you change something, and the app reopens on the page you left\. Last saved just now, (\d+) KB used\. Clearing the data of the app, or uninstalling it, would erase it\.$/, function (m) { return "Votre travail est enregistré automatiquement à chaque modification, et l'application se rouvre sur la page où vous étiez. Dernier enregistrement : à l'instant, " + m[1] + " Ko utilisés. Effacer les données de l'application, ou la désinstaller, les supprimerait."; }],
     [/^All items, orders, contacts and history for (.+) are removed\. Other companies are not touched\. This cannot be undone\.$/, function (m) { return "Tous les articles, commandes, contacts et l'historique de " + m[1] + " sont supprimés. Les autres entreprises ne sont pas touchées. Cette action est irréversible."; }],
     [/^This replaces everything on this phone \((\d+) (company|companies)\) with what is in the PDF\. This cannot be undone\.$/, function (m) { return "Cela remplace tout ce qui se trouve sur ce téléphone (" + plu(m[1], "entreprise", "entreprises") + ") par le contenu du PDF. Cette action est irréversible."; }],
     [/^The backup is incomplete \(found (\d+) of (\d+) parts\)\.$/, function (m) { return "La sauvegarde est incomplète (" + m[1] + " parties trouvées sur " + m[2] + ")."; }],
@@ -520,8 +532,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     "Activation code": "Code d'activation", "Paste the activation code here": "Collez ici le code d'activation", "Activate": "Activer",
     "Enter code": "Saisir le code", "Renew": "Renouveler", "Enter code or renew": "Saisir un code ou renouveler", "Licence activated": "Licence activée",
     "Send this phone code to your seller. You get an activation code back. Paste it below.": "Envoyez ce code de téléphone à votre vendeur. Il vous renvoie un code d'activation. Collez-le ci-dessous.",
-    "A code works on this phone only. If you clear this browser's data or change phone, ask your seller for a new code.": "Un code ne fonctionne que sur ce téléphone. Si vous effacez les données du navigateur ou changez de téléphone, demandez un nouveau code à votre vendeur.",
-    "That code is not valid.": "Ce code n'est pas valide.", "This code is for a different phone.": "Ce code est prévu pour un autre téléphone.", "This code was already used.": "Ce code a déjà été utilisé.", "This browser cannot check codes.": "Ce navigateur ne peut pas vérifier les codes.",
+    "A code works on this phone only. If you clear the data of the app or change phone, ask your seller for a new code.": "Un code ne fonctionne que sur ce téléphone. Si vous effacez les données de l'application ou changez de téléphone, demandez un nouveau code à votre vendeur.",
+    "That code is not valid.": "Ce code n'est pas valide.", "This code is for a different phone.": "Ce code est prévu pour un autre téléphone.", "This code was already used.": "Ce code a déjà été utilisé.", "This phone cannot check codes.": "Ce téléphone ne peut pas vérifier les codes.",
     "Lifetime licence": "Licence à vie", "Active": "Active", "Free trial": "Essai gratuit", "Licence ended": "Licence terminée", "Read-only": "Lecture seule",
     "Your licence has ended. The app is read-only: you can look and export, but not add or change anything.": "Votre licence est terminée. L'application est en lecture seule : vous pouvez consulter et exporter, mais pas ajouter ni modifier.",
     "Your licence has ended. Enter a code to continue.": "Votre licence est terminée. Saisissez un code pour continuer.",
@@ -575,13 +587,18 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     for (var i = 0; i < RULES.length; i++) { var m = RULES[i][0].exec(c); if (m) return RULES[i][1](m); }
     return undefined;
   }
-  Object.assign(FR, {"Skip to content": "Aller au contenu", "Number and date format": "Format des nombres et des dates", "Automatic (this phone)": "Automatique (ce téléphone)", "Privacy and your data": "Confidentialité et vos données", "Privacy and terms": "Confidentialité et conditions", "Download all my data": "Télécharger toutes mes données", "Erase everything on this phone": "Tout effacer sur ce téléphone", "Erase everything on this phone?": "Tout effacer sur ce téléphone ?", "Erase everything": "Tout effacer", "Every company, item, order, contact, PIN and setting on this phone is removed. Your licence stays. Data already shared through sync stays on the shared copy and on your other phones. Save a backup first if you may need it.": "Toutes les entreprises, articles, commandes, contacts, PIN et réglages de ce téléphone sont supprimés. Votre licence reste. Les données déjà partagées par la synchronisation restent sur la copie partagée et sur vos autres téléphones. Faites d'abord une sauvegarde si vous en avez besoin.", "Your data": "Vos données", "Everything you enter (items, orders, contacts, photos, PINs) is kept on this phone, in this browser. The seller cannot see it. It is not sold and not used for advertising. There are no accounts, no trackers and no analytics.": "Tout ce que vous saisissez (articles, commandes, contacts, photos, PIN) reste sur ce téléphone, dans ce navigateur. Le vendeur ne peut pas le voir. Rien n'est vendu ni utilisé pour la publicité. Il n'y a ni compte, ni traceur, ni statistiques.", "Sync between phones (optional)": "Synchronisation entre téléphones (facultatif)", "If you turn on sync, the data of that company is locked with a key on this phone and stored on the sync server, so your other phones can read it. The server owner cannot read it. Turn it off in Settings to stop.": "Si vous activez la synchronisation, les données de cette entreprise sont verrouillées par une clé sur ce téléphone puis stockées sur le serveur de synchronisation, pour que vos autres téléphones puissent les lire. Le propriétaire du serveur ne peut pas les lire. Désactivez-la dans les réglages pour arrêter.", "What loads from the internet": "Ce qui vient d'internet", "The first time you open the app online it loads a font from Google Fonts and the PDF and barcode tools from public servers (cdnjs and jsDelivr). If you use sync, the app also connects to your sync server. Like any website, those servers can see your phone's internet address. After that the app works with no internet.": "À la première ouverture en ligne, l'application charge une police depuis Google Fonts et les outils PDF et codes-barres depuis des serveurs publics (cdnjs et jsDelivr). Si vous utilisez la synchronisation, l'application se connecte aussi à votre serveur de synchronisation. Comme pour tout site, ces serveurs voient l'adresse internet de votre téléphone. Ensuite l'application fonctionne sans internet.", "Your controls": "Vos contrôles", "In Settings you can download all your data, save and restore a backup, or erase everything on this phone, at any time. Clearing this site's data in your browser also erases it.": "Dans les réglages, vous pouvez à tout moment télécharger toutes vos données, enregistrer et restaurer une sauvegarde, ou tout effacer sur ce téléphone. Effacer les données du site dans votre navigateur les supprime aussi.", "Licence": "Licence", "A licence code works on one phone for the time it was sold for. It is checked on the phone itself and nothing about it is sent anywhere.": "Un code de licence fonctionne sur un seul téléphone pour la durée vendue. Il est vérifié sur le téléphone lui-même et rien n'est envoyé nulle part.", "Terms of use": "Conditions d'utilisation", "The app is provided as it is. You are responsible for keeping backups, and for checking prices, tax and totals before you rely on them. The app is not accounting, legal or tax advice.": "L'application est fournie telle quelle. Vous êtes responsable de vos sauvegardes et de la vérification des prix, taxes et totaux avant de vous y fier. L'application ne remplace ni un conseil comptable, ni juridique, ni fiscal.", "Questions or requests about your data": "Questions ou demandes sur vos données", "Write or call on WhatsApp:": "Écrivez ou appelez sur WhatsApp :"});
+  Object.assign(FR, {"Skip to content": "Aller au contenu", "Number and date format": "Format des nombres et des dates", "Automatic (this phone)": "Automatique (ce téléphone)", "Privacy and your data": "Confidentialité et vos données", "Privacy and terms": "Confidentialité et conditions", "Download all my data": "Télécharger toutes mes données", "Erase everything on this phone": "Tout effacer sur ce téléphone", "Erase everything on this phone?": "Tout effacer sur ce téléphone ?", "Erase everything": "Tout effacer", "Every company, item, order, contact, PIN and setting on this phone is removed. Your licence stays. Data already shared through sync stays on the shared copy and on your other phones. Save a backup first if you may need it.": "Toutes les entreprises, articles, commandes, contacts, PIN et réglages de ce téléphone sont supprimés. Votre licence reste. Les données déjà partagées par la synchronisation restent sur la copie partagée et sur vos autres téléphones. Faites d'abord une sauvegarde si vous en avez besoin.", "Your data": "Vos données", "Everything you enter (items, orders, contacts, photos, PINs) is kept on this phone, inside the app. The seller cannot see it. It is not sold and not used for advertising. There are no accounts, no trackers and no analytics.": "Tout ce que vous saisissez (articles, commandes, contacts, photos, PIN) reste sur ce téléphone, dans l'application. Le vendeur ne peut pas le voir. Rien n'est vendu ni utilisé pour la publicité. Il n'y a ni compte, ni traceur, ni statistiques.", "Sync between phones (optional)": "Synchronisation entre téléphones (facultatif)", "If you turn on sync, the data of that company is locked with a key on this phone and stored on the sync server, so your other phones can read it. The server owner cannot read it. Turn it off in Settings to stop.": "Si vous activez la synchronisation, les données de cette entreprise sont verrouillées par une clé sur ce téléphone puis stockées sur le serveur de synchronisation, pour que vos autres téléphones puissent les lire. Le propriétaire du serveur ne peut pas les lire. Désactivez-la dans les réglages pour arrêter.", "What loads from the internet": "Ce qui vient d'internet", "The first time you open the app online it loads a font from Google Fonts and the PDF and barcode tools from public servers (cdnjs and jsDelivr). If you use sync, the app also connects to your sync server. Like any website, those servers can see your phone's internet address. After that the app works with no internet.": "À la première ouverture en ligne, l'application charge une police depuis Google Fonts et les outils PDF et codes-barres depuis des serveurs publics (cdnjs et jsDelivr). Si vous utilisez la synchronisation, l'application se connecte aussi à votre serveur de synchronisation. Comme pour tout site, ces serveurs voient l'adresse internet de votre téléphone. Ensuite l'application fonctionne sans internet.", "Your controls": "Vos contrôles", "In Settings you can download all your data, save and restore a backup, or erase everything on this phone, at any time. Clearing the data of the app, or uninstalling it, also erases it.": "Dans les réglages, vous pouvez à tout moment télécharger toutes vos données, enregistrer et restaurer une sauvegarde, ou tout effacer sur ce téléphone. Effacer les données de l'application, ou la désinstaller, les supprime aussi.", "Licence": "Licence", "A licence code works on one phone for the time it was sold for. It is checked on the phone itself and nothing about it is sent anywhere.": "Un code de licence fonctionne sur un seul téléphone pour la durée vendue. Il est vérifié sur le téléphone lui-même et rien n'est envoyé nulle part.", "Terms of use": "Conditions d'utilisation", "The app is provided as it is. You are responsible for keeping backups, and for checking prices, tax and totals before you rely on them. The app is not accounting, legal or tax advice.": "L'application est fournie telle quelle. Vous êtes responsable de vos sauvegardes et de la vérification des prix, taxes et totaux avant de vous y fier. L'application ne remplace ni un conseil comptable, ni juridique, ni fiscal.", "Questions or requests about your data": "Questions ou demandes sur vos données", "Write or call on WhatsApp:": "Écrivez ou appelez sur WhatsApp :"});
   Object.assign(FR, {"Other income": "Autres revenus", "Add other income": "Ajouter un revenu", "Edit other income": "Modifier le revenu", "Save other income": "Enregistrer le revenu", "Delete other income": "Supprimer le revenu", "Latest other income": "Derniers autres revenus", "No other income in this period.": "Aucun autre revenu sur cette période.", "Other income saved": "Revenu enregistré", "Other income deleted": "Revenu supprimé", "Received by": "Reçu par", "Other income report": "Rapport des autres revenus", "No other income yet.": "Aucun autre revenu pour l'instant.", "Total received": "Total reçu", "Entries": "Écritures", "Other inc.": "Autres rev.", "Commission": "Commission", "Service fee": "Frais de service", "Rent received": "Loyer reçu", "Interest": "Intérêts", "Refund received": "Remboursement reçu", "Gift or loan": "Don ou prêt", "Sales report": "Rapport des ventes", "The period applies to every list and report below: Orders, History, Expenses, Other income, Cash drawer and the Sales report. Only the stock list is always as of today.": "La période s'applique à toutes les listes et à tous les rapports ci-dessous : commandes, historique, dépenses, autres revenus, caisse et rapport des ventes. Seule la liste du stock est toujours à la date d'aujourd'hui."});
   Object.assign(FR, {"Yesterday": "Hier", "This week": "Cette semaine", "Last month": "Le mois dernier", "This year": "Cette année", "Export Excel (CSV)": "Exporter Excel (CSV)", "Export PDF": "Exporter PDF", "Uses the period chosen under Export, at the bottom of this page.": "Utilise la période choisie sous Export, en bas de cette page.", "The period applies to every export below, and to the Export buttons under Expenses and Other income: Orders, History, Expenses, Other income, Cash drawer and the Sales report. Only the stock list is always as of today.": "La période s'applique à tous les exports ci-dessous et aux boutons Export sous Dépenses et Autres revenus : Commandes, Historique, Dépenses, Autres revenus, Caisse et rapport des ventes. Seule la liste du stock est toujours à la date d'aujourd'hui."});
   Object.assign(FR, {"Invoices": "Factures", "Create invoice": "Créer la facture", "Edit invoice": "Modifier la facture", "Invoice date": "Date de la facture", "Due date": "Échéance", "Invoice details": "Détails de la facture", "Business address": "Adresse de l'entreprise", "Business phone or email": "Téléphone ou e-mail de l'entreprise", "Tax or business ID (shown on invoices)": "Numéro fiscal ou d'entreprise (affiché sur les factures)", "Payment details (bank, mobile money)": "Détails de paiement (banque, mobile money)", "Payment details": "Détails de paiement", "Days to pay an invoice (0 = due when issued)": "Jours pour payer une facture (0 = due à l'émission)", "Note at the bottom of invoices": "Note en bas des factures", "Note on the invoice": "Note sur la facture", "Enter the days to pay as a number from 0 to 365.": "Saisissez les jours pour payer, un nombre de 0 à 365.", "Pick the invoice date and the due date.": "Choisissez la date de la facture et l'échéance.", "The due date cannot be before the invoice date.": "L'échéance ne peut pas précéder la date de la facture.", "Order": "Commande", "Bill to": "Facturer à", "Part paid": "Partiellement payé", "Unpaid": "Impayé", "Overdue": "En retard", "Tax ID": "N° fiscal", "Payment due by": "À payer avant le", "Invoice copied": "Facture copiée", "Still to collect": "Reste à encaisser", "No invoices match.": "Aucune facture ne correspond.", "No invoices yet. Open a completed sale in Orders and tap Invoice.": "Aucune facture. Ouvrez une vente terminée dans Commandes et touchez Facture.", "No invoices yet.": "Aucune facture.", "Total invoiced": "Total facturé", "Invoice": "Facture", "Qty": "Qté", "Export": "Export", "Period": "Période", "From": "Du", "To": "Au", "Copying is blocked here. Try Save PDF.": "La copie est bloquée ici. Essayez Enregistrer en PDF.", "Save": "Enregistrer"});
   Object.assign(FR, {"Sync server address": "Adresse du serveur de synchronisation", "Save server": "Enregistrer le serveur", "Remove server": "Retirer le serveur", "I have an invite": "J'ai une invitation", "Checking…": "Vérification…", "To keep several phones in step, add the address of your sync server (a free Firebase Realtime Database). Inside Claude, sync works without a server.": "Pour garder plusieurs téléphones à jour, ajoutez l'adresse de votre serveur de synchronisation (une base Firebase Realtime Database gratuite). Dans Claude, la synchronisation fonctionne sans serveur.", "Your data is locked with a key on your phones before it is sent, so the server cannot read it.": "Vos données sont verrouillées par une clé sur vos téléphones avant l'envoi, le serveur ne peut donc pas les lire.", "Send invite on WhatsApp": "Envoyer l'invitation sur WhatsApp", "Copy invite": "Copier l'invitation", "Invite copied": "Invitation copiée", "This company is shared. To add another phone, send it the invite below, then on that phone open Settings and tap I have an invite.": "Cette entreprise est partagée. Pour ajouter un autre téléphone, envoyez-lui l'invitation ci-dessous, puis sur ce téléphone ouvrez les réglages et touchez J'ai une invitation.", "Anyone with the invite can read and change this company, so send it only to people you trust.": "Toute personne ayant l'invitation peut lire et modifier cette entreprise, envoyez-la donc seulement à des personnes de confiance.", "Enter the server address, like https://your-project-default-rtdb.firebaseio.com": "Saisissez l'adresse du serveur, comme https://votre-projet-default-rtdb.firebaseio.com", "The server refused. Check its rules.": "Le serveur a refusé. Vérifiez ses règles.", "Could not reach the server. Check the address and your internet.": "Impossible de joindre le serveur. Vérifiez l'adresse et votre internet.", "Sync server saved": "Serveur de synchronisation enregistré", "Remove the sync server?": "Retirer le serveur de synchronisation ?", "Companies that sync through it keep their data on this phone but stop syncing until a server is added again.": "Les entreprises synchronisées par ce serveur gardent leurs données sur ce téléphone mais ne se synchronisent plus tant qu'un serveur n'est pas ajouté.", "Remove": "Retirer", "Copying is blocked here. Try WhatsApp.": "La copie est bloquée ici. Essayez WhatsApp.", "Paste the whole invite message you received. This phone then keeps its own copy of that company and stays in step with it.": "Collez tout le message d'invitation reçu. Ce téléphone garde alors sa propre copie de l'entreprise et reste à jour avec elle.", "Invite": "Invitation", "Add company": "Ajouter l'entreprise", "That is not a valid invite. Paste the whole message.": "Ce n'est pas une invitation valide. Collez tout le message.", "This company is already on this phone.": "Cette entreprise est déjà sur ce téléphone.", "This invite is for a different sync server. Change the server in Settings first.": "Cette invitation est pour un autre serveur. Changez d'abord le serveur dans les réglages.", "No company was found for this invite.": "Aucune entreprise trouvée pour cette invitation.", "The key in this invite does not match. Ask for a new invite.": "La clé de cette invitation ne correspond pas. Demandez une nouvelle invitation.", "The sync server refused this. Check the server address and its rules.": "Le serveur de synchronisation a refusé. Vérifiez son adresse et ses règles.", "This phone's invite does not match the shared data. Ask for a new invite.": "L'invitation de ce téléphone ne correspond pas aux données partagées. Demandez une nouvelle invitation.", "This company was synced another way. Stop syncing it and turn sync on again to use the sync server.": "Cette entreprise était synchronisée autrement. Arrêtez sa synchronisation et réactivez-la pour utiliser le serveur."});
   Object.assign(FR, {"How to set up the sync server": "Comment configurer le serveur de synchronisation", "One free Firebase database keeps all your phones in step, with or without Claude. It takes about 5 minutes. Do it once, on any phone or computer.": "Une base Firebase gratuite garde tous vos téléphones à jour, avec ou sans Claude. Cela prend environ 5 minutes. À faire une seule fois, sur un téléphone ou un ordinateur.", "Rules to paste": "Règles à coller", "Copy the rules": "Copier les règles", "Rules copied": "Règles copiées", "Copying is blocked here. Select the rules and copy them by hand.": "La copie est bloquée ici. Sélectionnez les règles et copiez-les à la main.", "Your data is locked with a key that stays on your phones before it is sent, so the server only holds unreadable text. Use the same server address on every phone.": "Vos données sont verrouillées par une clé qui reste sur vos téléphones avant l'envoi, le serveur ne contient donc que du texte illisible. Utilisez la même adresse de serveur sur tous les téléphones.", "Open console.firebase.google.com and sign in with a Google account.": "Ouvrez console.firebase.google.com et connectez-vous avec un compte Google.", "Tap Create a project, give it a name, and switch Google Analytics off.": "Touchez Create a project, donnez-lui un nom et désactivez Google Analytics.", "In the menu choose Build, then Realtime Database, then Create Database. Pick the location closest to you and start in locked mode.": "Dans le menu choisissez Build, puis Realtime Database, puis Create Database. Choisissez l'emplacement le plus proche et démarrez en mode verrouillé (locked mode).", "Open the Rules tab, delete what is there, paste the rules below, then tap Publish.": "Ouvrez l'onglet Rules, supprimez ce qui s'y trouve, collez les règles ci-dessous, puis touchez Publish.", "Open the Data tab and copy the address at the top. It looks like https://your-project-default-rtdb.firebaseio.com": "Ouvrez l'onglet Data et copiez l'adresse en haut. Elle ressemble à https://your-project-default-rtdb.firebaseio.com", "Come back here, paste it in Sync server address and tap Save server.": "Revenez ici, collez-la dans Adresse du serveur de synchronisation et touchez Enregistrer le serveur.", "Tap Turn on sync, then Send invite on WhatsApp. On the other phone tap I have an invite and paste it.": "Touchez Activer la synchronisation, puis Envoyer l'invitation sur WhatsApp. Sur l'autre téléphone touchez J'ai une invitation et collez-la."});
   Object.assign(FR, {"User manual": "Mode d'emploi", "New here? Read the short user manual.": "Nouveau ici ? Lisez le court mode d'emploi.", "What this app is": "À quoi sert cette application", "Golden Gates Stock Inventory is a record-keeping system for people who want to travel abroad and for business owners. You enter your business stock, sales, purchases, debts and expenses, and the app keeps your accounts. Over time it builds a clear and credible financial history.": "Golden Gates Stock Inventory est un système de tenue de comptes pour les personnes qui veulent voyager à l'étranger et pour les chefs d'entreprise. Vous saisissez votre stock, vos ventes, achats, dettes et dépenses, et l'application tient vos comptes. Avec le temps, elle construit un historique financier clair et crédible.", "For people applying for a visa": "Pour une demande de visa", "Embassies look for a business that is real, active and steady over many months. Daily records with real dates, sales, expenses and profit reports give you organised proof of your activity. Save the PDF reports and bring them with your bank statements and business papers.": "Les ambassades cherchent une activité réelle, active et régulière sur plusieurs mois. Des enregistrements quotidiens avec les vraies dates, des ventes, des dépenses et des rapports de bénéfice vous donnent une preuve organisée de votre activité. Enregistrez les rapports PDF et apportez-les avec vos relevés bancaires et vos papiers d'entreprise.", "Record only what really happened. True and regular records are what make a history credible. They do not replace the documents an embassy asks for.": "N'enregistrez que ce qui s'est vraiment passé. Ce sont des enregistrements vrais et réguliers qui rendent un historique crédible. Ils ne remplacent pas les documents demandés par une ambassade.", "For business owners": "Pour les chefs d'entreprise", "Use it every day to know what you have in stock, what you sold, who owes you and what you earned. It works on your phone, even with no internet.": "Utilisez-la chaque jour pour savoir ce que vous avez en stock, ce que vous avez vendu, qui vous doit de l'argent et ce que vous avez gagné. Elle fonctionne sur votre téléphone, même sans internet.", "Getting started": "Pour commencer", "Open Settings and enter your business name, town, currency, address and logo.": "Ouvrez les réglages et saisissez le nom de votre entreprise, la ville, la devise, l'adresse et le logo.", "In Stock, add your items with their cost, selling price and the quantity you have.": "Dans Stock, ajoutez vos articles avec leur coût, leur prix de vente et la quantité que vous avez.", "When you sell or buy, open Orders, tap New sale or New purchase, and complete it. Stock and profit update by themselves.": "Quand vous vendez ou achetez, ouvrez Commandes, touchez Nouvelle vente ou Nouvel achat, puis terminez-la. Le stock et le bénéfice se mettent à jour tout seuls.", "Record what you spend under Reports, Expenses, and other money you receive under Other income.": "Enregistrez vos dépenses dans Rapports, Dépenses, et les autres sommes reçues dans Autres revenus.", "If a customer pays later, record each payment in Orders. The list Customers owe you shows what is still unpaid.": "Si un client paie plus tard, enregistrez chaque paiement dans Commandes. La liste Les clients vous doivent montre ce qui reste à payer.", "Every day": "Chaque jour", "Record every sale and purchase on the day it happens, with the real date. Count your cash at closing in the Cash drawer. Look at the Overview page to see your stock and your profit.": "Enregistrez chaque vente et chaque achat le jour même, avec la vraie date. Comptez votre caisse à la fermeture. Consultez la page Aperçu pour voir votre stock et votre bénéfice.", "Reports and proof": "Rapports et preuves", "In Reports, choose a period, for example the last 6 or 12 months, and save the Sales report, Expenses, Other income, Invoices and Cash drawer as a PDF or an Excel file. Use Invoices when a customer needs a formal bill.": "Dans Rapports, choisissez une période, par exemple les 6 ou 12 derniers mois, et enregistrez le rapport des ventes, les dépenses, les autres revenus, les factures et la caisse en PDF ou en fichier Excel. Utilisez les factures quand un client a besoin d'une facture officielle.", "Keep your records safe": "Gardez vos données en sécurité", "Save a PDF backup every week in Settings, Backup. Set a PIN so nobody else can open the app. To use several phones, turn on sync. Your data stays on your phone.": "Faites une sauvegarde PDF chaque semaine dans Réglages, Sauvegarde. Définissez un PIN pour que personne d'autre n'ouvre l'application. Pour utiliser plusieurs téléphones, activez la synchronisation. Vos données restent sur votre téléphone.", "Need help?": "Besoin d'aide ?", "Write or call on WhatsApp:": "Écrivez ou appelez sur WhatsApp :"});
+  Object.assign(FR, {"Item with variants": "Article à variantes", "variant": "variante", "variants": "variantes", "Variants": "Variantes", "Variant": "Variante", "Group": "Groupe", "Group name (the shared item name)": "Nom du groupe (nom commun de l'article)", "Rename group": "Renommer le groupe", "Group renamed": "Groupe renommé", "Variant name of this item (e.g. Red / L)": "Nom de variante de cet article (ex. Rouge / L)", "Add more variants": "Ajouter des variantes", "First option, separated by commas (e.g. S, M, L)": "Première option, séparée par des virgules (ex. S, M, L)", "Second option (optional), e.g. Red, Blue": "Deuxième option (facultatif), ex. Rouge, Bleu", "Show the variants": "Afficher les variantes", "Enter the options, for example S, M, L.": "Saisissez les options, par exemple S, M, L.", "That makes more than 60 variants. Use fewer options.": "Cela fait plus de 60 variantes. Utilisez moins d'options.", "All of these variants already exist.": "Toutes ces variantes existent déjà.", "Enter the variant name of this item.": "Saisissez le nom de variante de cet article.", "Every variant needs a SKU.": "Chaque variante a besoin d'une référence (SKU).", "Two variants have the same SKU.": "Deux variantes ont la même référence (SKU).", "Variants added": "Variantes ajoutées", "Clear the group to make this a normal item.": "Videz le groupe pour en faire un article normal.", "Turn into variants": "Transformer en variantes", "All variants of": "Toutes les variantes de", "Scan items": "Scanner des articles", "Find an item": "Trouver un article", "Scan with camera": "Scanner avec la caméra", "Scan": "Scanner", "Scan a barcode": "Scanner un code-barres", "Light": "Lampe", "Take a photo instead": "Prendre une photo à la place", "Starting the camera...": "Démarrage de la caméra...", "Point the camera at a barcode": "Dirigez la caméra vers un code-barres", "The camera is not available here.": "La caméra n'est pas disponible ici.", "The camera could not be opened.": "Impossible d'ouvrir la caméra.", "Camera permission was refused. Allow the camera for the app in your phone settings.": "L'accès à la caméra a été refusé. Autorisez la caméra pour l'application dans les réglages du téléphone."});
+  RULES.push([/^Create (\d+) variants?$/, function (m) { return "Créer " + plu(m[1], "variante", "variantes"); }]);
+  RULES.push([/^All variants of (.+)$/, function (m) { return "Toutes les variantes de " + m[1]; }]);
+  Object.assign(FR, {"Add variant": "Ajouter une variante", "Variant name (e.g. Red / L)": "Nom de la variante (ex. Rouge / L)", "Enter the variant name.": "Saisissez le nom de la variante.", "That variant already exists.": "Cette variante existe déjà.", "Variant added": "Variante ajoutée"});
+  Object.assign(FR, {"Safari can delete the saved data of websites you have not opened for about a week. An app added to the home screen is not affected, so install it and keep a PDF backup.": "Safari peut supprimer les données des sites non ouverts depuis environ une semaine. Une application ajoutée à l'écran d'accueil n'est pas concernée : installez-la et gardez une sauvegarde PDF."});
   function trPart(c) { var r = FR[c]; return r !== undefined ? r : trRule(c); }
   /* keeps spaces and a leading or trailing middle dot as they are, and also translates the pieces of "a · b · c" one by one */
   function tr(s) {
@@ -599,7 +616,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   var T = tr;
   var cnt = function (n, one, many) { return n + " " + T(+n === 1 ? one : many); };
   /* rewrites the text and the placeholder, aria-label, title and alt of everything in the page, and remembers the English so it can be switched back */
-  FR["Version"] = "Version";
+  FR["Version"] = "Version"; FR["Done"] = "Terminé";
   var trText = new WeakMap(), trAttr = new WeakMap(), TR_ATTRS = ["placeholder", "aria-label", "title", "alt"];
   function trNode(n) {
     var p = n.parentNode, tag = p && p.nodeName;
@@ -663,7 +680,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (t === "reports") return OWN() && (!CURU || CURU.tabs.indexOf("reports") > -1);
     return CURU ? CURU.tabs.indexOf(t) > -1 : true;
   }
-  var ACT_TAB = {"invoice": "orders", "invoices": "orders", "new-order": "orders", "restock": "orders", "owing": "orders", "pay": "orders", "complete": "orders", "cancel": "orders", "receipt": "orders", "return": "orders", "contacts": "orders", "new-contact": "orders", "new-product": "stock", "open-product": "stock", "stocktake": "stock", "import": "stock", "kits": "stock", "writeoff": "stock", "exp-add": "reports", "exp-edit": "reports", "export": "reports", "export-pdf": "reports", "range": "reports", "xr": "reports"};
+  var ACT_TAB = {"invoice": "orders", "invoices": "orders", "new-order": "orders", "restock": "orders", "owing": "orders", "pay": "orders", "complete": "orders", "cancel": "orders", "receipt": "orders", "return": "orders", "contacts": "orders", "new-contact": "orders", "new-product": "stock", "new-group": "stock", "group": "stock", "group-from": "stock", "add-variant": "stock", "scan-find": "stock", "open-product": "stock", "stocktake": "stock", "import": "stock", "kits": "stock", "writeoff": "stock", "exp-add": "reports", "exp-edit": "reports", "export": "reports", "export-pdf": "reports", "range": "reports", "xr": "reports"};
   var KEYRE = /^\d+\|(\d{4}-\d\d-\d\d)?$/;   /* a stock batch key: place id, then the expiry date or nothing */
   var IMGRE = /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/;
   var okImg = function (v) { return typeof v === "string" && v.length < 30000 && IMGRE.test(v) ? v : ""; };
@@ -736,6 +753,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         p[f] = m;
       });
       fix(p); p.exp = !!p.exp; p.cat = typeof p.cat === "string" ? p.cat.slice(0, 40) : ""; p.sup = typeof p.sup === "string" ? p.sup.slice(0, 120) : ""; p.img = okImg(p.img); p.wp = p.wp > 0 && isFinite(p.wp) ? Math.round(p.wp * 100) / 100 : 0;
+      if (p.grp != null) { p.grp = typeof p.grp === "string" ? p.grp.slice(0, 120) : ""; p.vr = typeof p.vr === "string" ? p.vr.slice(0, 80) : ""; }
     });
     s.contacts.forEach(function (c) { c.lvl = c.lvl === "w" ? "w" : ""; });
     s.orders.forEach(function (o) { if (o.loc != null && !lid[o.loc]) o.loc = s.locs[0].id; if (o.pm && !/^(momo|bank|gw)$/.test(o.pm)) delete o.pm; (o.pays || []).forEach(function (p) { if (p.m && !/^(momo|bank|gw)$/.test(p.m)) delete p.m; }); });
@@ -758,7 +776,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     return ok;
   }
   function savedLine() {
-    var txt = saveErr ? "Not saved. This browser is blocking storage." : "Saved in this browser" + (lastSaved ? " · " + new Date(lastSaved).toLocaleTimeString(LOC(), {hour: "2-digit", minute: "2-digit"}) : "") + (syncOn(cur()) ? " · " + syncText(cur()) : "");
+    var txt = saveErr ? "Not saved. The app is blocked from storing data." : "Saved in the app" + (lastSaved ? " · " + new Date(lastSaved).toLocaleTimeString(LOC(), {hour: "2-digit", minute: "2-digit"}) : "") + (syncOn(cur()) ? " · " + syncText(cur()) : "");
     return '<div class="savedline' + (saveErr ? ' bad' : '') + '"><span>' + esc(txt) + '</span><button class="btn ghost sm" data-act="save-now">Save now</button></div>';
   }
   /* a synced company gets ids that cannot clash with ids made on another phone; a company kept on one phone keeps counting 1, 2, 3 */
@@ -905,14 +923,32 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   function openSheet(title, html, mount) {
     if (!$("#overlay .sheet")) sheetOpener = document.activeElement;
     $("#overlay").innerHTML = '<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="hd"><h2>' + esc(title) + '</h2><button class="iconbtn" data-act="close" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' + html + '</div></div>';
+    hsHold();
     if (mount) mount($(".sheet"));
     var shEl = $("#overlay .sheet"); if (shEl) { shEl.setAttribute("tabindex", "-1"); try { shEl.focus({preventScroll: true}); } catch (e) {} }
   }
   function closeSheet() {
     $("#overlay").innerHTML = "";
+    hsRelease();
     var o = sheetOpener; sheetOpener = null;
     if (o && o.isConnected && o.focus) { try { o.focus({preventScroll: true}); } catch (e) {} }
   }
+  /* the phone's back button or back swipe closes the open sheet or camera instead of leaving the app.
+     One extra history entry is kept while something is open; HPEND counts the backs this code asked for itself. */
+  var HS = false, HPEND = 0, HWANT = false;
+  function hsHold() { if (HPEND > 0) { HWANT = true; return; } if (!HS) { try { window.history.pushState({gg: 1}, ""); HS = true; } catch (e) {} } }
+  function hsRelease() { if (HS && !HPEND && !$("#overlay .sheet") && !CAM) { HS = false; HPEND = 1; try { window.history.back(); } catch (e) { HPEND = 0; } } }
+  window.addEventListener("popstate", function () {
+    if (HPEND > 0) { HPEND--; if (HWANT && !HPEND) { HWANT = false; if ($("#overlay .sheet") || CAM) hsHold(); } return; }
+    HS = false;
+    if (CAM) { camClose(); if ($("#overlay .sheet")) hsHold(); return; }   /* the sheet under the camera is still open and needs its own entry */
+    if ($("#overlay .sheet")) closeSheet();
+  });
+  /* a field hidden behind the on-screen keyboard is scrolled into view */
+  document.addEventListener("focusin", function (e) {
+    var el = e.target; if (!el || !el.closest || !el.closest(".sheet") || !/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+    setTimeout(function () { try { if (document.activeElement === el) el.scrollIntoView({block: "center", behavior: "smooth"}); } catch (x) {} }, 320);
+  });
   /* keyboard: Escape closes a sheet, Tab stays inside it */
   document.addEventListener("keydown", function (e) {
     var sh = $("#overlay .sheet"); if (!sh || LOCKED) return;
@@ -972,6 +1008,11 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     return h;
   }
 
+  function cmpItems(a, b) { return (a.grp || a.name).localeCompare(b.grp || b.name) || a.name.localeCompare(b.name); }
+  function grpHead(g) {
+    var m = S.products.filter(function (x) { return x.grp === g; }), tot = m.reduce(function (t, x) { return t + locQty(x, locSel); }, 0);
+    return '<div class="grph"><button class="gh" data-act="group" data-g="' + esc(g) + '"><b>' + esc(g) + '</b><span>' + m.length + ' ' + T(m.length === 1 ? "variant" : "variants") + ' · ' + tot + '</span></button><button class="btn sm" data-act="add-variant" data-g="' + esc(g) + '">Add variant</button></div>';
+  }
   function stockList() {
     var t = q.trim().toLowerCase();
     var rows = S.products.filter(function (p) {
@@ -979,23 +1020,25 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       if (catSel && (p.cat || "") !== catSel) return false;
       if (expOnly && !(p.exp && Object.keys(p.st).some(function (k) { return expState(kExp(k)); }))) return false;
       return !t || (p.name + " " + p.sku + " " + (p.code || "") + " " + (p.cat || "")).toLowerCase().indexOf(t) > -1;
-    }).sort(function (a, b) { return a.name.localeCompare(b.name); });
+    }).sort(cmpItems);
     if (!rows.length) return '<div class="empty">' + (S.products.length ? "No items match." : "No items yet. Tap Add item.") + '</div>';
+    var lastG = null;
     return rows.map(function (p) {
+      var head = p.grp && p.grp !== lastG ? grpHead(p.grp) : ""; lastG = p.grp || null;
       var es = p.exp ? Object.keys(p.st).reduce(function (w, k) { var x = expState(kExp(k)); return x === "gone" || w === "gone" ? "gone" : (x || w); }, "") : "";
       var shown = locQty(p, locSel);
-      return '<button class="item" data-act="open-product" data-id="' + p.id + '">' + (p.img ? '<img class="thumb" alt="" src="' + esc(p.img) + '">' : '') + '<div class="main"><div class="name">' + esc(p.name) + '</div><div class="sub"><span class="mono">' + esc(p.sku) + '</span> · ' + esc(money(p.price)) + ' / ' + esc(p.unit) + (p.cat ? ' · ' + esc(p.cat) : '') + '</div></div>' +
+      return head + '<button class="item" data-act="open-product" data-id="' + p.id + '">' + (p.img ? '<img class="thumb" alt="" src="' + esc(p.img) + '">' : '') + '<div class="main"><div class="name">' + esc(p.grp ? (p.vr || p.name) : p.name) + '</div><div class="sub"><span class="mono">' + esc(p.sku) + '</span> · ' + esc(money(p.price)) + ' / ' + esc(p.unit) + (p.cat ? ' · ' + esc(p.cat) : '') + '</div></div>' +
         (es ? '<span class="tag low">' + (es === "gone" ? "Expired" : "Expiring") + '</span>' : '') +
         (isLow(p) && locSel === "all" ? '<span class="tag low">' + (p.qty === 0 ? "Out" : "Low") + '</span>' : '') +
         '<div class="qty' + (isLow(p) && locSel === "all" ? ' low' : '') + '">' + shown + '<small>' + esc(p.unit) + '</small></div></button>';
     }).join("");
   }
   function stock() {
-    return '<div class="tools"><input id="q" type="search" placeholder="Search name, SKU or barcode" value="' + esc(q) + '" aria-label="Search stock"><button class="btn" data-act="new-product">Add item</button></div>' +
+    return '<div class="tools"><input id="q" type="search" placeholder="Search name, SKU or barcode" value="' + esc(q) + '" aria-label="Search stock"><button class="btn ghost" data-act="scan-find" aria-label="Scan a barcode">Scan</button><button class="btn" data-act="new-product">Add item</button></div>' +
       (S.locs.length > 1 ? '<div class="chips"><button class="chip' + (locSel === "all" ? ' on' : '') + '" data-act="loc" data-l="all">All places</button>' + S.locs.map(function (l) { return '<button class="chip' + (locSel === l.id ? ' on' : '') + '" data-act="loc" data-l="' + l.id + '">' + esc(l.name) + '</button>'; }).join("") + '</div>' : '') +
       (function () { var cs = {}; S.products.forEach(function (p) { if (p.cat) cs[p.cat] = 1; }); var ks = Object.keys(cs).sort(); if (catSel && !cs[catSel]) catSel = ""; return ks.length ? '<div class="chips scroll"><button class="chip' + (catSel ? '' : ' on') + '" data-act="cat" data-c="">All categories</button>' + ks.map(function (c) { return '<button class="chip' + (catSel === c ? ' on' : '') + '" data-act="cat" data-c="' + esc(c) + '">' + esc(c) + '</button>'; }).join("") + '</div>' : ''; })() +
       '<div class="chips"><button class="chip' + (lowOnly || expOnly ? '' : ' on') + '" data-act="filter" data-f="all">All</button><button class="chip' + (lowOnly ? ' on' : '') + '" data-act="filter" data-f="low">Low stock</button><button class="chip' + (expOnly ? ' on' : '') + '" data-act="filter" data-f="exp">Expiring</button><button class="chip" data-act="stocktake">Count stock' + (countRows().length ? ' (' + countRows().length + ')' : '') + '</button></div>' +
-      '<div class="list" id="list">' + stockList() + '</div>' + (OWN() ? '<div class="row" style="margin-top:14px"><button class="btn ghost sm" data-act="import">Import items from a spreadsheet</button><button class="btn ghost sm" data-act="kits">Kits</button></div>' : '');
+      '<div class="list" id="list">' + stockList() + '</div>' + '<div class="row" style="margin-top:14px"><button class="btn ghost sm" data-act="new-group">Item with variants</button>' + (OWN() ? '<button class="btn ghost sm" data-act="import">Import items from a spreadsheet</button><button class="btn ghost sm" data-act="kits">Kits</button>' : '') + '</div>';
   }
 
   function orders() {
@@ -1033,7 +1076,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (S.logo) { lg.src = S.logo; lg.hidden = false; } else { lg.hidden = true; lg.removeAttribute("src"); }
     document.querySelectorAll("#tabs button").forEach(function (b) { b.classList.toggle("on", b.dataset.tab === tab); if (b.dataset.tab === tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     var al = alertLine();
-    $("#notice").innerHTML = licBanner() + instBanner() + (al ? '<div class="banner"><span>' + esc(al) + '</span><button data-act="alert-go">View</button></div>' : "") + (saveErr ? '<div class="banner" style="color:var(--alert)"><span>Your changes are not being saved. This browser may be in private mode or out of space. Save a PDF backup from Settings.</span></div>' : "") +
+    $("#notice").innerHTML = licBanner() + instBanner() + (al ? '<div class="banner"><span>' + esc(al) + '</span><button data-act="alert-go">View</button></div>' : "") + (saveErr ? '<div class="banner" style="color:var(--alert)"><span>Your changes are not being saved. The phone may be out of space or blocking storage. Save a PDF backup from Settings.</span></div>' : "") +
       (S.examples && S.products.some(function (p) { return p.ex; })
         ? '<div class="banner"><span>These are example items so you can see how it works.</span><button data-act="clear-examples">Remove examples</button></div>' : "");
     saveUI();
@@ -1261,8 +1304,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     return {g: g, w: w, h: h};
   }
   /* im: {g: grey values 0-255, w, h}. Returns the text or null. */
-  function decodeGray(im) {
-    var angles = [0, 90, 12, -12, 102, 78, 24, -24, 114, 66, 36, -36, 126, 54], si, ai, seen = {};
+  function decodeGray(im, onlyAngles) {
+    var angles = onlyAngles || [0, 90, 12, -12, 102, 78, 24, -24, 114, 66, 36, -36, 126, 54], si, ai, seen = {};
     /* short results (EAN-8 or up to 4 characters) are easy to produce by accident, so they must be seen on two different lines */
     var accept = function (t) { if (t.length > 4 && !(t.length === 8 && /^\d{8}$/.test(t))) return true; if (seen[t]) return true; seen[t] = 1; return false; };
     for (si = 0; si < 3; si++) {   /* full size, half, quarter: very large barcodes need the smaller copies */
@@ -1523,7 +1566,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   function productFields(p) {
     p = p || {};
     var cats = {}; S.products.forEach(function (x) { if (x.cat) cats[x.cat] = 1; });
-    return '<label>Name<input id="p-name" value="' + esc(p.name || "") + '" required></label>' +
+    var nameF = p.id && p.grp ? '<input id="p-name" type="hidden" value="' + esc(p.name || "") + '"><div class="two"><label>Group<input id="p-grp" maxlength="100" value="' + esc(p.grp) + '"></label><label>Variant<input id="p-vr" maxlength="40" value="' + esc(p.vr || "") + '"></label></div><div class="sub" style="margin:-6px 0 12px">Clear the group to make this a normal item.</div>' : '<label>Name<input id="p-name" value="' + esc(p.name || "") + '" required></label>';
+    return nameF +
       '<div class="photorow"><img class="pimg" id="p-img" alt="" data-v="' + esc(p.img || "") + '"' + (p.img ? ' src="' + esc(p.img) + '"' : ' hidden') + '><div class="row" style="flex:1"><button type="button" class="btn ghost sm" id="p-photo">' + (p.img ? 'Change photo' : 'Add photo') + '</button><button type="button" class="btn warn sm" id="p-photo-del"' + (p.img ? '' : ' hidden') + '>Remove photo</button></div><input id="p-ph-file" type="file" accept="image/*" hidden></div>' +
       '<label>Usual supplier (optional)<input id="p-sup" list="sups" maxlength="120" value="' + esc(p.sup || "") + '" autocomplete="off"></label><datalist id="sups">' + S.contacts.filter(function (c) { return c.kind === "supplier"; }).map(function (c) { return '<option value="' + esc(c.name) + '">'; }).join("") + '</datalist>' +
       '<label>Category (optional)<input id="p-cat" list="cats" maxlength="40" value="' + esc(p.cat || "") + '" autocomplete="off"></label><datalist id="cats">' + Object.keys(cats).sort().map(function (c) { return '<option value="' + esc(c) + '">'; }).join("") + '</datalist>' +
@@ -1542,6 +1586,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     var qi = $("#p-qty", root); d.qty = qi ? Math.round(num(qi.value || 0)) : null;
     d.cat = $("#p-cat", root).value.trim().slice(0, 40); d.sup = $("#p-sup", root).value.trim().slice(0, 120); d.img = okImg($("#p-img", root).dataset.v);
     d.track = $("#p-track", root).value === "1"; d.oloc = readLoc(root, "p-loc"); d.oexp = d.track && $("#p-oexp", root) ? $("#p-oexp", root).value : "";
+    if ($("#p-grp", root)) {
+      var gg = $("#p-grp", root).value.trim().slice(0, 100), vv = $("#p-vr", root).value.trim().slice(0, 40);
+      if (gg) { d.grp = gg; d.vr = vv; d.name = vFull(gg, vv); } else { d.grp = ""; d.vr = ""; }
+    }
     if (!d.name) return "Enter a name.";
     d.code = $("#p-code", root).value.trim();
     if (d.code) {
@@ -1564,6 +1612,238 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   function wireTrack(root) { var tr = $("#p-track", root), w = $("#p-oexpw", root); if (tr && w) tr.onchange = function () { w.hidden = tr.value !== "1"; }; }
   function skuTaken(sku, exceptId) { return S.products.some(function (p) { return p.id !== exceptId && p.sku.toLowerCase() === sku.toLowerCase(); }); }
+
+  /* ---------- variants: every variant is an ordinary item (own stock, price, barcode) that shares a group name ---------- */
+  var VSEP = " – ";
+  function vFull(g, v) { return v ? g + VSEP + v : g; }
+  function grpMembers(g) { return S.products.filter(function (p) { return p.grp === g; }).sort(function (a, b) { return (a.vr || a.name).localeCompare(b.vr || b.name); }); }
+  function itemOpts() {   /* the item pickers of the order form: variants appear under their group name */
+    var out = "", cur = null;
+    S.products.slice().sort(cmpItems).forEach(function (p) {
+      if (p.grp) { if (cur !== p.grp) { if (cur) out += "</optgroup>"; out += '<optgroup label="' + esc(p.grp) + '">'; cur = p.grp; } }
+      else if (cur) { out += "</optgroup>"; cur = null; }
+      out += '<option value="' + p.id + '">' + esc(p.grp ? (p.vr || p.name) : p.name) + ' (' + p.qty + ')</option>';
+    });
+    return out + (cur ? "</optgroup>" : "");
+  }
+  function splitList(t) {
+    var seen = {}, out = [];
+    String(t || "").split(/[,;\n]/).forEach(function (x) { x = x.trim().slice(0, 30); var k = x.toLowerCase(); if (x && !seen[k]) { seen[k] = 1; out.push(x); } });
+    return out;
+  }
+  function skuWord(v) { return String(v).toUpperCase().replace(/[^A-Z0-9]+/g, "").slice(0, 3) || "X"; }
+  /* arg: nothing = a new group, a string = an existing group, {pid} = turn that single item into the first variant of a group */
+  function groupSheet(arg) {
+    var base = arg && typeof arg === "object" ? prod(arg.pid) : null;
+    if (arg && typeof arg === "object" && !base) return;
+    var g = typeof arg === "string" ? arg : (base ? base.name : ""), mem = typeof arg === "string" ? grpMembers(g) : [], ref = base || mem[0] || null, existing = mem.length > 0;
+    var cats = {}; S.products.forEach(function (x) { if (x.cat) cats[x.cat] = 1; });
+    var h = '<form id="f">' + (existing ? '<button type="button" class="btn block" data-act="add-variant" data-g="' + esc(g) + '" style="margin-bottom:12px">Add variant</button>' : '');
+    if (existing) h += '<div class="list" style="margin-bottom:14px">' + mem.map(function (p) {
+      return '<button type="button" class="item" data-act="open-product" data-id="' + p.id + '"><div class="main"><div class="name">' + esc(p.vr || p.name) + '</div><div class="sub"><span class="mono">' + esc(p.sku) + '</span> · ' + esc(money(p.price)) + '</div></div><div class="qty">' + p.qty + '<small>' + esc(p.unit) + '</small></div></button>';
+    }).join("") + '</div>';
+    h += '<label>Group name (the shared item name)<input id="g-name" maxlength="100" value="' + esc(g) + '" required></label>' +
+      (existing ? '<button type="button" class="btn ghost sm" id="g-ren" style="margin:-4px 0 14px">Rename group</button>' : '') +
+      (base ? '<label>Variant name of this item (e.g. Red / L)<input id="g-own" maxlength="40" autocomplete="off"></label>' : '') +
+      '<div class="label" style="margin:4px 0 8px">' + (existing ? "Add more variants" : "Variants") + '</div>' +
+      '<label>First option, separated by commas (e.g. S, M, L)<input id="g-o1" autocomplete="off"></label>' +
+      '<label>Second option (optional), e.g. Red, Blue<input id="g-o2" autocomplete="off"></label>' +
+      '<div class="two">' + (OWN() ? '<label>Cost price<input id="g-cost" inputmode="decimal" value="' + esc(ref ? ref.cost : "") + '"></label>' : '') + '<label>Sale price<input id="g-price" inputmode="decimal" value="' + esc(ref ? ref.price : "") + '"></label></div>' +
+      '<div class="two"><label>Unit<input id="g-unit" value="' + esc(ref ? ref.unit : "pcs") + '"></label><label>Reorder at<input id="g-min" inputmode="numeric" value="' + esc(ref ? ref.min : 0) + '"></label></div>' +
+      '<label>Category (optional)<input id="g-cat" list="gcats" maxlength="40" value="' + esc(ref ? ref.cat || "" : "") + '" autocomplete="off"></label><datalist id="gcats">' + Object.keys(cats).sort().map(function (c) { return '<option value="' + esc(c) + '">'; }).join("") + '</datalist>' +
+      '<div class="err" id="err"></div><button type="button" class="btn ghost block" id="g-prev">Show the variants</button><div id="g-out" style="margin-top:12px"></div></form>';
+    openSheet(g ? g : "Item with variants", h, function (root) {
+      var PREV = null, err = function (t) { $("#err", root).textContent = t || ""; };
+      function groupName() { return $("#g-name", root).value.trim().slice(0, 100); }
+      function rename() {   /* returns false when the new name is empty */
+        var nn = groupName(); if (!existing) return !!nn; if (!nn) return false;
+        if (nn !== g) { mem.forEach(function (p) { p.grp = nn; p.name = vFull(nn, p.vr); }); g = nn; mem = grpMembers(g); return "renamed"; }
+        return true;
+      }
+      if ($("#g-ren", root)) $("#g-ren", root).onclick = function () {
+        err(""); var r = rename(); if (!r) { err("Enter a name."); return; }
+        if (r === "renamed") { save(); render(); groupSheet(g); toast("Group renamed"); }
+      };
+      function combos() {
+        var a = splitList($("#g-o1", root).value), b = splitList($("#g-o2", root).value), out = [];
+        if (!a.length) { a = b; b = []; }
+        if (!a.length) return {err: "Enter the options, for example S, M, L."};
+        a.forEach(function (x) { if (b.length) b.forEach(function (y) { out.push(x + " / " + y); }); else out.push(x); });
+        if (out.length > 60) return {err: "That makes more than 60 variants. Use fewer options."};
+        return {list: out};
+      }
+      function preview() {
+        err(""); if (!groupName()) { err("Enter a name."); return; }
+        var own = base ? $("#g-own", root).value.trim().slice(0, 40) : "";
+        if (base && !own) { err("Enter the variant name of this item."); return; }
+        var c = combos(); if (c.err) { err(c.err); return; }
+        var have = {}; mem.forEach(function (p) { have[(p.vr || "").toLowerCase()] = 1; }); if (own) have[own.toLowerCase()] = 1;
+        var list = c.list.filter(function (x) { return !have[x.toLowerCase()]; });
+        if (!list.length) { err("All of these variants already exist."); return; }
+        var pre = groupName().toUpperCase().replace(/[^A-Z0-9]+/g, "").slice(0, 4) || "ITEM", used = {};
+        PREV = list.map(function (lab) {
+          var sku = pre + "-" + lab.split(" / ").map(skuWord).join("-"), n = 1, s0 = sku;
+          while (skuTaken(sku, base ? base.id : 0) || used[sku.toLowerCase()]) sku = s0 + "-" + (++n);
+          used[sku.toLowerCase()] = 1; return {lab: lab, sku: sku};
+        });
+        $("#g-out", root).innerHTML = '<div class="vhead"><span>Variant</span><span>SKU</span><span>Stock</span></div>' +
+          PREV.map(function (r, i) { return '<div class="vrow"><b>' + esc(r.lab) + '</b><input class="v-sku" data-i="' + i + '" value="' + esc(r.sku) + '" aria-label="SKU" autocapitalize="characters"><input class="v-qty" inputmode="numeric" value="0" aria-label="Opening stock"></div>'; }).join("") +
+          '<div style="margin-top:12px">' + locSelect("g-loc", "Opening stock goes in", locSel === "all" ? S.locs[0].id : locSel) + '</div><button class="btn block" id="g-go">Create ' + PREV.length + (PREV.length === 1 ? " variant" : " variants") + '</button>';
+      }
+      $("#g-prev", root).onclick = preview;
+      function create() {
+        err(""); var rn = rename(); if (!rn) { err("Enter a name."); return; }
+        var rows = [].slice.call(root.querySelectorAll(".vrow")), seen = {}, i, out = [], cost = $("#g-cost", root) ? num($("#g-cost", root).value || 0) : (ref ? ref.cost : 0), price = num($("#g-price", root).value || 0), min = Math.round(num($("#g-min", root).value || 0));
+        if (isNaN(cost) || cost < 0 || isNaN(price) || price < 0) { err("Prices must be numbers, 0 or more."); return; }
+        if (isNaN(min) || min < 0) { err("Quantities must be whole numbers, 0 or more."); return; }
+        for (i = 0; i < rows.length; i++) {
+          var sku = $(".v-sku", rows[i]).value.trim(), qn = Math.round(num($(".v-qty", rows[i]).value || 0));
+          if (!sku) { err("Every variant needs a SKU."); return; }
+          if (seen[sku.toLowerCase()]) { err("Two variants have the same SKU."); return; }
+          if (skuTaken(sku, base ? base.id : 0)) { err("That SKU is already used."); return; }
+          if (isNaN(qn) || qn < 0) { err("Quantities must be whole numbers, 0 or more."); return; }
+          seen[sku.toLowerCase()] = 1; out.push({lab: PREV[i].lab, sku: sku, qty: qn});
+        }
+        var name = groupName(), loc = readLoc(root, "g-loc"), unit = $("#g-unit", root).value.trim() || "pcs", cat = $("#g-cat", root).value.trim().slice(0, 40);
+        if (base) { base.grp = name; base.vr = $("#g-own", root).value.trim().slice(0, 40); base.name = vFull(name, base.vr); }
+        out.forEach(function (r) {
+          var p = {id: nid(), name: vFull(name, r.lab), grp: name, vr: r.lab, sku: r.sku, code: "", unit: unit, cost: cost, price: price, wp: ref && ref.wp > 0 ? ref.wp : 0, qty: 0, st: {}, mn: {}, bs: {}, exp: ref ? !!ref.exp : false, min: min, cat: cat, sup: ref ? ref.sup || "" : "", img: ref ? ref.img || "" : ""};
+          S.products.push(p);
+          if (r.qty > 0) { stAdd(p, loc, "", r.qty); addMove(p, r.qty, "Opening stock" + (S.locs.length > 1 ? " · " + locName(loc) : "")); }
+        });
+        closeSheet(); commit("Variants added");
+      }
+      $("#f", root).onsubmit = function (e) { e.preventDefault(); if (PREV && $("#g-go", root)) create(); else preview(); };
+      root.addEventListener("click", function (e) { if (e.target && e.target.id === "g-go") { e.preventDefault(); create(); } });
+      ["g-o1", "g-o2", "g-own", "g-name"].forEach(function (id) { var el = $("#" + id, root); if (el) el.addEventListener("input", function () { PREV = null; $("#g-out", root).innerHTML = ""; }); });
+    });
+  }
+
+  /* adds one variant to an existing group; the price, unit and other details are copied from the group's first variant */
+  function addVariantSheet(g) {
+    var mem = grpMembers(g), ref = mem[0]; if (!ref) return;
+    var pre = g.toUpperCase().replace(/[^A-Z0-9]+/g, "").slice(0, 4) || "ITEM";
+    openSheet("Add variant",
+      '<form id="f"><div class="label" style="margin-bottom:10px">' + esc(g) + '</div><label>Variant name (e.g. Red / L)<input id="av-n" maxlength="40" autocomplete="off" required></label>' +
+      '<div class="two"><label>SKU<input id="av-sku" autocapitalize="characters"></label><label>Opening stock<input id="av-q" inputmode="numeric" value="0"></label></div>' +
+      '<div class="two">' + (OWN() ? '<label>Cost price<input id="av-cost" inputmode="decimal" value="' + esc(ref.cost) + '"></label>' : '') + '<label>Sale price<input id="av-price" inputmode="decimal" value="' + esc(ref.price) + '"></label></div>' +
+      locSelect("av-loc", "Opening stock goes in", locSel === "all" ? S.locs[0].id : locSel) + '<div class="err" id="err"></div><button class="btn block">Add variant</button></form>',
+      function (root) {
+        var skuEdited = false, sk = $("#av-sku", root), nm = $("#av-n", root);
+        sk.addEventListener("input", function () { skuEdited = true; });
+        nm.addEventListener("input", function () {
+          if (skuEdited) return;
+          var v = nm.value.trim(); if (!v) { sk.value = ""; return; }
+          var base = pre + "-" + v.split("/").map(function (x) { return skuWord(x.trim()); }).join("-"), c = base, n = 1;
+          while (skuTaken(c, 0)) c = base + "-" + (++n);
+          sk.value = c;
+        });
+        $("#f", root).onsubmit = function (e) {
+          e.preventDefault();
+          var v = nm.value.trim().slice(0, 40), er = $("#err", root), sku = sk.value.trim(), qn = Math.round(num($("#av-q", root).value || 0)), pr = num($("#av-price", root).value || 0), co = $("#av-cost", root) ? num($("#av-cost", root).value || 0) : ref.cost;
+          if (!v) { er.textContent = "Enter the variant name."; return; }
+          if (grpMembers(g).some(function (x) { return (x.vr || "").toLowerCase() === v.toLowerCase(); })) { er.textContent = "That variant already exists."; return; }
+          if (!sku) { er.textContent = "Every variant needs a SKU."; return; }
+          if (skuTaken(sku, 0)) { er.textContent = "That SKU is already used."; return; }
+          if (isNaN(qn) || qn < 0) { er.textContent = "Quantities must be whole numbers, 0 or more."; return; }
+          if (isNaN(pr) || pr < 0 || isNaN(co) || co < 0) { er.textContent = "Prices must be numbers, 0 or more."; return; }
+          var loc = readLoc(root, "av-loc");
+          var p = {id: nid(), name: vFull(g, v), grp: g, vr: v, sku: sku, code: "", unit: ref.unit, cost: co, price: pr, wp: ref.wp > 0 ? ref.wp : 0, qty: 0, st: {}, mn: {}, bs: {}, exp: !!ref.exp, min: ref.min, cat: ref.cat || "", sup: ref.sup || "", img: ref.img || ""};
+          S.products.push(p);
+          if (qn > 0) { stAdd(p, loc, "", qn); addMove(p, qn, "Opening stock" + (S.locs.length > 1 ? " · " + locName(loc) : "")); }
+          closeSheet(); commit("Variant added");
+        };
+      });
+  }
+
+  /* ---------- live camera scanner: the camera stays open and every barcode it sees is handed to onCode ---------- */
+  var CAM = null;
+  function camClose() { if (!CAM) return; var c = CAM; CAM = null; c.stop(); hsRelease(); }
+  var AUD = null;
+  function audioPrime() {   /* iPhone only plays sound that was set up during a tap, so the sound is prepared when the scan starts */
+    try { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; if (!AUD) AUD = new AC(); if (AUD.state === "suspended") AUD.resume(); } catch (e) {}
+  }
+  function beep() {
+    try {
+      if (!AUD) return;
+      var o = AUD.createOscillator(), gn = AUD.createGain(); o.type = "sine"; o.frequency.value = 880; gn.gain.value = 0.15; o.connect(gn); gn.connect(AUD.destination); o.start();
+      setTimeout(function () { try { o.stop(); } catch (e) {} }, 110);
+    } catch (e) {}
+  }
+  /* onCode(code) returns {ok, msg, close}: msg is shown under the picture, close ends the scan */
+  function camScan(title, onCode) {
+    camClose(); audioPrime();
+    var opener = document.activeElement, ov = document.createElement("div");
+    ov.className = "camov"; ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true"); ov.setAttribute("aria-label", T(title));
+    ov.innerHTML = '<div class="camtop"><b>' + esc(title) + '</b><button type="button" class="btn sm" id="cam-x">Done</button></div>' +
+      '<div class="camvid"><video playsinline muted autoplay></video><div class="camguide"></div></div>' +
+      '<div class="camfoot"><div class="cammsg" id="cam-msg" aria-live="polite">Starting the camera...</div><div class="row" style="justify-content:center"><button type="button" class="btn ghost sm" id="cam-torch" hidden>Light</button><button type="button" class="btn ghost sm" id="cam-ph" hidden>Take a photo instead</button></div><input id="cam-file" type="file" accept="image/*" capture="environment" hidden></div>';
+    document.body.appendChild(ov); hsHold();
+    var video = $("video", ov), msg = $("#cam-msg", ov), torchBtn = $("#cam-torch", ov), phBtn = $("#cam-ph", ov), fileIn = $("#cam-file", ov);
+    var stream = null, timer = 0, stopped = false, busy = false, frame = 0, lastCode = "", lastAt = 0, det = null, torchOn = false, cv = document.createElement("canvas"), cx = cv.getContext("2d", {willReadFrequently: true});
+    function say(t, cls) { msg.className = "cammsg" + (cls ? " " + cls : ""); msg.textContent = t; }
+    function hit(code) {
+      var now = Date.now(); if (code === lastCode && now - lastAt < 2500) { lastAt = now; return; }
+      lastCode = code; lastAt = now;
+      var r = null; try { r = onCode(code); } catch (e) {}
+      if (r && r.ok === false) { try { if (navigator.vibrate) navigator.vibrate([40, 60, 40]); } catch (e) {} say(r.msg || "", "bad"); return; }
+      beep(); try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {}
+      say((r && r.msg) || code, "ok");
+      if (r && r.close) camClose();
+    }
+    function ownRead() {
+      var vw = video.videoWidth, vh = video.videoHeight; if (!vw || !vh) return null;
+      var k = Math.min(1, 720 / Math.max(vw, vh)), w = Math.max(1, Math.round(vw * k)), h = Math.max(1, Math.round(vh * k));
+      cv.width = w; cv.height = h; cx.drawImage(video, 0, 0, w, h);
+      var d = cx.getImageData(0, 0, w, h).data, gr = new Float32Array(w * h), i, j;
+      for (i = 0, j = 0; j < gr.length; i += 4, j++) gr[j] = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      return decodeGray({g: gr, w: w, h: h}, frame % 4 === 0 ? null : [0, 90, 12, -12]);
+    }
+    function tick() {
+      if (stopped) return;
+      if (busy || video.readyState < 2) { timer = setTimeout(tick, 120); return; }
+      busy = true; frame++;
+      var done = function (code) { busy = false; if (stopped) return; if (code) hit(code); timer = setTimeout(tick, 140); };
+      if (det) det.detect(video).then(function (r) { done(r && r.length && r[0].rawValue ? r[0].rawValue : null); }, function () { det = null; done(null); });
+      else { var t = null; try { t = ownRead(); } catch (e) {} done(t); }
+    }
+    function fail(t) { say(t, "bad"); phBtn.hidden = false; }
+    function stop() {
+      stopped = true; clearTimeout(timer);
+      try { if (stream) stream.getTracks().forEach(function (x) { x.stop(); }); } catch (e) {}
+      try { video.srcObject = null; } catch (e) {}
+      document.removeEventListener("visibilitychange", vis); ov.remove();
+      if (opener && opener.isConnected && opener.focus) { try { opener.focus({preventScroll: true}); } catch (e) {} }
+    }
+    function vis() { if (document.hidden) camClose(); }
+    document.addEventListener("visibilitychange", vis);
+    CAM = {stop: stop};
+    $("#cam-x", ov).onclick = camClose;
+    ov.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); camClose(); return; }
+      if (e.key !== "Tab") return;
+      e.stopPropagation();
+      var f = [].filter.call(ov.querySelectorAll("button"), function (x) { return !x.hidden; }), a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    });
+    torchBtn.onclick = function () { torchOn = !torchOn; try { stream.getVideoTracks()[0].applyConstraints({advanced: [{torch: torchOn}]}); } catch (e) {} };
+    phBtn.onclick = function () { fileIn.click(); };
+    fileIn.onchange = function () {
+      var f = fileIn.files[0]; fileIn.value = ""; if (!f) return;
+      say("Reading picture...");
+      scanPhoto(f, function (er, text) { if (er) say(er, "bad"); else hit(text); });
+    };
+    try { $("#cam-x", ov).focus(); } catch (e) {}
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { fail("The camera is not available here."); return; }
+    navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: "environment"}, width: {ideal: 1280}, height: {ideal: 720}}, audio: false}).then(function (s) {
+      if (stopped) { s.getTracks().forEach(function (x) { x.stop(); }); return; }
+      stream = s; video.srcObject = s; var pp = video.play(); if (pp && pp.catch) pp.catch(function () {});
+      say("Point the camera at a barcode");
+      try { var caps = s.getVideoTracks()[0].getCapabilities ? s.getVideoTracks()[0].getCapabilities() : null; if (caps && caps.torch) torchBtn.hidden = false; } catch (e) {}
+      if ("BarcodeDetector" in window) { try { det = new window.BarcodeDetector(); } catch (e) { det = null; } }
+      tick();
+    }, function (e) { fail(/NotAllowed|Permission|Security/i.test(String(e && (e.name + " " + e.message))) ? "Camera permission was refused. Allow the camera for the app in your phone settings." : "The camera could not be opened."); });
+  }
 
   /* ---------- kits: a ready-made set of items sold together at one price ---------- */
   function kitStock(k) { var m = Infinity; k.items.forEach(function (i) { var p = prod(i.pid); m = Math.min(m, p ? Math.floor(p.qty / i.qty) : 0); }); return isFinite(m) ? m : 0; }
@@ -1757,6 +2037,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<form id="fa">' + locSelect("a-loc", "Place", adjLoc(p)) + (p.exp ? '<label>Expiry date when putting in (optional)<input id="a-exp" type="date"></label>' : '') + '<div class="two"><label>Quantity<input id="a-n" inputmode="numeric" placeholder="e.g. 5"></label><label>Reason<select id="a-r"><option value="Recount">Recount</option><option value="Damaged">Damaged</option><option value="Lost">Lost</option><option value="Returned">Returned</option><option value="Expired">Expired</option><option value="Other">Other</option></select></label></div>' +
       dateField("a-date") + '<div class="err" id="aerr"></div><div class="row"><button type="button" class="btn ghost" id="rm">Take out</button><button type="button" class="btn" id="add">Put in</button></div></form>' +
       (S.locs.length > 1 ? '<div class="sep"></div><form id="fm"><div class="label" style="margin-bottom:8px">Move to another place</div><div class="two"><label>From<select id="m-from">' + locOpts(adjLoc(p)) + '</select></label><label>To<select id="m-to">' + locOpts(S.locs.filter(function (l) { return l.id !== adjLoc(p); })[0].id) + '</select></label></div><label>Quantity<input id="m-n" inputmode="numeric" placeholder="e.g. 5"></label><div class="err" id="merr"></div><button class="btn block">Move stock</button></form>' : '') +
+      '<div class="sep"></div>' + (p.grp ? '<button type="button" class="btn ghost sm" data-act="group" data-g="' + esc(p.grp) + '">' + esc(T("All variants of") + " " + p.grp) + '</button> <button type="button" class="btn sm" data-act="add-variant" data-g="' + esc(p.grp) + '">Add variant</button>' : '<button type="button" class="btn ghost sm" data-act="group-from" data-id="' + p.id + '">Turn into variants</button>') +
       (OWN() ? historyBlock(p) : '') + '<div class="sep"></div><form id="fe">' + productFields(p) + '<div class="err" id="err"></div><button class="btn block">Save changes</button></form>' +
       (OWN() ? '<button class="btn warn block" style="margin-top:10px" id="del">Delete item</button>' : ''),
       function (root) {
@@ -1790,6 +2071,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
           if (typeof d === "string") { $("#err", root).textContent = d; return; }
           if (skuTaken(d.sku, p.id)) { $("#err", root).textContent = "That SKU is already used."; return; }
           p.name = d.name; p.sku = d.sku; p.code = d.code; p.unit = d.unit; p.cost = d.cost; p.price = d.price; p.wp = d.wp; p.min = d.min; p.exp = d.track; p.cat = d.cat; p.sup = d.sup; p.img = d.img;
+          if (d.grp !== undefined) { p.grp = d.grp; p.vr = d.vr; }
           closeSheet(); commit("Saved");
         };
         if ($("#del", root)) $("#del", root).onclick = function () {
@@ -1803,12 +2085,12 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   /* ---------- orders ---------- */
   function newOrder(kind, pid) {
     if (!S.products.length) { toast("Add an item first"); return; }
-    var opts = S.products.map(function (p) { return '<option value="' + p.id + '">' + esc(p.name) + ' (' + p.qty + ')</option>'; }).join("");
+    var opts = itemOpts();
     openSheet(kind === "sale" ? "New sale" : "New purchase",
       '<form id="f"><label>' + (kind === "sale" ? "Customer" : "Supplier") + ' (optional)<input id="o-party" list="parties" autocomplete="off"></label><datalist id="parties">' +
       S.contacts.filter(function (c) { return c.kind === (kind === "sale" ? "customer" : "supplier"); }).map(function (c) { return '<option value="' + esc(c.name) + '">'; }).join("") + '</datalist>' + dateField("o-date") + locSelect("o-loc", kind === "sale" ? "Take stock from" : "Receive stock into", locSel === "all" ? S.locs[0].id : locSel) +
       (kind === "sale" && S.products.some(function (p) { return p.wp > 0; }) ? '<label>Price level<select id="o-lvl"><option value="">Retail prices</option><option value="w">Wholesale prices</option></select></label>' : '') +
-      '<label>Scan a barcode to add an item<input id="o-scan" placeholder="Scan or type a code, then Enter" autocomplete="off" autocapitalize="off"></label>' +
+      '<label>Scan a barcode to add an item<input id="o-scan" placeholder="Scan or type a code, then Enter" autocomplete="off" autocapitalize="off"></label><button type="button" class="btn ghost sm" id="o-cam" style="margin:-4px 0 14px">Scan with camera</button>' +
       '<div class="label" style="margin-bottom:8px">Items, quantity, unit price</div><div id="lines"></div>' +
       '<button type="button" class="btn ghost sm" id="addl" style="margin-bottom:8px">Add another item</button>' + (kind === "purchase" ? '<div class="sub" id="o-hist" style="margin:0 0 12px"></div>' : (S.kits.length ? '<div class="two" style="align-items:end;margin-bottom:12px"><label>Add a kit<select id="o-kit">' + S.kits.map(function (k) { return '<option value="' + k.id + '">' + esc(k.name) + ' (' + kitStock(k) + ')</option>'; }).join("") + '</select></label><button type="button" class="btn ghost" id="o-kitadd">Add kit</button></div>' : '<div style="margin-bottom:6px"></div>')) +
       '<label>Discount (optional, amount or %)<input id="o-disc" inputmode="decimal" placeholder="e.g. 500 or 10%" autocomplete="off"></label><div class="sub" id="o-brk" style="margin:-6px 0 10px"></div>' +
@@ -1871,12 +2153,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         }
         root.addEventListener("input", sumNow); root.addEventListener("change", sumNow); root.addEventListener("click", function () { setTimeout(sumNow, 0); }); sumNow();
         var sc = $("#o-scan", root);
-        sc.onkeydown = function (e) {
-          if (e.key !== "Enter") return;
-          e.preventDefault();   /* a scanner presses Enter; never let that submit the order */
-          var code = sc.value.trim(); if (!code) return;
+        /* adds one of the item with this barcode; returns {ok, msg} so the camera screen can show what happened */
+        function scanIn(code) {
           var hit = lookupCode(code);
-          if (!hit) { $("#err", root).textContent = "No item has the barcode " + code + "."; sc.select(); return; }
+          if (!hit) { $("#err", root).textContent = "No item has the barcode " + code + "."; return {ok: false, msg: T("No item has the barcode") + " " + code + "."}; }
           $("#err", root).textContent = "";
           var found = null;
           root.querySelectorAll(".line").forEach(function (l) {
@@ -1884,10 +2164,21 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
             else if (+$("select", l).value === hit.id) found = l;
           });
           if (found && found.dataset.auto === "1") delete found.dataset.auto;   /* the starting line counts as the first scan */
-          else if (found) { var qn = found.querySelectorAll("input")[0]; qn.value = (Math.round(num(qn.value)) || 0) + 1; }
-          else addLine(hit.id);
-          sc.value = ""; toast(hit.name + " added"); sumNow();
+          else if (found) { var qn0 = found.querySelectorAll("input")[0]; qn0.value = (Math.round(num(qn0.value)) || 0) + 1; }
+          else { addLine(hit.id); found = root.querySelectorAll(".line")[root.querySelectorAll(".line").length - 1]; }
+          var qn = Math.round(num(found.querySelectorAll("input")[0].value)) || 1, have = locQty(hit, readLoc(root, "o-loc"));
+          sumNow();
+          return {ok: true, msg: hit.name + " × " + qn + (kind === "sale" && qn > have ? " · " + T("Only " + have + " in stock.") : "")};
+        }
+        sc.onkeydown = function (e) {
+          if (e.key !== "Enter") return;
+          e.preventDefault();   /* a scanner presses Enter; never let that submit the order */
+          var code = sc.value.trim(); if (!code) return;
+          var r = scanIn(code);
+          if (!r.ok) { sc.select(); return; }
+          sc.value = ""; toast(prod(lookupCode(code).id).name + " added");
         };
+        $("#o-cam", root).onclick = function () { camScan("Scan items", scanIn); };
         function build() {
           var lines = [], ok = true;
           root.querySelectorAll(".line").forEach(function (d) {
@@ -2164,33 +2455,49 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   var DL = null;
   function saveFile(name, data) {
     if (!DL) { toast("Saving files is not available here"); return; }
-    DL.save({filename: name, data: data}).then(function () { toast("Saved"); },
+    DL.save({filename: name, data: data}).then(function (how) { toast(how === "shared" ? "Done" : "Saved"); },
       function (e) { if (!e || e.code !== "declined") toast("Could not save the file"); });
   }
-  /* outside claude.ai there is no file helper, so files are handed to the phone's own share sheet or downloaded */
+  /* The installed app hands the file to the phone's own save/share sheet (Save to Files, Drive, WhatsApp...), which is the reliable way out of a standalone app.
+     In a normal browser tab, or if the sheet is not available, the file is downloaded instead. */
+  function fileMime(nm, t) {
+    var m = String(t || "").split(";")[0];
+    if (m && m !== "text/plain") return m;
+    return /\.pdf$/i.test(nm) ? "application/pdf" : /\.csv$/i.test(nm) ? "text/csv" : /\.json$/i.test(nm) ? "application/json" : /\.png$/i.test(nm) ? "image/png" : m || "application/octet-stream";
+  }
   function fallbackDL() {
     return {save: function (o) {
       return new Promise(function (resolve, reject) {
         try {
           var nm = o.filename, blob = (typeof Blob !== "undefined" && o.data instanceof Blob) ? o.data : new Blob([o.data], {type: /\.csv$/i.test(nm) ? "text/csv;charset=utf-8" : "text/plain"});
           var P = window.Capacitor && window.Capacitor.Plugins, ios = /iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+          var download = function () {
+            try {
+              var a = document.createElement("a"), u = URL.createObjectURL(blob);
+              a.href = u; a.download = nm; document.body.appendChild(a); a.click(); a.remove();
+              setTimeout(function () { URL.revokeObjectURL(u); }, 20000); resolve();
+            } catch (e2) { reject(e2); }
+          };
           if (P && P.Filesystem && P.Share) {
             var fr = new FileReader();
             fr.onload = function () {
               P.Filesystem.writeFile({path: nm, data: String(fr.result).split(",")[1], directory: "CACHE"}).then(function (w) {
                 return P.Share.share({title: nm, url: w.uri, dialogTitle: nm});
-              }).then(function () { resolve(); }, function (e) { if (e && /cancel|dismiss/i.test(String(e.message || e))) reject({code: "declined"}); else reject(e); });
+              }).then(function () { resolve("shared"); }, function (e) { if (e && /cancel|dismiss/i.test(String(e.message || e))) reject({code: "declined"}); else reject(e); });
             };
             fr.onerror = function () { reject(fr.error); };
             fr.readAsDataURL(blob); return;
           }
-          if (ios && navigator.canShare && window.File) {
-            var file = new File([blob], nm, {type: blob.type || "application/octet-stream"});
-            if (navigator.canShare({files: [file]})) { navigator.share({files: [file], title: nm}).then(function () { resolve(); }, function (e) { reject(e && e.name === "AbortError" ? {code: "declined"} : e); }); return; }
+          if ((ios || standalone()) && navigator.canShare && navigator.share && window.File) {
+            var file = new File([blob], nm, {type: fileMime(nm, blob.type)});
+            if (navigator.canShare({files: [file]})) {
+              navigator.share({files: [file], title: nm}).then(function () { resolve("shared"); }, function (e) {
+                if (e && e.name === "AbortError") reject({code: "declined"}); else download();   /* sheet refused (for example the tap was too long ago): download instead */
+              });
+              return;
+            }
           }
-          var a = document.createElement("a"), u = URL.createObjectURL(blob);
-          a.href = u; a.download = nm; document.body.appendChild(a); a.click(); a.remove();
-          setTimeout(function () { URL.revokeObjectURL(u); }, 20000); resolve();
+          download();
         } catch (e) { reject(e); }
       });
     }};
@@ -2209,10 +2516,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   function exportCSV(kind) {
     var rows;
     if (kind === "stock") {
-      var anyWp = S.products.some(function (p) { return p.wp > 0; }), multi = S.locs.length > 1, anyExp = S.products.some(function (p) { return p.exp; });
-      rows = [["SKU", "Barcode", "Name", "Unit", "In stock", "Cost", "Price", "Reorder at", "Value at cost", "Category"].map(T).concat(anyWp ? [T("Wholesale price")] : [], multi ? S.locs.map(function (l) { return l.name; }) : [], anyExp ? [T("Earliest expiry")] : [])].concat(S.products.map(function (p) {
+      var anyWp = S.products.some(function (p) { return p.wp > 0; }), multi = S.locs.length > 1, anyExp = S.products.some(function (p) { return p.exp; }), anyG = S.products.some(function (p) { return p.grp; });
+      rows = [["SKU", "Barcode", "Name", "Unit", "In stock", "Cost", "Price", "Reorder at", "Value at cost", "Category"].map(T).concat(anyWp ? [T("Wholesale price")] : [], multi ? S.locs.map(function (l) { return l.name; }) : [], anyExp ? [T("Earliest expiry")] : [], anyG ? [T("Group"), T("Variant")] : [])].concat(S.products.map(function (p) {
         var first = p.exp ? (bucketsOf(p, "all").map(kExp).filter(Boolean)[0] || "") : "";
-        return [p.sku, p.code || "", p.name, p.unit, p.qty, p.cost, p.price, p.min, r2(p.qty * p.cost), p.cat || ""].concat(anyWp ? [p.wp > 0 ? p.wp : ""] : [], multi ? S.locs.map(function (l) { return locQty(p, l.id); }) : [], anyExp ? [first] : []);
+        return [p.sku, p.code || "", p.name, p.unit, p.qty, p.cost, p.price, p.min, r2(p.qty * p.cost), p.cat || ""].concat(anyWp ? [p.wp > 0 ? p.wp : ""] : [], multi ? S.locs.map(function (l) { return locQty(p, l.id); }) : [], anyExp ? [first] : [], anyG ? [p.grp || "", p.vr || ""] : []);
       }));
     } else if (kind === "orders") {
       rows = [["Order", "Date", "Type", "Status", "Contact", "Item", "Quantity", "Unit price", "Line total", "Order discount", "Order tax", "Order paid", "Order balance", "Payment methods"].map(T)];
@@ -3116,7 +3423,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       try { bytes = unb64(joined); } catch (e) { cb("The backup is damaged."); return; }
       var done = function (u8) { var s; try { s = JSON.parse(new TextDecoder().decode(u8)); } catch (e) { cb("The backup could not be read."); return; } cb(null, s); };
       if (h[1] === "gz") {
-        if (typeof DecompressionStream !== "function") { cb("This browser cannot open compressed backups."); return; }
+        if (typeof DecompressionStream !== "function") { cb("This phone cannot open compressed backups."); return; }
         streamBytes(bytes, DecompressionStream, "gzip").then(done, function () { cb("The backup is damaged."); });
       } else done(bytes);
     };
@@ -3136,9 +3443,9 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
 
   function saveStatusText() {
-    if (saveErr) return "Not saved. This browser is blocking storage, possibly because it is in private mode or out of space. Save a PDF backup below so you do not lose your work.";
+    if (saveErr) return "Not saved. The app is blocked from storing data, possibly because the phone is out of space. Save a PDF backup below so you do not lose your work.";
     var kb = Math.max(1, Math.round(JSON.stringify(ROOT).length / 1024));
-    return "Your work is saved automatically every time you change something, and the app reopens on the page you left. Last saved " + (lastSaved ? new Date(lastSaved).toLocaleTimeString(LOC(), {hour: "2-digit", minute: "2-digit"}) : "just now") + ", " + kb + " KB used. Clearing this site's data in your browser would erase it.";
+    return "Your work is saved automatically every time you change something, and the app reopens on the page you left. Last saved " + (lastSaved ? new Date(lastSaved).toLocaleTimeString(LOC(), {hour: "2-digit", minute: "2-digit"}) : "just now") + ", " + kb + " KB used. Clearing the data of the app, or uninstalling it, would erase it.";
   }
 
   /* ---------- places ---------- */
@@ -3219,10 +3526,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   function privacySheet() {
     var h3 = '<h3 style="font-size:20px;text-transform:uppercase;margin:16px 0 6px">', p = '<p style="margin:0 0 8px;color:var(--mute)">';
     openSheet("Privacy and terms",
-      h3 + 'Your data</h3>' + p + 'Everything you enter (items, orders, contacts, photos, PINs) is kept on this phone, in this browser. The seller cannot see it. It is not sold and not used for advertising. There are no accounts, no trackers and no analytics.</p>' +
+      h3 + 'Your data</h3>' + p + 'Everything you enter (items, orders, contacts, photos, PINs) is kept on this phone, inside the app. The seller cannot see it. It is not sold and not used for advertising. There are no accounts, no trackers and no analytics.</p>' +
       h3 + 'Sync between phones (optional)</h3>' + p + 'If you turn on sync, the data of that company is locked with a key on this phone and stored on the sync server, so your other phones can read it. The server owner cannot read it. Turn it off in Settings to stop.</p>' +
       h3 + 'What loads from the internet</h3>' + p + 'The first time you open the app online it loads a font from Google Fonts and the PDF and barcode tools from public servers (cdnjs and jsDelivr). If you use sync, the app also connects to your sync server. Like any website, those servers can see your phone\'s internet address. After that the app works with no internet.</p>' +
-      h3 + 'Your controls</h3>' + p + 'In Settings you can download all your data, save and restore a backup, or erase everything on this phone, at any time. Clearing this site\'s data in your browser also erases it.</p>' +
+      h3 + 'Your controls</h3>' + p + 'In Settings you can download all your data, save and restore a backup, or erase everything on this phone, at any time. Clearing the data of the app, or uninstalling it, also erases it.</p>' +
       h3 + 'Licence</h3>' + p + 'A licence code works on one phone for the time it was sold for. It is checked on the phone itself and nothing about it is sent anywhere.</p>' +
       h3 + 'Terms of use</h3>' + p + 'The app is provided as it is. You are responsible for keeping backups, and for checking prices, tax and totals before you rely on them. The app is not accounting, legal or tax advice.</p>' +
       h3 + 'Questions or requests about your data</h3>' + p + 'Write or call on WhatsApp:</p><div class="mono" style="font-size:18px;margin-bottom:6px">' + CONTACT_TXT + '</div>' +
@@ -3261,10 +3568,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<label>Note at the bottom of invoices<textarea id="s-inote" rows="2" maxlength="300">' + esc(S.inote) + '</textarea></label>' +
       '<label>Warn about expiry this many days ahead<input id="s-warn" inputmode="numeric" value="' + S.warn + '"></label><div class="err" id="serr"></div><button class="btn block">Save settings</button></form>' +
       licBlock() + '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Install on your phone</h3><button type="button" class="btn ghost block" id="inst-open">Home screen icon</button>' + pinBlock() + syncBlock() +
-      '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Saved in this browser</h3>' +
+      '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Saved in the app</h3>' +
       '<p style="margin:0 0 10px;color:var(--mute);font-size:14px">' + esc(saveStatusText()) + '</p><button type="button" class="btn ghost block" id="savenow">Save now</button>' +
       '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Backup</h3>' +
-      '<p style="margin:0 0 10px;color:var(--mute);font-size:14px">Your data lives only on this phone and browser. If you clear site data it is gone, so save a PDF backup now and then and keep it somewhere safe. The backup includes all your companies and logos.</p>' +
+      '<p style="margin:0 0 10px;color:var(--mute);font-size:14px">Your data lives only inside the app on this phone. If you clear the data of the app or uninstall it, it is gone, so save a PDF backup now and then and keep it somewhere safe. The backup includes all your companies and logos.</p>' +
       '<div class="row" style="margin-bottom:6px"><button type="button" class="btn" id="bk-pdf">Save PDF backup</button><button type="button" class="btn ghost" id="bk-up">Upload PDF</button></div><input id="bk-file" type="file" accept="application/pdf,.pdf" hidden><div class="err" id="perr"></div>' +
       '<div class="label" style="margin:10px 0 6px">Or copy and paste text</div>' +
       '<textarea id="bk" readonly aria-label="Backup text"></textarea><div class="row" style="margin:10px 0"><button class="btn ghost" id="copy">Copy backup</button></div>' +
@@ -3280,7 +3587,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         $("#s-locs", root).onclick = locsSheet; wireSyncBlock(root); wirePinBlock(root);
         if ($("#lic-open", root)) $("#lic-open", root).onclick = licSheet;
         $("#inst-open", root).onclick = installSheet;
-        $("#savenow", root).onclick = function () { var ok = save(); render(); settings(); toast(ok ? "Saved in this browser" : "Could not save in this browser"); };
+        $("#savenow", root).onclick = function () { var ok = save(); render(); settings(); toast(ok ? "Saved in the app" : "Could not save in the app"); };
         if (!hasPDF()) $("#bk-pdf", root).hidden = true;
         $("#bk-pdf", root).onclick = function () { try { backupPDF(); } catch (e) { toast("Could not make the backup PDF"); } };
         var pf = $("#bk-file", root);
@@ -3366,7 +3673,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     delete d.sync;
     (d.products || []).forEach(function (p) { if (!p || typeof p !== "object") return; fix(p); p.mn = Object.assign({}, p.st); p.bs = {}; fix(p); });
   }
-  function bodyP(p) { var r = {name: str(p.name, 120), sku: str(p.sku, 60), code: str(p.code, 40), unit: str(p.unit, 20), cost: fin(p.cost), price: fin(p.price), min: Math.round(fin(p.min)), exp: !!p.exp, ex: !!p.ex, cat: str(p.cat, 40), sup: str(p.sup, 120), img: okImg(p.img)}; if (p.wp > 0) r.wp = fin(p.wp); return r; }
+  function bodyP(p) { var r = {name: str(p.name, 120), sku: str(p.sku, 60), code: str(p.code, 40), unit: str(p.unit, 20), cost: fin(p.cost), price: fin(p.price), min: Math.round(fin(p.min)), exp: !!p.exp, ex: !!p.ex, cat: str(p.cat, 40), sup: str(p.sup, 120), img: okImg(p.img)}; if (p.wp > 0) r.wp = fin(p.wp); if (p.grp != null) { r.grp = str(p.grp, 120); r.vr = str(p.vr, 80); } return r; }
   function bodyX(e) { var r = {cat: str(e.cat, 40), amt: fin(e.amt), date: fin(e.date), note: str(e.note, 160)}; if (e.by) r.by = str(e.by, 30); if (/^(momo|bank|gw)$/.test(e.pm)) r.pm = e.pm; return r; }
   function bodyKt(k) { return {name: str(k.name, 120), price: fin(k.price), items: (k.items || []).slice(0, 40).map(function (i) { return {pid: fin(i.pid), qty: Math.round(fin(i.qty))}; })}; }
   function bodyK(c) { return {day: str(c.day, 10), open: c.open == null ? "" : fin(c.open), close: c.close == null ? "" : fin(c.close), note: str(c.note, 160)}; }
@@ -3928,7 +4235,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     var el = $("#lock"); el.hidden = false;
     el.innerHTML = '<form class="box" id="lf" autocomplete="off"><div class="brandtag">Golden Gates Stock Inventory</div><h2 style="font-size:34px;text-transform:uppercase">' + esc(S.biz || "Golden Gates Stock Inventory") + '</h2><p style="color:var(--mute);margin:6px 0 0">Enter your PIN</p>' +
       '<input id="lp" type="password" inputmode="numeric" maxlength="8" autocomplete="off" aria-label="PIN"><div class="err" id="lerr"></div><button class="btn block">Unlock</button>' +
-      '<button type="button" class="btn ghost sm" id="lforgot" style="margin-top:14px">Forgot your PIN?</button><p id="lnote" hidden style="color:var(--mute);font-size:14px;text-align:left">If you forget the owner PIN, the only way back in is to clear this site\'s data in your browser, which erases the data on this phone. If sync is on, the data comes back from the shared copy. Save a PDF backup before you rely on a PIN.</p></form>';
+      '<button type="button" class="btn ghost sm" id="lforgot" style="margin-top:14px">Forgot your PIN?</button><p id="lnote" hidden style="color:var(--mute);font-size:14px;text-align:left">If you forget the owner PIN, the only way back in is to clear the data of the app in your phone settings, which erases the data on this phone. If sync is on, the data comes back from the shared copy. Save a PDF backup before you rely on a PIN.</p></form>';
     $("#lforgot", el).onclick = function () { $("#lnote", el).hidden = false; };
     if (msg) $("#lerr", el).textContent = T(msg);
     $("#lf", el).onsubmit = function (e) {
@@ -3958,7 +4265,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (!tabOK(tab)) tab = "home";
     render();
   }
-  function lockApp(msg) { if (!pinCfg()) return; LOCKED = true; ROLE = "staff"; CURU = null; closeSheet(); showLock(typeof msg === "string" ? msg : ""); }
+  function lockApp(msg) { if (!pinCfg()) return; camClose(); LOCKED = true; ROLE = "staff"; CURU = null; closeSheet(); showLock(typeof msg === "string" ? msg : ""); }
   /* working hours and idle lock for the people who are not the owner */
   var lastAct = Date.now();
   ["click", "keydown", "touchstart", "input"].forEach(function (ev) { document.addEventListener(ev, function () { lastAct = Date.now(); }, true); });
@@ -3993,7 +4300,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   function pinSheet(kind) {
     var c = pinCfg(), staff = kind === "staff";
     openSheet(staff ? "Staff PIN" : (c ? "Change PIN" : "Set a PIN"),
-      '<form id="f" autocomplete="off">' + (staff ? '' : '<p class="hint" style="margin:0 0 12px">If you forget the owner PIN, the only way back in is to clear this site\'s data in your browser, which erases the data on this phone. Save a PDF backup first.</p>') +
+      '<form id="f" autocomplete="off">' + (staff ? '' : '<p class="hint" style="margin:0 0 12px">If you forget the owner PIN, the only way back in is to clear the data of the app in your phone settings, which erases the data on this phone. Save a PDF backup first.</p>') +
       '<label>New PIN (4 to 8 digits)<input id="n1" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></label><label>Repeat the PIN<input id="n2" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></label><div class="err" id="err"></div><button class="btn block">Save PIN</button></form>',
       function (root) {
         $("#f", root).onsubmit = function (e) {
@@ -4006,7 +4313,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
             if (staff && h === c.o) { er.textContent = "The staff PIN must be different from the owner PIN."; return; }
             var n = c ? Object.assign({}, c) : {salt: salt, s: null};
             if (staff) n.s = h; else { if (n.s === h) n.s = null; n.o = h; }
-            if (!pinSave(n)) { er.textContent = "This browser is blocking storage, so the PIN cannot be saved."; return; }
+            if (!pinSave(n)) { er.textContent = "The app is blocked from storing data, so the PIN cannot be saved."; return; }
             closeSheet(); render(); toast("PIN saved");
           });
         };
@@ -4064,7 +4371,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
           var done = function (salt, h) {
             var c2 = pinCfg(), nu = {id: u.id || rid(8), name: name, salt: salt, h: h, lvl: lvl, tabs: tabs, hrs: hrs, days: days, from: from, to: to, off: $("#u-off", root).checked};
             c2.users = (c2.users || []).filter(function (x) { return x.id !== nu.id; }).concat([nu]);
-            if (!pinSave(c2)) { er.textContent = "This browser is blocking storage, so the PIN cannot be saved."; return; }
+            if (!pinSave(c2)) { er.textContent = "The app is blocked from storing data, so the PIN cannot be saved."; return; }
             usersSheet(); toast("User saved");
           };
           if (!pin) { done(u.salt, u.h); return; }
@@ -4111,7 +4418,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   function licCheck(raw) {
     return new Promise(function (resolve) {
       var clean = String(raw || "").replace(/[\s"'`]/g, ""), a;
-      if (!(window.crypto && crypto.subtle && window.atob)) { resolve({err: "This browser cannot check codes."}); return; }
+      if (!(window.crypto && crypto.subtle && window.atob)) { resolve({err: "This phone cannot check codes."}); return; }
       try { a = b64u(clean); } catch (e) { a = null; }
       if (!a || a.length !== 74) { resolve({err: "That code is not valid."}); return; }
       var data = a.slice(0, 10), sig = a.slice(10), dev = "", i;
@@ -4147,7 +4454,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if ((st.kind === "trial" || st.kind === "active") && st.left <= 7) return '<div class="banner"><span>' + esc(st.kind === "trial" ? "Your free trial ends in " + st.left + (st.left === 1 ? " day." : " days.") : "Your licence ends in " + st.left + (st.left === 1 ? " day." : " days.")) + '</span><button data-act="lic">' + (st.kind === "trial" ? "Enter code" : "Renew") + '</button></div>';
     return "";
   }
-  var RO_ACTS = ["new-order", "restock", "pay", "complete", "cancel", "return", "new-contact", "new-product", "open-product", "stocktake", "import", "new-kit", "edit-kit", "writeoff", "exp-add", "exp-edit", "inc-add", "inc-edit", "cash-day", "clear-examples", "bc-add", "bc-gen-all", "bc-photo", "bc-upload"];
+  var RO_ACTS = ["new-order", "restock", "pay", "complete", "cancel", "return", "new-contact", "new-product", "new-group", "group", "group-from", "add-variant", "open-product", "stocktake", "import", "new-kit", "edit-kit", "writeoff", "exp-add", "exp-edit", "inc-add", "inc-edit", "cash-day", "clear-examples", "bc-add", "bc-gen-all", "bc-photo", "bc-upload"];
   function licSheet() {
     var msg = "Hello, I would like a Golden Gates Stock Inventory activation code. My phone code is " + devCode() + ".";
     openSheet("Licence",
@@ -4158,7 +4465,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<div class="label">WhatsApp and calls</div><div class="mono" style="font-size:18px;margin:4px 0 8px">' + esc(CONTACT_TXT) + '</div><div class="row" style="margin-bottom:14px"><button type="button" class="btn ghost" id="lic-wa">Message on WhatsApp</button><a class="btn ghost" href="tel:+' + LIC_CONTACT + '">Call</a></div>' +
       '<label>Activation code<textarea id="lic-in" rows="3" placeholder="Paste the activation code here" autocomplete="off" spellcheck="false"></textarea></label><div class="err" id="lic-err"></div>' +
       '<button type="button" class="btn block" id="lic-go">Activate</button>' +
-      '<p style="margin:12px 0 0;color:var(--mute);font-size:13px">A code works on this phone only. If you clear this browser\'s data or change phone, ask your seller for a new code.</p>',
+      '<p style="margin:12px 0 0;color:var(--mute);font-size:13px">A code works on this phone only. If you clear the data of the app or change phone, ask your seller for a new code.</p>',
       function (root) {
         $("#lic-copy", root).onclick = function () { var t = devCode(); try { navigator.clipboard.writeText(t).then(function () { toast("Copied"); }, function () { toast(t); }); } catch (e) { toast(t); } };
         if (LIC_CONTACT) $("#lic-wa", root).onclick = function () { openWA(waLink("+" + LIC_CONTACT.replace(/\D/g, ""), msg)); };
@@ -4228,7 +4535,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       (ios ? iph + drd : drd + iph) +
       '<p style="margin:14px 0 0;color:var(--mute);font-size:14px">After that, open Golden Gates Stock Inventory from its icon. It opens full screen with no browser bar.</p>' +
       '<p style="margin:10px 0 0;color:var(--mute);font-size:14px">If this page is open inside another app such as WhatsApp or Facebook, open it in Chrome or Safari first.</p>' +
-      '<p style="margin:10px 0 0;color:var(--mute);font-size:14px">On iPhone the home screen icon keeps its own saved data, separate from Safari. Install the icon first and enter your data there, or restore a PDF backup in it.</p>',
+      '<p style="margin:10px 0 0;color:var(--mute);font-size:14px">On iPhone the home screen icon keeps its own saved data, separate from Safari. Install the icon first and enter your data there, or restore a PDF backup in it.</p>' +
+      '<p style="margin:10px 0 0;color:var(--mute);font-size:14px">Safari can delete the saved data of websites you have not opened for about a week. An app added to the home screen is not affected, so install it and keep a PDF backup.</p>',
       function (root) { if (instEvt) $("#inst-now", root).onclick = function () { try { instEvt.prompt(); } catch (e) {} closeSheet(); }; });
   }
   installHead();
@@ -4251,6 +4559,16 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     else if (a === "inst-hide") { try { localStorage.setItem(INST_KEY, "1"); } catch (e) {} render(); }
     else if (a === "alert-go") { alertSeen = true; tab = "home"; render(); window.scrollTo(0, 0); }
     else if (a === "new-product") newProduct();
+    else if (a === "new-group") groupSheet();
+    else if (a === "group") groupSheet(t.dataset.g || "");
+    else if (a === "group-from") groupSheet({pid: +t.dataset.id});
+    else if (a === "add-variant") addVariantSheet(t.dataset.g || "");
+    else if (a === "scan-find") camScan("Find an item", function (code) {
+      var h = lookupCode(code);
+      if (!h) return {ok: false, msg: T("No item has the barcode") + " " + code + "."};
+      setTimeout(function () { openProduct(h.id); }, 0);
+      return {ok: true, msg: h.name, close: true};
+    });
     else if (a === "open-product") openProduct(+t.dataset.id);
     else if (a === "new-order") newOrder(t.dataset.kind, t.dataset.pid ? +t.dataset.pid : 0);
     else if (a === "filter") { lowOnly = t.dataset.f === "low"; expOnly = t.dataset.f === "exp"; render(); }
@@ -4272,7 +4590,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       var c = S.orders.filter(function (x) { return x.id === +t.dataset.id; })[0];
       if (c && c.status === "draft") { c.status = "cancelled"; commit("Order cancelled"); }
     }
-    else if (a === "save-now") { var okSave = save(); render(); toast(okSave ? "Saved in this browser" : "Could not save in this browser"); }
+    else if (a === "save-now") { var okSave = save(); render(); toast(okSave ? "Saved in the app" : "Could not save in the app"); }
     else if (a === "bc-find") { var bi = $("#bc-in"); bcFind(bi ? bi.value : "", false); }
     else if (a === "bc-photo") { var bf = $("#bc-file"); if (bf) bf.click(); }
     else if (a === "bc-upload") { var bu = $("#bc-upl"); if (bu) bu.click(); }
