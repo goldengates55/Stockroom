@@ -20,7 +20,7 @@
 <title>Golden Gates Stock Inventory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"></noscript>
 <style>
 /* Layout: one-column phone app. Header, scrolling view, fixed bottom tab bar, slide-up sheets for forms.
    Look: shipping-label type (condensed caps + mono quantities) on cool grey, deep teal ink, signal orange for low stock. */
@@ -239,7 +239,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
 <div id="toast" class="toast" hidden></div>
 <datalist id="cur-list"><option value="XAF"><option value="XOF"><option value="FCFA"><option value="USD"><option value="EUR"><option value="GBP"><option value="NGN"><option value="GHS"><option value="KES"><option value="ZAR"><option value="MAD"><option value="EGP"><option value="TND"><option value="CAD"><option value="AUD"><option value="INR"><option value="CNY"><option value="JPY"><option value="AED"><option value="SAR"><option value="BRL"><option value="MXN"><option value="CHF"><option value="TRY"></datalist>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script async src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js"></script>
 <script>
 (function () {
@@ -249,7 +249,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.18", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.19", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
