@@ -70,6 +70,7 @@ header.top h1{font-size:28px;text-transform:uppercase;min-width:0;overflow:hidde
 .btn.block{width:100%}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1;min-width:0}
+.order .row>.btn{flex:1 1 calc(50% - 5px);min-width:0;padding:6px 8px;line-height:1.2;white-space:normal;text-align:center;overflow-wrap:anywhere}
 .xgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .xgrid .btn{min-height:46px;padding:4px 3px;font-size:12.5px;font-weight:600;line-height:1.15;white-space:normal;text-align:center;overflow-wrap:normal;word-break:normal;hyphens:none;letter-spacing:-.01em}
 
@@ -134,8 +135,11 @@ label input,label select{margin-top:5px;color:var(--ink)}
 .sheet .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
 .sheet h2{font-size:26px;text-transform:uppercase;overflow-wrap:anywhere}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.line{display:grid;grid-template-columns:1fr 64px 84px 40px;gap:6px;margin-bottom:8px;align-items:center}
-.line select,.line input{min-height:44px;padding:0 8px;margin:0}
+.line,.svcrow,.adrow{display:grid;grid-template-columns:1fr 64px 84px 40px;gap:6px;margin-bottom:8px;align-items:center}
+.line select,.line input,.svcrow input,.adrow select,.adrow input{min-height:44px;padding:0 8px;margin:0}
+.adrow .adn{font-weight:600;line-height:1.25;word-break:break-word}.adrow .adn small{display:block;font-weight:400;color:var(--mute)}
+.adrow button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--alert)}
+.line button,.svcrow button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--alert)}
 .line button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:none;color:var(--alert)}
 .err{color:var(--alert);font-size:14px;min-height:20px;margin-bottom:6px}
 textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:10px;font:16px/1.4 var(--mono)}
@@ -249,7 +253,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.19", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.24", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
@@ -605,6 +609,11 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   Object.assign(FR, {"Safari can delete the saved data of websites you have not opened for about a week. An app added to the home screen is not affected, so install it and keep a PDF backup.": "Safari peut supprimer les données des sites non ouverts depuis environ une semaine. Une application ajoutée à l'écran d'accueil n'est pas concernée : installez-la et gardez une sauvegarde PDF."});
   Object.assign(FR, {"Share the app": "Partager l'application", "Send this message to a customer or a friend. It explains how to install the app on Android and on iPhone.": "Envoyez ce message à un client ou à un ami. Il explique comment installer l'application sur Android et sur iPhone.", "Send on WhatsApp": "Envoyer sur WhatsApp", "Message": "Message", "Share": "Partager", "Message copied": "Message copié", "Share the app with a customer": "Partager l'application avec un client", "Copy": "Copier"});
   Object.assign(FR, {"Install QR code": "Code QR d'installation", "QR code": "Code QR", "Show this to a customer. They scan it with the phone camera and the install page opens. Save it as an image or a PDF to print or send.": "Montrez-le à un client. Il le scanne avec l'appareil photo du téléphone et la page d'installation s'ouvre. Enregistrez-le en image ou en PDF pour l'imprimer ou l'envoyer.", "Could not make the QR code": "Impossible de créer le code QR"});
+  Object.assign(FR, {"Proforma invoice": "Facture proforma", "Valid for 30 days. Goods are released after payment.": "Valable 30 jours. Les marchandises sont remises après paiement.", "Payment received": "Paiement reçu", "Amount received": "Montant reçu", "Saving takes the stock out and records this payment. If you enter less than the total, the rest stays owing.": "L'enregistrement sort le stock et note ce paiement. Si vous saisissez moins que le total, le reste reste dû.", "Save payment and take stock out": "Enregistrer le paiement et sortir le stock", "Payment saved, stock taken out": "Paiement enregistré, stock sorti"});
+  Object.assign(FR, {"Services, quantity, price (labour, delivery, repair...)": "Services, quantité, prix (main-d'œuvre, livraison, réparation...)", "Add a service": "Ajouter un service", "Check each service: a name, a quantity above 0 and a price.": "Vérifiez chaque service : un nom, une quantité supérieure à 0 et un prix."});
+  Object.assign(FR, {"Total in words": "Total en lettres"});
+  Object.assign(FR, {"Adjust": "Modifier", "Adjust sale": "Modifier la vente", "Change what was sold. The stock follows: items taken off go back in, extra items come out. Payments are kept.": "Modifiez ce qui a été vendu. Le stock suit : les articles retirés y retournent, les articles en plus en sortent. Les paiements sont conservés.", "Add an item": "Ajouter un article", "Reason (optional)": "Motif (facultatif)", "New total": "Nouveau total", "Money to give back": "Argent à rendre", "Save changes": "Enregistrer les changements", "Changes so far": "Changements déjà faits", "Sale adjusted": "Vente modifiée", "e.g. client added labour": "ex. le client a ajouté de la main-d'œuvre", "Keep at least one item or service. To cancel the whole sale, use Return items.": "Gardez au moins un article ou un service. Pour annuler toute la vente, utilisez Retourner des articles.", "Check each item: a quantity of 0 or more and a valid price.": "Vérifiez chaque article : une quantité de 0 ou plus et un prix valide.", "Check each new item: a quantity above 0 and a valid price.": "Vérifiez chaque nouvel article : une quantité supérieure à 0 et un prix valide."});
+  RULES.push([/^Adjusted (\d+) times?$/, function (m) { return "Modifiée " + plu(m[1], "fois", "fois"); }], [/^(.+) returned$/, function (m) { return m[1] + " retourné(s)"; }], [/^Paid so far (.+) · balance (.+)$/, function (m) { return "Payé jusqu'ici " + m[1] + " · reste " + m[2]; }], [/^Paid so far (.+) · the client paid (.+) too much$/, function (m) { return "Payé jusqu'ici " + m[1] + " · le client a payé " + m[2] + " de trop"; }], [/^That is more than the (.+) the client paid too much\.$/, function (m) { return "C'est plus que les " + m[1] + " payés en trop par le client."; }]);
   function trPart(c) { var r = FR[c]; return r !== undefined ? r : trRule(c); }
   /* keeps spaces and a leading or trailing middle dot as they are, and also translates the pieces of "a · b · c" one by one */
   function tr(s) {
@@ -686,7 +695,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (t === "reports") return OWN() && (!CURU || CURU.tabs.indexOf("reports") > -1);
     return CURU ? CURU.tabs.indexOf(t) > -1 : true;
   }
-  var ACT_TAB = {"invoice": "orders", "invoices": "orders", "new-order": "orders", "restock": "orders", "owing": "orders", "pay": "orders", "complete": "orders", "cancel": "orders", "receipt": "orders", "return": "orders", "contacts": "orders", "new-contact": "orders", "new-product": "stock", "new-group": "stock", "group": "stock", "group-from": "stock", "add-variant": "stock", "scan-find": "stock", "open-product": "stock", "stocktake": "stock", "import": "stock", "kits": "stock", "writeoff": "stock", "exp-add": "reports", "exp-edit": "reports", "export": "reports", "export-pdf": "reports", "range": "reports", "xr": "reports"};
+  var ACT_TAB = {"adjust": "orders", "pf-pay": "orders", "invoice": "orders", "invoices": "orders", "new-order": "orders", "restock": "orders", "owing": "orders", "pay": "orders", "complete": "orders", "cancel": "orders", "receipt": "orders", "return": "orders", "contacts": "orders", "new-contact": "orders", "new-product": "stock", "new-group": "stock", "group": "stock", "group-from": "stock", "add-variant": "stock", "scan-find": "stock", "open-product": "stock", "stocktake": "stock", "import": "stock", "kits": "stock", "writeoff": "stock", "exp-add": "reports", "exp-edit": "reports", "export": "reports", "export-pdf": "reports", "range": "reports", "xr": "reports"};
   var KEYRE = /^\d+\|(\d{4}-\d\d-\d\d)?$/;   /* a stock batch key: place id, then the expiry date or nothing */
   var IMGRE = /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/;
   var okImg = function (v) { return typeof v === "string" && v.length < 30000 && IMGRE.test(v) ? v : ""; };
@@ -762,7 +771,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       if (p.grp != null) { p.grp = typeof p.grp === "string" ? p.grp.slice(0, 120) : ""; p.vr = typeof p.vr === "string" ? p.vr.slice(0, 80) : ""; }
     });
     s.contacts.forEach(function (c) { c.lvl = c.lvl === "w" ? "w" : ""; });
-    s.orders.forEach(function (o) { if (o.loc != null && !lid[o.loc]) o.loc = s.locs[0].id; if (o.pm && !/^(momo|bank|gw)$/.test(o.pm)) delete o.pm; (o.pays || []).forEach(function (p) { if (p.m && !/^(momo|bank|gw)$/.test(p.m)) delete p.m; }); });
+    s.orders.forEach(function (o) { if (o.adj != null) { o.adj = Array.isArray(o.adj) ? o.adj.filter(function (a) { return a && isFinite(+a.d) && isFinite(+a.a) && isFinite(+a.b); }).slice(-30).map(function (a) { return {d: +a.d, a: +a.a, b: +a.b, w: String(a.w || "").slice(0, 120), u: String(a.u || "").slice(0, 30)}; }) : []; if (!o.adj.length) delete o.adj; } if (o.svc != null) { o.svc = Array.isArray(o.svc) ? o.svc.filter(function (x) { return x && typeof x.name === "string" && x.qty > 0 && x.price >= 0; }).slice(0, 40).map(function (x) { return {name: String(x.name).slice(0, 120), qty: Math.round(+x.qty), price: +x.price}; }) : []; if (!o.svc.length) delete o.svc; } if (o.loc != null && !lid[o.loc]) o.loc = s.locs[0].id; if (o.pm && !/^(momo|bank|gw)$/.test(o.pm)) delete o.pm; (o.pays || []).forEach(function (p) { if (p.m && !/^(momo|bank|gw)$/.test(p.m)) delete p.m; }); });
     s.orders.forEach(function (o) { if (o.no && o.no > s.ordN) s.ordN = o.no; });
     s.orders.slice().sort(function (a, b) { return a.id - b.id; }).forEach(function (o) { if (!o.no) o.no = ++s.ordN; });
     return s;
@@ -886,8 +895,12 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   /* returned goods are taken off the order: the lines as they stand now, without what came back */
   function netLines(o) { return o.lines.map(function (l) { return l.ret ? Object.assign({}, l, {qty: l.qty - l.ret}) : l; }).filter(function (l) { return l.qty > 0; }); }
+  /* services (labour, delivery, repair...) are charged on the order but never touch the stock: they are kept apart from the item lines */
+  function svcLines(o) { return Array.isArray(o.svc) ? o.svc.filter(function (x) { return x && x.qty > 0 && x.price >= 0 && x.name; }).map(function (x) { return {pid: 0, name: x.name, qty: x.qty, price: x.price, cost: 0, svc: true}; }) : []; }
+  function allLines(o) { return netLines(o).concat(svcLines(o)); }
   function orderCalc(o) {
-    var sub = netLines(o).reduce(function (t, l) { return t + l.qty * l.price; }, 0), orig = o.lines.reduce(function (t, l) { return t + l.qty * l.price; }, 0);
+    var sv = svcLines(o).reduce(function (t, l) { return t + l.qty * l.price; }, 0);
+    var sub = netLines(o).reduce(function (t, l) { return t + l.qty * l.price; }, 0) + sv, orig = o.lines.reduce(function (t, l) { return t + l.qty * l.price; }, 0) + sv;
     var disc = o.disc && orig > 0 && sub < orig ? rnd(o.disc * sub / orig) : o.disc;
     return calcFrom(sub, disc, o.kind === "sale" ? o.taxRate : 0, o.taxIncl);
   }
@@ -1054,11 +1067,11 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (!rows.length) h += '<div class="empty">No ' + ordKind + 's yet.</div>';
     rows.forEach(function (o) {
       h += '<div class="order"><div class="top"><b>#' + orderNo(o) + (o.party ? ' · ' + esc(o.party) : '') + '</b><span class="tag ' + o.status + '">' + o.status + '</span></div>' +
-        '<div class="lines">' + netLines(o).map(function (l) { return l.qty + ' × ' + esc(l.name); }).join(", ") + (S.locs.length > 1 && o.loc != null ? ' · ' + esc(locName(o.loc)) : '') + (o.lines.some(function (l) { return l.ret; }) ? ' · returned' : '') + '</div>' +
+        '<div class="lines">' + allLines(o).map(function (l) { return l.qty + ' × ' + esc(l.name); }).join(", ") + (S.locs.length > 1 && o.loc != null ? ' · ' + esc(locName(o.loc)) : '') + (o.lines.some(function (l) { return l.ret; }) ? ' · returned' : '') + '</div>' +
         '<div class="top"><span class="mono" style="font-weight:600">' + esc(money(orderTotal(o))) + '</span><span class="sub label">' + esc(when(o.date) + (o.status === "completed" ? byTxt(o) : "")) + '</span></div>';
-      if (o.status === "draft") h += '<div class="row" style="margin-top:12px"><button class="btn sm" data-act="complete" data-id="' + o.id + '">' + (o.kind === "sale" ? "Complete, take stock out" : "Complete, add stock in") + '</button><button class="btn sm ghost" data-act="cancel" data-id="' + o.id + '">Cancel</button>' + (o.kind === "sale" ? '<button class="btn sm ghost" data-act="receipt" data-mode="quote" data-id="' + o.id + '">Quote</button>' : '') + '</div>';
+      if (o.status === "draft") h += '<div class="row" style="margin-top:12px">' + (o.kind === "sale" ? '<button class="btn sm" data-act="pf-pay" data-id="' + o.id + '">Payment received</button>' : '') + '<button class="btn sm' + (o.kind === "sale" ? ' ghost' : '') + '" data-act="complete" data-id="' + o.id + '">' + (o.kind === "sale" ? "Complete, take stock out" : "Complete, add stock in") + '</button></div><div class="row" style="margin-top:8px">' + (o.kind === "sale" ? '<button class="btn sm ghost" data-act="receipt" data-mode="proforma" data-id="' + o.id + '">Proforma invoice</button><button class="btn sm ghost" data-act="receipt" data-mode="quote" data-id="' + o.id + '">Quote</button>' : '') + '<button class="btn sm ghost" data-act="cancel" data-id="' + o.id + '">Cancel</button></div>';
       if (o.status === "completed" && balOf(o) > 0) h += '<div class="sub" style="margin-top:6px">Paid ' + esc(money(paidOf(o))) + ' · <b class="neg">' + (o.kind === "sale" ? "owes you " : "you owe ") + esc(money(balOf(o))) + '</b></div>';
-      if (o.status === "completed") h += '<div class="row" style="margin-top:12px">' + (balOf(o) > 0 ? '<button class="btn sm" data-act="pay" data-id="' + o.id + '">Record payment</button>' : '') + '<button class="btn sm ghost" data-act="receipt" data-id="' + o.id + '">' + (o.kind === "sale" ? "Receipt" : "Purchase record") + '</button>' + (o.kind === "sale" ? '<button class="btn sm ghost" data-act="invoice" data-id="' + o.id + '">' + (o.inv ? esc(invNo(o)) : "Invoice") + '</button>' : '') + (OWN() && o.lines.some(function (l) { return l.qty - (l.ret || 0) > 0; }) ? '<button class="btn sm ghost" data-act="return" data-id="' + o.id + '">Return items</button>' : '') + '</div>';
+      if (o.status === "completed") h += '<div class="row" style="margin-top:12px">' + (balOf(o) > 0 ? '<button class="btn sm" data-act="pay" data-id="' + o.id + '">Record payment</button>' : '') + '<button class="btn sm ghost" data-act="receipt" data-id="' + o.id + '">' + (o.kind === "sale" ? "Receipt" : "Purchase record") + '</button>' + (o.kind === "sale" ? '<button class="btn sm ghost" data-act="invoice" data-id="' + o.id + '">' + (o.inv ? esc(invNo(o)) : "Invoice") + '</button>' : '') + (OWN() && o.lines.some(function (l) { return l.qty - (l.ret || 0) > 0; }) ? '<button class="btn sm ghost" data-act="return" data-id="' + o.id + '">Return items</button>' : '') + (OWN() && o.kind === "sale" ? '<button class="btn sm ghost" data-act="adjust" data-id="' + o.id + '">Adjust</button>' : '') + '</div>' + (o.adj && o.adj.length ? '<div class="sub" style="margin-top:6px">' + esc("Adjusted " + o.adj.length + (o.adj.length === 1 ? " time" : " times") + " · last " + when(o.adj[o.adj.length - 1].d)) + '</div>' : '');
       h += '</div>';
     });
     return h + '</div>';
@@ -2308,7 +2321,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       (kind === "sale" && S.products.some(function (p) { return p.wp > 0; }) ? '<label>Price level<select id="o-lvl"><option value="">Retail prices</option><option value="w">Wholesale prices</option></select></label>' : '') +
       '<label>Scan a barcode to add an item<input id="o-scan" placeholder="Scan or type a code, then Enter" autocomplete="off" autocapitalize="off"></label><button type="button" class="btn ghost sm" id="o-cam" style="margin:-4px 0 14px">Scan with camera</button>' +
       '<div class="label" style="margin-bottom:8px">Items, quantity, unit price</div><div id="lines"></div>' +
-      '<button type="button" class="btn ghost sm" id="addl" style="margin-bottom:8px">Add another item</button>' + (kind === "purchase" ? '<div class="sub" id="o-hist" style="margin:0 0 12px"></div>' : (S.kits.length ? '<div class="two" style="align-items:end;margin-bottom:12px"><label>Add a kit<select id="o-kit">' + S.kits.map(function (k) { return '<option value="' + k.id + '">' + esc(k.name) + ' (' + kitStock(k) + ')</option>'; }).join("") + '</select></label><button type="button" class="btn ghost" id="o-kitadd">Add kit</button></div>' : '<div style="margin-bottom:6px"></div>')) +
+      '<button type="button" class="btn ghost sm" id="addl" style="margin-bottom:8px">Add another item</button>' + (kind === "sale" ? '<div class="label" style="margin:6px 0 8px">Services, quantity, price (labour, delivery, repair...)</div><div id="svcs"></div><button type="button" class="btn ghost sm" id="adds" style="margin-bottom:12px">Add a service</button>' : '') + (kind === "purchase" ? '<div class="sub" id="o-hist" style="margin:0 0 12px"></div>' : (S.kits.length ? '<div class="two" style="align-items:end;margin-bottom:12px"><label>Add a kit<select id="o-kit">' + S.kits.map(function (k) { return '<option value="' + k.id + '">' + esc(k.name) + ' (' + kitStock(k) + ')</option>'; }).join("") + '</select></label><button type="button" class="btn ghost" id="o-kitadd">Add kit</button></div>' : '<div style="margin-bottom:6px"></div>')) +
       '<label>Discount (optional, amount or %)<input id="o-disc" inputmode="decimal" placeholder="e.g. 500 or 10%" autocomplete="off"></label><div class="sub" id="o-brk" style="margin:-6px 0 10px"></div>' +
       '<div class="rrow rtot" style="padding-top:0"><span>Total</span><b class="mono" id="o-sum">0</b></div>' +
       '<label>' + (kind === "sale" ? "Amount received now" : "Amount paid now") + ' (leave empty if paid in full)<input id="o-paid" inputmode="decimal" placeholder="Full amount" autocomplete="off"></label><div class="sub" id="o-bal" style="margin:-6px 0 12px"></div>' + pmSelect("o-pm", "Payment method", "cash") + '<div class="err" id="err"></div>' +
@@ -2346,8 +2359,26 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
           $("#lines", root).appendChild(d);
         }
         addLine(pid, !pid); $("#addl", root).onclick = function () { addLine(); };
+        function addSvc() {
+          var d = document.createElement("div"); d.className = "svcrow";
+          d.innerHTML = '<input class="svn" aria-label="Service" placeholder="e.g. Labour" maxlength="120" autocomplete="off"><input inputmode="numeric" value="1" aria-label="Quantity"><input inputmode="decimal" aria-label="Price" placeholder="Price"><button type="button" aria-label="Remove service">×</button>';
+          $("button", d).onclick = function () { d.remove(); sumNow(); };
+          $("#svcs", root).appendChild(d); $(".svn", d).focus();
+        }
+        if ($("#adds", root)) $("#adds", root).onclick = addSvc;
+        function svcRows() {   /* the filled-in service rows: [name, qty, price] or null when a row is half filled */
+          var out = [], bad = false;
+          root.querySelectorAll(".svcrow").forEach(function (d) {
+            var nm = $(".svn", d).value.trim(), ins = d.querySelectorAll("input"), qn = num(ins[1].value), pr = num(ins[2].value);
+            if (!nm && !ins[2].value.trim()) return;
+            if (!nm || isNaN(qn) || qn <= 0 || isNaN(pr) || pr < 0) { bad = true; return; }
+            out.push({name: nm, qty: Math.round(qn), price: pr});
+          });
+          return bad ? null : out;
+        }
         function sumNow() {   /* running total and what stays unpaid */
           var t = 0; root.querySelectorAll(".line").forEach(function (d) { var ins = d.querySelectorAll("input"), qn = num(ins[0].value), pr = num(ins[1].value); if (qn > 0 && pr >= 0) t += Math.round(qn) * pr; });
+          root.querySelectorAll(".svcrow").forEach(function (d) { var ins = d.querySelectorAll("input"), qn = num(ins[1].value), pr = num(ins[2].value); if (qn > 0 && pr >= 0) t += Math.round(qn) * pr; });
           var dd = parseDisc($("#o-disc", root).value, t), cc = calcFrom(t, dd.err ? 0 : dd.amt, kind === "sale" ? S.tax : 0, S.taxIncl);
           $("#o-sum", root).textContent = money(cc.total);
           var oh = $("#o-hist", root);
@@ -2402,9 +2433,11 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
             var qn = Math.round(num(ins[0].value)), pr = num(ins[1].value);
             if (!p || isNaN(qn) || qn <= 0 || isNaN(pr) || pr < 0) ok = false; else lines.push({pid: p.id, name: p.name, qty: qn, price: pr, exp: kind === "purchase" && p.exp ? (ins[2].value || "") : ""});
           });
-          if (!lines.length || !ok) { $("#err", root).textContent = "Check each line: quantity above 0 and a valid price."; return null; }
+          var svc = kind === "sale" ? svcRows() : [];
+          if (!svc) { $("#err", root).textContent = "Check each service: a name, a quantity above 0 and a price."; return null; }
+          if ((!lines.length && !svc.length) || !ok) { $("#err", root).textContent = "Check each line: quantity above 0 and a valid price."; return null; }
           var pn = $("#o-party", root).value.trim(), ct = findContact(pn, kind);
-          var sub0 = lines.reduce(function (t, l) { return t + l.qty * l.price; }, 0), dd = parseDisc($("#o-disc", root).value, sub0);
+          var sub0 = lines.reduce(function (t, l) { return t + l.qty * l.price; }, 0) + svc.reduce(function (t, l) { return t + l.qty * l.price; }, 0), dd = parseDisc($("#o-disc", root).value, sub0);
           if (dd.err) { $("#err", root).textContent = dd.err; return null; }
           var cc = calcFrom(sub0, dd.amt, kind === "sale" ? S.tax : 0, S.taxIncl), tot = cc.total, ps = $("#o-paid", root).value.trim(), payNow = null;
           if (ps !== "") {
@@ -2414,7 +2447,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
             if (payNow < tot - 0.005 && !pn) { $("#err", root).textContent = "Enter " + (kind === "sale" ? "the customer's" : "the supplier's") + " name so the balance can be tracked."; return null; }
           }
           var dt = pickDate(root, "o-date");
-          return {id: nid(), no: S.ordN + 1, loc: readLoc(root, "o-loc"), kind: kind, party: pn, cid: ct ? ct.id : 0, status: "draft", date: dt.ms, dateSet: dt.set, lines: lines, payNow: payNow, disc: dd.amt, taxRate: kind === "sale" ? (S.tax || 0) : 0, taxIncl: !!S.taxIncl, pm: pmVal(root, "o-pm")};
+          return {id: nid(), no: S.ordN + 1, loc: readLoc(root, "o-loc"), kind: kind, party: pn, cid: ct ? ct.id : 0, status: "draft", date: dt.ms, dateSet: dt.set, lines: lines, svc: svc.length ? svc : undefined, payNow: payNow, disc: dd.amt, taxRate: kind === "sale" ? (S.tax || 0) : 0, taxIncl: !!S.taxIncl, pm: pmVal(root, "o-pm")};
         }
         $("#draft", root).onclick = function () { var o = build(); if (!o) return; S.orders.push(o); S.ordN = o.no; ordKind = kind; tab = "orders"; closeSheet(); commit("Draft saved"); };
         $("#f", root).onsubmit = function (e) {
@@ -2560,6 +2593,129 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   /* ---------- returns ----------
      Goods coming back reduce the order (so totals, profit and what is owed follow), put the stock back (or take it out, for goods sent back to a supplier),
      and any money handed back is kept as a negative payment. */
+
+  /* ---------- adjust a sale after it was completed (and invoiced): quantities, prices, extra items, services, discount ----------
+     Stock follows the change the same way returns do: fewer of an item puts the difference back, more takes it out. */
+  function adjustSheet(o) {
+    var loc = S.locs.some(function (x) { return x.id === o.loc; }) ? o.loc : S.locs[0].id, oldTotal = orderTotal(o), paid = paidOf(o);
+    var rows = o.lines.map(function (l, i) {
+      var p = prod(l.pid);
+      return '<div class="adrow" data-i="' + i + '"><div class="adn">' + esc(l.name) + (l.ret ? '<small>' + esc(l.ret + " returned") + '</small>' : '') + '</div><input inputmode="numeric" value="' + l.qty + '" aria-label="Quantity"><input inputmode="decimal" value="' + l.price + '" aria-label="Unit price"><button type="button" aria-label="Remove item">×</button></div>';
+    }).join("");
+    var svc = (Array.isArray(o.svc) ? o.svc : []).map(function (x) { return '<div class="svcrow"><input class="svn" aria-label="Service" maxlength="120" autocomplete="off" value="' + esc(x.name) + '"><input inputmode="numeric" value="' + x.qty + '" aria-label="Quantity"><input inputmode="decimal" value="' + x.price + '" aria-label="Price"><button type="button" aria-label="Remove service">×</button></div>'; }).join("");
+    var hist = (o.adj || []).slice().reverse().map(function (a) { return '<div class="sub">' + esc(when(a.d) + " · " + money(a.a) + " → " + money(a.b) + (a.w ? " · " + a.w : "")) + '</div>'; }).join("");
+    openSheet("Adjust sale",
+      '<p style="margin:0 0 4px;color:var(--mute)">#' + orderNo(o) + (o.party ? ' · ' + esc(o.party) : '') + (o.inv ? ' · ' + esc(invNo(o)) : '') + '</p>' +
+      '<p style="margin:0 0 12px;font-size:14px">Change what was sold. The stock follows: items taken off go back in, extra items come out. Payments are kept.</p>' +
+      '<div class="label" style="margin-bottom:8px">Items, quantity, unit price</div><div id="ad-lines">' + rows + '</div><div id="ad-new"></div>' +
+      '<button type="button" class="btn ghost sm" id="ad-additem" style="margin-bottom:12px">Add an item</button>' +
+      '<div class="label" style="margin:6px 0 8px">Services, quantity, price (labour, delivery, repair...)</div><div id="svcs">' + svc + '</div><button type="button" class="btn ghost sm" id="adds" style="margin-bottom:12px">Add a service</button>' +
+      '<label>Discount (optional, amount or %)<input id="ad-disc" inputmode="decimal" placeholder="e.g. 500 or 10%" autocomplete="off" value="' + (o.disc > 0 ? o.disc : "") + '"></label>' +
+      '<label>Reason (optional)<input id="ad-why" maxlength="120" placeholder="e.g. client added labour" autocomplete="off"></label>' +
+      '<div class="rrow rtot" style="padding-top:0"><span>New total</span><b class="mono" id="ad-sum">' + esc(money(oldTotal)) + '</b></div><div class="sub" id="ad-bal" style="margin:0 0 12px"></div>' +
+      '<div id="ad-refund" hidden><label>Money to give back<input id="ad-cash" inputmode="decimal" autocomplete="off" placeholder="0"></label>' + pmSelect("ad-pm", "Payment method", "cash") + '</div>' +
+      '<div class="err" id="err"></div><button class="btn block" id="ad-go">Save changes</button>' +
+      (hist ? '<div class="label" style="margin:16px 0 6px">Changes so far</div>' + hist : ''),
+      function (root) {
+        var opts = itemOpts(), edited = false, saved = false;
+        function svcRead() {
+          var out = [], bad = false;
+          root.querySelectorAll(".svcrow").forEach(function (d) {
+            var nm = $(".svn", d).value.trim(), ins = d.querySelectorAll("input"), qn = num(ins[1].value), pr = num(ins[2].value);
+            if (!nm && !ins[2].value.trim()) return;
+            if (!nm || isNaN(qn) || qn <= 0 || isNaN(pr) || pr < 0) { bad = true; return; }
+            out.push({name: nm, qty: Math.round(qn), price: pr});
+          });
+          return bad ? null : out;
+        }
+        /* everything typed, as {keep: [[line index, qty, price]], add: [[pid, qty, price]], svc, disc} or {err} */
+        function read() {
+          var keep = [], add = [], i, bad = "";
+          root.querySelectorAll("#ad-lines .adrow").forEach(function (d) {
+            var ins = d.querySelectorAll("input"), n = Math.round(num(ins[0].value)), pr = num(ins[1].value), l = o.lines[+d.dataset.i];
+            if (d.dataset.gone === "1") { n = l.ret || 0; pr = l.price; }
+            if (isNaN(n) || n < 0 || isNaN(pr) || pr < 0) bad = "Check each item: a quantity of 0 or more and a valid price.";
+            else if (n < (l.ret || 0)) bad = l.name + ": " + (l.ret || 0) + " already returned, so the quantity cannot be lower.";
+            else keep.push([+d.dataset.i, n, pr]);
+          });
+          root.querySelectorAll("#ad-new .adrow").forEach(function (d) {
+            var p = prod(+$("select", d).value), ins = d.querySelectorAll("input"), n = Math.round(num(ins[0].value)), pr = num(ins[1].value);
+            if (!p || isNaN(n) || n <= 0 || isNaN(pr) || pr < 0) bad = "Check each new item: a quantity above 0 and a valid price."; else add.push([p.id, n, pr]);
+          });
+          var sv = svcRead(); if (!sv) bad = bad || "Check each service: a name, a quantity above 0 and a price.";
+          if (bad) return {err: bad};
+          var lines = o.lines.map(function (l, j) { var k = keep.filter(function (x) { return x[0] === j; })[0]; return k ? Object.assign({}, l, {qty: k[1], price: k[2]}) : l; }).concat(add.map(function (a) { return {pid: a[0], name: (prod(a[0]) || {}).name, qty: a[1], price: a[2]}; }));
+          var sub0 = lines.reduce(function (t, l) { return t + (l.qty - (l.ret || 0)) * l.price; }, 0) + sv.reduce(function (t, l) { return t + l.qty * l.price; }, 0);
+          var dd = parseDisc($("#ad-disc", root).value, sub0); if (dd.err) return {err: dd.err};
+          var tmp = {kind: "sale", disc: dd.amt, taxRate: o.taxRate, taxIncl: o.taxIncl, lines: lines, svc: sv};
+          if (!netLines(tmp).length && !sv.length) return {err: "Keep at least one item or service. To cancel the whole sale, use Return items."};
+          return {keep: keep, add: add, svc: sv, disc: dd.amt, total: orderCalc(tmp).total};
+        }
+        function refresh() {
+          if (saved) return;
+          var r = read(), el = $("#ad-sum", root), bl = $("#ad-bal", root), rf = $("#ad-refund", root);
+          if (r.err) { bl.textContent = ""; rf.hidden = true; return; }
+          el.textContent = money(r.total); var bal = rnd(r.total - paid);
+          bl.textContent = (bal >= 0 ? "Paid so far " + money(paid) + " · balance " + money(bal) : "Paid so far " + money(paid) + " · the client paid " + money(-bal) + " too much");
+          rf.hidden = !(bal < -0.005);
+          if (!rf.hidden && !edited) $("#ad-cash", root).value = String(-bal);
+        }
+        root.addEventListener("input", function (e) { if (e.target.id === "ad-cash") edited = true; refresh(); });
+        root.addEventListener("change", refresh);
+        root.addEventListener("click", function (e) {
+          var b = e.target.closest("button"); if (!b) return;
+          var row = b.closest(".adrow");
+          if (row && row.parentNode.id === "ad-lines") { row.dataset.gone = "1"; var l = o.lines[+row.dataset.i]; row.querySelectorAll("input")[0].value = String(l.ret || 0); row.style.opacity = ".45"; }
+          else if (row) row.remove();
+          else if (b.closest(".svcrow")) b.closest(".svcrow").remove();
+          setTimeout(refresh, 0);
+        });
+        $("#ad-additem", root).onclick = function () {
+          var d = document.createElement("div"); d.className = "adrow";
+          d.innerHTML = '<select aria-label="Item">' + opts + '</select><input inputmode="numeric" value="1" aria-label="Quantity"><input inputmode="decimal" aria-label="Unit price"><button type="button" aria-label="Remove item">×</button>';
+          var sl = $("select", d), pr = d.querySelectorAll("input")[1], sync = function () { var p = prod(+sl.value); pr.value = p ? p.price : ""; };
+          sl.onchange = sync; sync(); $("#ad-new", root).appendChild(d); refresh();
+        };
+        $("#adds", root).onclick = function () {
+          var d = document.createElement("div"); d.className = "svcrow";
+          d.innerHTML = '<input class="svn" aria-label="Service" placeholder="e.g. Labour" maxlength="120" autocomplete="off"><input inputmode="numeric" value="1" aria-label="Quantity"><input inputmode="decimal" aria-label="Price" placeholder="Price"><button type="button" aria-label="Remove service">×</button>';
+          $("#svcs", root).appendChild(d); $(".svn", d).focus();
+        };
+        refresh();
+        $("#ad-go", root).onclick = function () {
+          var er = $("#err", root); er.textContent = "";
+          var r = read(); if (r.err) { er.textContent = T(r.err); return; }
+          /* the net change per item: positive takes stock out, negative puts it back */
+          var net = {}, id;
+          r.keep.forEach(function (k) { var l = o.lines[k[0]], d = k[1] - l.qty; if (d) net[l.pid] = (net[l.pid] || 0) + d; });
+          r.add.forEach(function (a) { net[a[0]] = (net[a[0]] || 0) + a[1]; });
+          for (id in net) {
+            var p = prod(+id); if (!p) { er.textContent = T("An item on this order was deleted."); return; }
+            if (net[id] > 0 && locQty(p, loc) < net[id]) { er.textContent = T("Not enough ") + p.name + " (" + (S.locs.length > 1 ? locName(loc) + ": " : "") + "have " + locQty(p, loc) + ", need " + net[id] + " more)."; return; }
+          }
+          var cash = 0, bal = rnd(r.total - paid);
+          if (bal < -0.005) {
+            var ct = $("#ad-cash", root).value.trim(); cash = ct === "" ? 0 : num(ct);
+            if (isNaN(cash) || cash < 0) { er.textContent = T("Enter the money as a number, or leave it empty."); return; }
+            if (cash > -bal + 0.005) { er.textContent = "That is more than the " + money(-bal) + " the client paid too much."; return; }
+          }
+          for (id in net) {
+            var q = prod(+id), n = net[id];
+            if (n > 0) stTake(q, loc, n); else stAdd(q, loc, "", -n);
+            addMove(q, -n, "Adjusted · Sale #" + orderNo(o) + (o.party ? " · " + o.party : "") + (S.locs.length > 1 ? " · " + locName(loc) : ""));
+          }
+          r.keep.forEach(function (k) { var l = o.lines[k[0]]; l.qty = k[1]; l.price = k[2]; });
+          r.add.forEach(function (a) { var q = prod(a[0]); o.lines.push({pid: q.id, name: q.name, qty: a[1], price: a[2], exp: "", cost: q.cost}); });
+          o.lines = o.lines.filter(function (l) { return l.qty > 0; });
+          if (r.svc.length) o.svc = r.svc; else delete o.svc;
+          o.disc = r.disc;
+          if (cash > 0) { o.pays = o.pays || []; var rp = {id: nid(), amt: -rnd(cash), date: Date.now()}; if (pmVal(root, "ad-pm")) rp.m = pmVal(root, "ad-pm"); o.pays.push(rp); }
+          var why = $("#ad-why", root).value.trim().slice(0, 120);
+          o.adj = (o.adj || []).concat([{d: Date.now(), a: oldTotal, b: orderTotal(o), w: why, u: who() || ""}]).slice(-30);
+          saved = true; closeSheet(); commit("Sale adjusted");
+        };
+      });
+  }
   function returnSheet(o) {
     var sale = o.kind === "sale", loc = S.locs.some(function (x) { return x.id === o.loc; }) ? o.loc : S.locs[0].id;
     var rows = o.lines.map(function (l, i) {
@@ -2647,6 +2803,29 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
           var b = e.target.closest("[data-pid]"); if (!b) return;
           o.dp = (o.dp || []).concat([+b.dataset.pid]); o.pays = o.pays.filter(function (p) { return p.id !== +b.dataset.pid; });
           save(); render(); payForm(o, back); toast("Payment removed");
+        };
+      });
+  }
+  /* a pro-forma is a draft sale: the goods stay in stock until the payment is recorded here, which records it and takes the stock out in one step */
+  function proformaPaySheet(o) {
+    var tot = Math.round(orderTotal(o) * 100) / 100;
+    openSheet("Payment received",
+      '<p style="margin:0 0 14px;color:var(--mute)">#' + orderNo(o) + (o.party ? ' · ' + esc(o.party) : '') + '<br>Total <b class="mono">' + esc(money(tot)) + '</b></p>' +
+      '<p style="margin:0 0 12px;font-size:14px">Saving takes the stock out and records this payment. If you enter less than the total, the rest stays owing.</p>' +
+      '<form id="f"><label>Amount received<input id="pa-amt" inputmode="decimal" value="' + tot + '" autocomplete="off"></label>' + pmSelect("pa-pm", "Payment method", "cash") +
+      '<div class="err" id="err"></div><button class="btn block">Save payment and take stock out</button></form>',
+      function (root) {
+        $("#f", root).onsubmit = function (e) {
+          e.preventDefault();
+          if (o.status !== "draft") { closeSheet(); return; }
+          var amt = num($("#pa-amt", root).value);
+          if (isNaN(amt) || amt <= 0) { $("#err", root).textContent = "Enter an amount above 0."; return; }
+          if (amt > tot + 0.005) { $("#err", root).textContent = "That is more than the total of " + money(tot) + "."; return; }
+          var was = [o.payNow, o.pm];
+          o.payNow = Math.round(amt * 100) / 100; if (pmVal(root, "pa-pm")) o.pm = pmVal(root, "pa-pm"); else delete o.pm;
+          var err = completeOrder(o);
+          if (err) { o.payNow = was[0]; if (was[1] == null) delete o.pm; else o.pm = was[1]; if (was[0] == null) delete o.payNow; $("#err", root).textContent = T(err); return; }
+          closeSheet(); commit("Payment saved, stock taken out");
         };
       });
   }
@@ -2740,7 +2919,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     } else if (kind === "orders") {
       rows = [["Order", "Date", "Type", "Status", "Contact", "Item", "Quantity", "Unit price", "Line total", "Order discount", "Order tax", "Order paid", "Order balance", "Payment methods"].map(T)];
       S.orders.filter(function (o) { return inX(o.date); }).sort(function (a, b) { return orderNo(a) - orderNo(b); }).forEach(function (o) {
-        netLines(o).forEach(function (l, i) { rows.push([orderNo(o), ymd(o.date), T(o.kind), T(o.status), o.party, l.name, l.qty, l.price, r2(l.qty * l.price), i ? "" : orderCalc(o).disc, i ? "" : orderCalc(o).tax, i || o.status !== "completed" ? "" : r2(paidOf(o)), i || o.status !== "completed" ? "" : balOf(o), i || o.status !== "completed" ? "" : paySummary(o)]); });
+        allLines(o).forEach(function (l, i) { rows.push([orderNo(o), ymd(o.date), T(o.kind), T(o.status), o.party, l.name, l.qty, l.price, r2(l.qty * l.price), i ? "" : orderCalc(o).disc, i ? "" : orderCalc(o).tax, i || o.status !== "completed" ? "" : r2(paidOf(o)), i || o.status !== "completed" ? "" : balOf(o), i || o.status !== "completed" ? "" : paySummary(o)]); });
       });
     } else if (kind === "cash") {
       rows = [["Date", "Opening cash", "Cash received from sales", "Other income", "Paid to suppliers", "Expenses", "Expected in the drawer", "Counted at close", "Difference", "Note", "Not in the drawer"].map(T)].concat(S.cash.filter(function (x) { return inX(dayMs(x.day, false) + 432e5); }).sort(function (a, b) { return a.day < b.day ? -1 : 1; }).map(function (x) { var k = cashDay(x.day); return [x.day, k.open == null ? "" : k.open, k.inn, k.oi, k.out, k.exp, k.expected, k.close == null ? "" : k.close, k.diff == null ? "" : k.diff, x.note, PMS.filter(function (r) { return r[0] !== "cash" && k.oth[r[0]] && Math.abs(k.oth[r[0]]) > 0.004; }).map(function (r) { return pmName(r[0]) + " " + r2(k.oth[r[0]]); }).join("; ")]; }));
@@ -2805,7 +2984,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       n++;
       var oc = orderCalc(o), ratio = oc.sub > 0 ? oc.rev / oc.sub : 1;   /* sales are counted after the discount and without tax */
       discs += oc.disc; taxes += oc.tax;
-      netLines(o).forEach(function (l) {
+      allLines(o).forEach(function (l) {
         var r = l.qty * l.price * ratio, c = l.qty * lineCost(l);
         rev += r; cogs += c;
         var b = items[l.name] || (items[l.name] = {name: l.name, qty: 0, rev: 0, profit: 0});
@@ -3150,7 +3329,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   function receiptPDF(o) {
     var r = receiptData(o), n = r.lines.length, W = 80, M = 6, ex = extraRows(o), pr = payRows(o);
-    var d = new window.jspdf.jsPDF({unit: "mm", format: [W, 78 + n * 11 + (S.logo ? 18 : 0) + (S.town ? 5 : 0) + (r.bal > 0 ? 14 : 0) + ex.length * 6 + pr.length * 6]}), y = 12;
+    var wtxt = wordsLine(o), wlines = [];
+    var d = new window.jspdf.jsPDF({unit: "mm", format: [W, 78 + n * 11 + (S.logo ? 18 : 0) + (S.town ? 5 : 0) + (r.bal > 0 ? 14 : 0) + ex.length * 6 + pr.length * 6 + (wtxt ? 8 + Math.ceil(wtxt.length / 34) * 4 : 0)]}), y = 12;
     function fit(t, w) {
       t = pdfSafe(t);
       if (d.getTextWidth(t) <= w) return t;
@@ -3181,6 +3361,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     ex.forEach(function (e) { if (!e[2]) { exLine(e); y += 6; } });
     d.setFont("helvetica", "bold"); d.setFontSize(11); d.setTextColor.apply(d, DARK);
     d.text(T("TOTAL"), M, y); d.text(pdfSafe(money(r.total)), W - M, y, {align: "right"});
+    if (wtxt) { d.setFont("helvetica", "italic"); d.setFontSize(8.5); d.setTextColor.apply(d, MUTE); d.splitTextToSize(pdfSafe(wtxt), W - M * 2).forEach(function (ln) { y += 4.5; d.text(ln, M, y); }); y += 1.5; }
     ex.forEach(function (e) { if (e[2]) { y += 6; exLine(e); } });
     pr.forEach(function (e) { y += 6; d.setTextColor.apply(d, MUTE); exLine(e); });
     if (r.bal > 0) {
@@ -3231,12 +3412,68 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
 
   /* ---------- receipts ---------- */
   function orderNo(o) { return o.no || o.id; }
-  var RMODE = "";   /* "quote" for a draft sale, "invoice" for a completed sale, otherwise the normal receipt */
-  function footTxt() { return T(RMODE === "quote" ? "Valid for 30 days" : "Thank you"); }
+  /* ---------- the total in words (English and French), for invoices, pro-formas and quotes ---------- */
+  var W_EN1 = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"],
+      W_EN10 = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+  function en100(n) { return n < 20 ? W_EN1[n] : W_EN10[Math.floor(n / 10)] + (n % 10 ? "-" + W_EN1[n % 10] : ""); }
+  function en1000(n) { var h = Math.floor(n / 100), r = n % 100; return (h ? W_EN1[h] + " hundred" : "") + (h && r ? " and " : "") + (r ? en100(r) : ""); }
+  function wordsEN(n) {
+    if (n === 0) return "zero";
+    var g = [[1e9, "billion"], [1e6, "million"], [1e3, "thousand"]], out = [], rest = n;
+    g.forEach(function (x) { var q = Math.floor(rest / x[0]); if (q) { out.push(en1000(q) + " " + x[1]); rest -= q * x[0]; } });
+    if (rest) out.push((out.length && rest < 100 ? "and " : "") + en1000(rest));
+    return out.join(" ");
+  }
+  var W_FR1 = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize"],
+      W_FR10 = ["", "", "vingt", "trente", "quarante", "cinquante", "soixante"];
+  function frTeen(v) { return v < 17 ? W_FR1[v] : "dix-" + W_FR1[v - 10]; }   /* 10 to 19 */
+  function fr100(n, fin) {
+    if (n < 20) return frTeen(n);
+    var t = Math.floor(n / 10), u = n % 10;
+    if (t <= 6) return W_FR10[t] + (u === 1 ? " et un" : u ? "-" + W_FR1[u] : "");
+    if (t === 7) return n === 71 ? "soixante et onze" : "soixante-" + frTeen(n - 60);
+    if (t === 8) return u === 0 ? (fin ? "quatre-vingts" : "quatre-vingt") : "quatre-vingt-" + W_FR1[u];
+    return "quatre-vingt-" + frTeen(n - 80);
+  }
+  function fr1000(n, fin) {
+    var h = Math.floor(n / 100), r = n % 100, s = h === 0 ? "" : h === 1 ? "cent" : W_FR1[h] + " cent";
+    if (h > 1 && r === 0 && fin) s += "s";
+    return s + (r ? (s ? " " : "") + fr100(r, fin) : "");
+  }
+  function wordsFR(n) {
+    if (n === 0) return "zéro";
+    var b = Math.floor(n / 1e9), m = Math.floor(n % 1e9 / 1e6), k = Math.floor(n % 1e6 / 1e3), r = n % 1000, out = [];
+    if (b) out.push(fr1000(b, true) + " milliard" + (b > 1 ? "s" : ""));
+    if (m) out.push(fr1000(m, true) + " million" + (m > 1 ? "s" : ""));
+    if (k) out.push(k === 1 ? "mille" : fr1000(k, false) + " mille");
+    if (r) out.push(fr1000(r, true));
+    return out.join(" ");
+  }
+  var W_CUR = {XAF: ["CFA franc", "CFA francs", "franc CFA", "francs CFA"], XOF: ["CFA franc", "CFA francs", "franc CFA", "francs CFA"], FCFA: ["CFA franc", "CFA francs", "franc CFA", "francs CFA"], CFA: ["CFA franc", "CFA francs", "franc CFA", "francs CFA"],
+    USD: ["US dollar", "US dollars", "dollar US", "dollars US"], EUR: ["euro", "euros", "euro", "euros"], GBP: ["pound sterling", "pounds sterling", "livre sterling", "livres sterling"], NGN: ["naira", "naira", "naira", "nairas"]};
+  /* "Four thousand five hundred and twenty-four CFA francs", or "" when the amount is too large or not a number */
+  function amtWords(amt) {
+    var d = cdp(), f = d === 3 ? 1000 : 100, v = Math.round((+amt || 0) * f) / f;
+    if (!isFinite(v) || v < 0 || v >= 1e12) return "";
+    var whole = Math.floor(v + 1e-9), cents = Math.round((v - whole) * f), fr = LANG === "fr";
+    var w = fr ? wordsFR(whole) : wordsEN(whole), cur = (S.cur || "").trim(), nm = W_CUR[cur.toUpperCase().replace(/[\s.]/g, "")];
+    var unit = nm ? nm[(fr ? 2 : 0) + (whole === 1 ? 0 : 1)] : cur;
+    if (fr && unit && whole >= 1e6 && whole % 1e6 === 0) unit = (/^[aeiouhéè]/i.test(unit) ? "d'" : "de ") + unit;   /* "deux millions de francs" */
+    var s = w + (unit ? " " + unit : "") + (cents ? (fr ? " et " : " and ") + String(cents).padStart(d, "0") + "/" + f : "");
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+  /* the "Total in words" line: on invoices, pro-formas and quotes (force = always, for the invoice screens) */
+  function wordsLine(o, force) {
+    if (o.kind !== "sale" || !(force || RMODE === "quote" || RMODE === "proforma" || RMODE === "invoice")) return "";
+    var w = amtWords(orderTotal(o)); return w ? T("Total in words") + colon() + w : "";
+  }
+  function wordsHtml(o, force) { var w = wordsLine(o, force); return w ? '<div class="sub" style="padding:6px 0 8px;font-style:italic">' + esc(w) + '</div>' : ""; }
+  var RMODE = "";   /* "quote" or "proforma" for a draft sale, "invoice" for a completed sale, otherwise the normal receipt */
+  function footTxt() { return T(RMODE === "quote" ? "Valid for 30 days" : RMODE === "proforma" ? "Valid for 30 days. Goods are released after payment." : "Thank you"); }
   function receiptData(o) {
-    return {title: T(RMODE === "quote" ? "Quote" : RMODE === "invoice" ? "Invoice" : o.kind === "sale" ? "Receipt" : "Purchase record"), no: orderNo(o),
+    return {title: T(RMODE === "quote" ? "Quote" : RMODE === "proforma" ? "Proforma invoice" : RMODE === "invoice" ? "Invoice" : o.kind === "sale" ? "Receipt" : "Purchase record"), no: orderNo(o),
       date: new Date(o.date).toLocaleString(LOC(), {day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"}),
-      who: T(o.kind === "sale" ? "Customer" : "Supplier"), party: o.party, lines: netLines(o), total: orderTotal(o), paid: paidOf(o), bal: balOf(o)};
+      who: T(o.kind === "sale" ? "Customer" : "Supplier"), party: o.party, lines: allLines(o), total: orderTotal(o), paid: paidOf(o), bal: balOf(o)};
   }
   function colon() { return LANG === "fr" ? " : " : ": "; }
   function rateTxt(r) { return String(+r).replace(".", LANG === "fr" ? "," : "."); }
@@ -3271,18 +3508,26 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     var ex = extraRows(o);
     ex.forEach(function (e) { if (!e[2]) t.push(e[0] + ": " + e[1]); });
     t.push(T("TOTAL:") + " " + money(r.total));
+    var wl = wordsLine(o); if (wl) t.push(wl);
     ex.forEach(function (e) { if (e[2]) t.push(e[0] + ": " + e[1]); });
     payRows(o).forEach(function (e) { t.push(e[0] + colon() + e[1]); });
     if (r.bal > 0) t.push(T("Paid:") + " " + money(r.paid), T(o.kind === "sale" ? "BALANCE DUE:" : "BALANCE OWED:") + " " + money(r.bal));
-    if (o.kind === "sale") t.push("", RMODE === "quote" ? T("Valid for 30 days") : T("Thank you!"));
+    if (o.kind === "sale") t.push("", RMODE === "quote" ? T("Valid for 30 days") : RMODE === "proforma" ? T("Valid for 30 days. Goods are released after payment.") : T("Thank you!"));
     return t.join("\n");
   }
   function receiptPNG(o, cb) { withLogo(function (img) { receiptPNGdraw(o, cb, img); }); }
   function receiptPNGdraw(o, cb, img) {
     var r = receiptData(o), W = 640, P = 36, n = r.lines.length, ex = extraRows(o), pr = payRows(o);
-    var c = document.createElement("canvas"), x = c.getContext("2d"), H = 300 + n * 62 + (img ? 100 : 0) + (S.town ? 30 : 0) + (r.bal > 0 ? 90 : 0) + ex.length * 38 + pr.length * 38;
-    c.width = W; c.height = H;
     var sans = "Barlow, Arial, sans-serif", mono = "ui-monospace, Menlo, Consolas, monospace";
+    var wtxt = wordsLine(o), wl = [];
+    if (wtxt) {   /* the words are wrapped to the width of the slip */
+      var mc = document.createElement("canvas").getContext("2d"), cur = "";
+      mc.font = "italic 500 20px " + sans;
+      wtxt.split(" ").forEach(function (w) { var tt = cur ? cur + " " + w : w; if (cur && mc.measureText(tt).width > W - P * 2) { wl.push(cur); cur = w; } else cur = tt; });
+      if (cur) wl.push(cur);
+    }
+    var c = document.createElement("canvas"), x = c.getContext("2d"), H = 300 + n * 62 + (img ? 100 : 0) + (S.town ? 30 : 0) + (r.bal > 0 ? 90 : 0) + ex.length * 38 + pr.length * 38 + (wl.length ? 20 + wl.length * 26 : 0);
+    c.width = W; c.height = H;
     function fit(t, w) { while (t.length > 2 && x.measureText(t).width > w) t = t.slice(0, -2) + "…"; return t; }
     function rule(yy) { x.strokeStyle = "#b9c4c5"; x.setLineDash([6, 6]); x.beginPath(); x.moveTo(P, yy); x.lineTo(W - P, yy); x.stroke(); }
     x.fillStyle = "#ffffff"; x.fillRect(0, 0, W, H);
@@ -3308,6 +3553,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     ex.forEach(function (e) { if (!e[2]) { exLine(e); y += 38; } });
     x.textAlign = "left"; x.fillStyle = "#14201f"; x.font = "700 28px " + sans; x.fillText(T("TOTAL"), P, y);
     x.textAlign = "right"; x.font = "700 28px " + mono; x.fillText(money(r.total), W - P, y);
+    if (wl.length) { x.textAlign = "left"; x.fillStyle = "#566665"; x.font = "italic 500 20px " + sans; wl.forEach(function (t, i) { x.fillText(t, P, y + 32 + i * 26); }); y += 8 + wl.length * 26; }
     ex.forEach(function (e) { if (e[2]) { y += 38; exLine(e); } });
     pr.forEach(function (e) { y += 38; x.fillStyle = "#566665"; exLine(e); x.fillStyle = "#14201f"; });
     if (r.bal > 0) {
@@ -3321,13 +3567,13 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   function exHtml(e) { return '<div class="rrow"><span>' + esc(e[0]) + '</span><b class="mono">' + esc(e[1]) + '</b></div>'; }
   function receiptSheet(o, mode) {
-    RMODE = o.kind === "sale" && ((mode === "quote" && o.status === "draft") || (mode === "invoice" && o.status === "completed")) ? mode : "";
+    RMODE = o.kind === "sale" && (((mode === "quote" || mode === "proforma") && o.status === "draft") || (mode === "invoice" && o.status === "completed")) ? mode : "";
     var r = receiptData(o);
     openSheet(r.title + " #" + r.no,
       '<div class="receipt">' + (S.logo ? '<img class="rlogo" src="' + esc(S.logo) + '" alt="">' : '') + '<div class="rbiz">' + esc(S.biz) + '</div>' + (S.town ? '<div class="sub">' + esc(S.town) + '</div>' : '') + '<div class="sub">' + esc(r.date) + '</div>' + (r.party ? '<div class="sub">' + esc(r.who) + colon() + esc(r.party) + '</div>' : '') +
       '<div class="rl">' + r.lines.map(function (l) { return '<div class="rrow"><span>' + esc(l.name) + '<small class="mono">' + l.qty + ' × ' + esc(money(l.price)) + '</small></span><b class="mono">' + esc(money(l.qty * l.price)) + '</b></div>'; }).join("") + '</div>' +
       extraRows(o).filter(function (e) { return !e[2]; }).map(exHtml).join("") +
-      '<div class="rrow rtot"><span>Total</span><b class="mono">' + esc(money(r.total)) + '</b></div>' + extraRows(o).filter(function (e) { return e[2]; }).map(exHtml).join("") + payRows(o).map(exHtml).join("") + (r.bal > 0 ? '<div class="rrow"><span>Paid</span><b class="mono">' + esc(money(r.paid)) + '</b></div><div class="rrow rtot neg"><span>' + (o.kind === "sale" ? "Balance due" : "Balance owed") + '</span><b class="mono">' + esc(money(r.bal)) + '</b></div>' : '') + (o.kind === "sale" ? '<div class="sub" style="margin-top:10px">' + esc(footTxt()) + '</div>' : '') + '</div>' +
+      '<div class="rrow rtot"><span>Total</span><b class="mono">' + esc(money(r.total)) + '</b></div>' + wordsHtml(o) + extraRows(o).filter(function (e) { return e[2]; }).map(exHtml).join("") + payRows(o).map(exHtml).join("") + (r.bal > 0 ? '<div class="rrow"><span>Paid</span><b class="mono">' + esc(money(r.paid)) + '</b></div><div class="rrow rtot neg"><span>' + (o.kind === "sale" ? "Balance due" : "Balance owed") + '</span><b class="mono">' + esc(money(r.bal)) + '</b></div>' : '') + (o.kind === "sale" ? '<div class="sub" style="margin-top:10px">' + esc(footTxt()) + '</div>' : '') + '</div>' +
       '<div class="row" style="margin-top:14px"><button class="btn" id="rp">Save PDF</button><button class="btn ghost" id="ri">Save image</button></div><div class="row" style="margin-top:10px"><button class="btn ghost" id="rw">WhatsApp</button><button class="btn ghost" id="rc">Copy text</button></div><div class="err" id="err" style="margin-top:8px"></div>',
       function (root) {
         $("#rw", root).onclick = function () { var ct = findContact(o.party, o.kind); openWA(waLink(ct ? ct.phone : "", receiptText(o))); };
@@ -3355,10 +3601,11 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     var ct = findContact(o.party, o.kind), t = [S.biz].concat(sellerLines(), ["", T("Invoice") + " " + invNo(o), T("Invoice date") + colon() + dateTxt(o.idt), T("Due date") + colon() + dateTxt(o.due)]);
     if (o.party) t.push(T("Bill to") + colon() + o.party + (ct && ct.phone ? " (" + ct.phone + ")" : ""));
     t.push("");
-    netLines(o).forEach(function (l) { t.push(l.qty + " x " + l.name + " @ " + money(l.price) + " = " + money(l.qty * l.price)); });
+    allLines(o).forEach(function (l) { t.push(l.qty + " x " + l.name + " @ " + money(l.price) + " = " + money(l.qty * l.price)); });
     t.push("");
     var ex = extraRows(o); ex.forEach(function (e) { if (!e[2]) t.push(e[0] + ": " + e[1]); });
     t.push(T("TOTAL:") + " " + money(orderTotal(o)));
+    var iwl = wordsLine(o, true); if (iwl) t.push(iwl);
     ex.forEach(function (e) { if (e[2]) t.push(e[0] + ": " + e[1]); });
     t.push(T("Paid:") + " " + money(paidOf(o)), T("BALANCE DUE:") + " " + money(balOf(o)));
     if (S.ibank) t.push("", T("Payment details") + colon(), S.ibank);
@@ -3394,8 +3641,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<div class="rrow" style="margin-top:12px"><span>Invoice date</span><b class="mono">' + esc(dateTxt(o.idt)) + '</b></div><div class="rrow"><span>Due date</span><b class="mono">' + esc(dateTxt(o.due)) + '</b></div>' +
       '<div class="rrow"><span>Status</span><b' + (st === "Overdue" ? ' style="color:var(--alert)"' : '') + '>' + esc(T(st)) + '</b></div>' +
       (o.party ? '<div class="rrow"><span>Bill to</span><b>' + esc(o.party) + (ct && ct.phone ? '<small class="mono"> ' + esc(ct.phone) + '</small>' : '') + '</b></div>' : '') +
-      '<div class="rl">' + netLines(o).map(function (l) { return '<div class="rrow"><span>' + esc(l.name) + '<small class="mono">' + l.qty + ' × ' + esc(money(l.price)) + '</small></span><b class="mono">' + esc(money(l.qty * l.price)) + '</b></div>'; }).join("") + '</div>' +
-      ex.filter(function (e) { return !e[2]; }).map(exHtml).join("") + '<div class="rrow rtot"><span>Total</span><b class="mono">' + esc(money(orderTotal(o))) + '</b></div>' + ex.filter(function (e) { return e[2]; }).map(exHtml).join("") +
+      '<div class="rl">' + allLines(o).map(function (l) { return '<div class="rrow"><span>' + esc(l.name) + '<small class="mono">' + l.qty + ' × ' + esc(money(l.price)) + '</small></span><b class="mono">' + esc(money(l.qty * l.price)) + '</b></div>'; }).join("") + '</div>' +
+      ex.filter(function (e) { return !e[2]; }).map(exHtml).join("") + '<div class="rrow rtot"><span>Total</span><b class="mono">' + esc(money(orderTotal(o))) + '</b></div>' + wordsHtml(o, true) + ex.filter(function (e) { return e[2]; }).map(exHtml).join("") +
       '<div class="rrow"><span>Paid</span><b class="mono">' + esc(money(paidOf(o))) + '</b></div><div class="rrow rtot"><span>Balance due</span><b class="mono">' + esc(money(bal)) + '</b></div>' +
       (S.ibank ? '<div class="label" style="margin:14px 0 4px">Payment details</div><div class="sub" style="white-space:pre-line">' + esc(S.ibank) + '</div>' : '') +
       (o.inote ? '<div class="sub" style="margin-top:12px;white-space:pre-line">' + esc(o.inote) + '</div>' : '') + '</div>' +
@@ -3481,7 +3728,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     function thead() { d.setFont("helvetica", "bold"); d.setFontSize(9); ink(DARK); cols.forEach(function (c) { d.text(pdfSafe(c[0]), c[1], y, {align: c[2] === "r" ? "right" : "left"}); }); d.setDrawColor.apply(d, DARK); d.setLineWidth(0.3); d.line(M, y + 2, X2, y + 2); y += 8; }
     function room(h) { if (y + h > 280) { d.addPage(); y = M + 6; thead(); } }
     thead();
-    netLines(o).forEach(function (l) {
+    allLines(o).forEach(function (l) {
       room(7); d.setFont("helvetica", "normal"); d.setFontSize(9.5); ink(DARK);
       d.text(fit(l.name, 92), M, y); d.text(String(l.qty), 118, y, {align: "right"}); d.text(pdfSafe(money(l.price)), 152, y, {align: "right"}); d.text(pdfSafe(money(l.qty * l.price)), X2, y, {align: "right"});
       d.setDrawColor.apply(d, RULE); d.setLineWidth(0.15); d.line(M, y + 2.5, X2, y + 2.5); y += 7;
@@ -3490,6 +3737,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     function tot(label, val, bold, big) { room(8); d.setFont("helvetica", bold ? "bold" : "normal"); d.setFontSize(big ? 12 : 9.5); ink(DARK); d.text(pdfSafe(label), 125, y); d.text(pdfSafe(val), X2, y, {align: "right"}); y += big ? 8 : 6; }
     var ex = extraRows(o); ex.forEach(function (e) { if (!e[2]) tot(e[0], e[1]); });
     tot(T("Total"), money(orderTotal(o)), true, true);
+    var iw = wordsLine(o, true);
+    if (iw) { d.setFont("helvetica", "italic"); d.setFontSize(9); ink(MUTE); d.splitTextToSize(pdfSafe(iw), W - M * 2 - 10).forEach(function (ln) { room(5); d.text(ln, X2, y, {align: "right"}); y += 4.5; }); y += 2; }
     ex.forEach(function (e) { if (e[2]) tot(e[0], e[1]); });
     tot(T("Paid"), money(paidOf(o)));
     tot(T("Balance due"), money(balOf(o)), true, true);
@@ -3900,6 +4149,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       status: ["draft", "completed", "cancelled"].indexOf(o.status) > -1 ? o.status : "draft", date: fin(o.date), dateSet: !!o.dateSet,
       lines: o.lines.slice(0, 300).map(function (l) { var x = {pid: fin(l.pid), name: str(l.name, 120), qty: Math.round(fin(l.qty)), price: fin(l.price)}; if (l.exp) x.exp = str(l.exp, 10); if (l.cost != null) x.cost = fin(l.cost); if (l.ret) x.ret = Math.round(fin(l.ret)); return x; }),
       disc: fin(o.disc), taxRate: fin(o.taxRate), taxIncl: !!o.taxIncl, cd: str(o.cd, 8), cp: fin(o.cp)};
+    if (Array.isArray(o.adj) && o.adj.length) b.adj = o.adj.slice(-30).map(function (a) { return {d: fin(a.d), a: fin(a.a), b: fin(a.b), w: str(a.w, 120), u: str(a.u, 30)}; });
+    if (Array.isArray(o.svc) && o.svc.length) b.svc = o.svc.slice(0, 40).map(function (x) { return {name: str(x.name, 120), qty: Math.round(fin(x.qty)), price: fin(x.price)}; });
     if (o.by) b.by = str(o.by, 30);
     if (o.inv > 0) { b.inv = Math.round(fin(o.inv)); b.idt = fin(o.idt); b.due = fin(o.due); if (o.inote) b.inote = str(o.inote, 300); }
     if (/^(momo|bank|gw)$/.test(o.pm)) b.pm = o.pm;
@@ -4685,7 +4936,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if ((st.kind === "trial" || st.kind === "active") && st.left <= 7) return '<div class="banner"><span>' + esc((st.kind === "trial" ? "Your free trial ends in " : "Your licence ends in ") + licSpan(st.rem) + ".") + '</span><button data-act="lic">' + (st.kind === "trial" ? "Enter code" : "Renew") + '</button></div>';
     return "";
   }
-  var RO_ACTS = ["new-order", "restock", "pay", "complete", "cancel", "return", "new-contact", "new-product", "new-group", "group", "group-from", "add-variant", "open-product", "stocktake", "import", "new-kit", "edit-kit", "writeoff", "exp-add", "exp-edit", "inc-add", "inc-edit", "cash-day", "clear-examples", "bc-add", "bc-gen-all", "bc-photo", "bc-upload"];
+  var RO_ACTS = ["adjust", "pf-pay", "new-order", "restock", "pay", "complete", "cancel", "return", "new-contact", "new-product", "new-group", "group", "group-from", "add-variant", "open-product", "stocktake", "import", "new-kit", "edit-kit", "writeoff", "exp-add", "exp-edit", "inc-add", "inc-edit", "cash-day", "clear-examples", "bc-add", "bc-gen-all", "bc-photo", "bc-upload"];
   function licSheet() {
     var msg = "Hello, I would like a Golden Gates Stock Inventory activation code. My phone code is " + devCode() + ".";
     openSheet("Licence",
@@ -4819,6 +5070,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       var err = o && o.status === "draft" ? completeOrder(o) : "Order is not a draft.";
       if (err) toast(err); else commit("Order completed");
     }
+    else if (a === "adjust") { var ajo = orderById(+t.dataset.id); if (ajo && ajo.status === "completed" && ajo.kind === "sale" && OWN()) adjustSheet(ajo); }
+    else if (a === "pf-pay") { var pfo = orderById(+t.dataset.id); if (pfo && pfo.status === "draft" && pfo.kind === "sale") proformaPaySheet(pfo); }
     else if (a === "cancel") {
       var c = S.orders.filter(function (x) { return x.id === +t.dataset.id; })[0];
       if (c && c.status === "draft") { c.status = "cancelled"; commit("Order cancelled"); }
