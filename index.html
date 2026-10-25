@@ -68,6 +68,10 @@ header.top h1{font-size:28px;text-transform:uppercase;min-width:0;overflow:hidde
 .btn.warn{background:transparent;color:var(--alert);border-color:var(--alert)}
 .btn.sm{min-height:38px;padding:0 14px;font-size:14px}
 .btn.block{width:100%}
+.sug{border:1px solid var(--line);border-radius:12px;background:var(--card,#fff);margin:-6px 0 12px;overflow:hidden}
+.sug .sugi{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;min-height:46px;padding:8px 12px;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;text-align:left}
+.sug .sugi:last-child{border-bottom:0}.sug .sugi:active{background:var(--wash)}
+.sug .sn{font-weight:600;min-width:0;overflow-wrap:anywhere}.sug .ss{flex:none;font-size:13px;color:var(--mute)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1;min-width:0}
 .order .row>.btn{flex:1 1 calc(50% - 5px);min-width:0;padding:6px 8px;line-height:1.2;white-space:normal;text-align:center;overflow-wrap:anywhere}
@@ -253,7 +257,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.24", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.26", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
@@ -613,7 +617,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   Object.assign(FR, {"Services, quantity, price (labour, delivery, repair...)": "Services, quantité, prix (main-d'œuvre, livraison, réparation...)", "Add a service": "Ajouter un service", "Check each service: a name, a quantity above 0 and a price.": "Vérifiez chaque service : un nom, une quantité supérieure à 0 et un prix."});
   Object.assign(FR, {"Total in words": "Total en lettres"});
   Object.assign(FR, {"Adjust": "Modifier", "Adjust sale": "Modifier la vente", "Change what was sold. The stock follows: items taken off go back in, extra items come out. Payments are kept.": "Modifiez ce qui a été vendu. Le stock suit : les articles retirés y retournent, les articles en plus en sortent. Les paiements sont conservés.", "Add an item": "Ajouter un article", "Reason (optional)": "Motif (facultatif)", "New total": "Nouveau total", "Money to give back": "Argent à rendre", "Save changes": "Enregistrer les changements", "Changes so far": "Changements déjà faits", "Sale adjusted": "Vente modifiée", "e.g. client added labour": "ex. le client a ajouté de la main-d'œuvre", "Keep at least one item or service. To cancel the whole sale, use Return items.": "Gardez au moins un article ou un service. Pour annuler toute la vente, utilisez Retourner des articles.", "Check each item: a quantity of 0 or more and a valid price.": "Vérifiez chaque article : une quantité de 0 ou plus et un prix valide.", "Check each new item: a quantity above 0 and a valid price.": "Vérifiez chaque nouvel article : une quantité supérieure à 0 et un prix valide."});
+  RULES.push([/^No item matches “(.+)”\.?$/, function (m) { return "Aucun article ne correspond à “" + m[1] + "”."; }]);
   RULES.push([/^Adjusted (\d+) times?$/, function (m) { return "Modifiée " + plu(m[1], "fois", "fois"); }], [/^(.+) returned$/, function (m) { return m[1] + " retourné(s)"; }], [/^Paid so far (.+) · balance (.+)$/, function (m) { return "Payé jusqu'ici " + m[1] + " · reste " + m[2]; }], [/^Paid so far (.+) · the client paid (.+) too much$/, function (m) { return "Payé jusqu'ici " + m[1] + " · le client a payé " + m[2] + " de trop"; }], [/^That is more than the (.+) the client paid too much\.$/, function (m) { return "C'est plus que les " + m[1] + " payés en trop par le client."; }]);
+  Object.assign(FR, {"Search an item or scan a barcode": "Chercher un article ou scanner un code-barres", "Type a name, SKU or code": "Saisissez un nom, une référence ou un code", "No item matches": "Aucun article ne correspond à", "more, keep typing": "de plus, continuez à saisir"});
+  Object.assign(FR, {"Scan to read the invoice summary": "Scannez pour lire le résumé de la facture"});
   function trPart(c) { var r = FR[c]; return r !== undefined ? r : trRule(c); }
   /* keeps spaces and a leading or trailing middle dot as they are, and also translates the pieces of "a · b · c" one by one */
   function tr(s) {
@@ -1873,7 +1880,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   function shareText(lang) { return SHARE_MSG[lang === "fr" ? "fr" : "en"].replace("{URL}", shareUrl()).replace("{TEL}", CONTACT_TXT); }
 /* QR-BEGIN */
-  /* A small QR code writer (byte mode, error level M, versions 1 to 6: links up to 106 characters). */
+  /* A small QR code writer (byte mode, error level M, versions 1 to 10: up to 213 bytes). */
   var QR = (function () {
     var EXP = [], LOG = [], i, x = 1;
     for (i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 256) x ^= 0x11d; }
@@ -1890,9 +1897,13 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       data.forEach(function (d) { var f = d ^ r[0]; r.shift(); r.push(0); for (j = 0; j < n; j++) r[j] ^= gmul(g[j + 1], f); });
       return r;
     }
+    /* level M: size, check codewords per block, block groups [count, data codewords], alignment centres */
     var VER = [null,
-      {n: 21, ec: 10, nb: 1, dp: 16, al: 0}, {n: 25, ec: 16, nb: 1, dp: 28, al: 18}, {n: 29, ec: 26, nb: 1, dp: 44, al: 22},
-      {n: 33, ec: 18, nb: 2, dp: 32, al: 26}, {n: 37, ec: 24, nb: 2, dp: 43, al: 30}, {n: 41, ec: 16, nb: 4, dp: 27, al: 34}];
+      {n: 21, ec: 10, g: [[1, 16]], al: []}, {n: 25, ec: 16, g: [[1, 28]], al: [6, 18]}, {n: 29, ec: 26, g: [[1, 44]], al: [6, 22]},
+      {n: 33, ec: 18, g: [[2, 32]], al: [6, 26]}, {n: 37, ec: 24, g: [[2, 43]], al: [6, 30]}, {n: 41, ec: 16, g: [[4, 27]], al: [6, 34]},
+      {n: 45, ec: 18, g: [[4, 31]], al: [6, 22, 38]}, {n: 49, ec: 22, g: [[2, 38], [2, 39]], al: [6, 24, 42]},
+      {n: 53, ec: 22, g: [[3, 36], [2, 37]], al: [6, 26, 46]}, {n: 57, ec: 26, g: [[4, 43], [1, 44]], al: [6, 28, 50]}];
+    VER.forEach(function (V) { if (V) V.dc = V.g.reduce(function (t, q) { return t + q[0] * q[1]; }, 0); });
     function utf8(s) {
       var out = [], k, c;
       s = unescape(encodeURIComponent(String(s)));
@@ -1901,26 +1912,26 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     }
     function make(text, forceMask) {
       var bytes = utf8(text), v, V;
-      for (v = 1; v <= 6; v++) if (bytes.length <= VER[v].nb * VER[v].dp - 2) break;
-      if (v > 6) return null;
+      for (v = 1; v <= 10; v++) if (bytes.length <= VER[v].dc - (v < 10 ? 2 : 3)) break;
+      if (v > 10) return null;
       V = VER[v];
-      var total = V.nb * V.dp, bits = [], k, j;
+      var total = V.dc, bits = [], k, j;
       var put = function (val, len) { for (var b = len - 1; b >= 0; b--) bits.push((val >> b) & 1); };
-      put(4, 4); put(bytes.length, 8); bytes.forEach(function (b) { put(b, 8); });
+      put(4, 4); put(bytes.length, v < 10 ? 8 : 16); bytes.forEach(function (b) { put(b, 8); });
       for (k = 0; k < 4 && bits.length < total * 8; k++) bits.push(0);
       while (bits.length % 8) bits.push(0);
       var cw = [];
       for (k = 0; k < bits.length; k += 8) { var by = 0; for (j = 0; j < 8; j++) by = (by << 1) | bits[k + j]; cw.push(by); }
       for (k = 0; cw.length < total; k++) cw.push(k % 2 ? 0x11 : 0xec);
-      var blocks = [], ecs = [];
-      for (k = 0; k < V.nb; k++) { var d = cw.slice(k * V.dp, (k + 1) * V.dp); blocks.push(d); ecs.push(rsEnc(d, V.ec)); }
+      var blocks = [], ecs = [], pos = 0, maxd = 0;
+      V.g.forEach(function (q) { for (var t = 0; t < q[0]; t++) { var d = cw.slice(pos, pos + q[1]); pos += q[1]; blocks.push(d); ecs.push(rsEnc(d, V.ec)); if (q[1] > maxd) maxd = q[1]; } });
       var all = [];
-      for (k = 0; k < V.dp; k++) for (j = 0; j < V.nb; j++) all.push(blocks[j][k]);
-      for (k = 0; k < V.ec; k++) for (j = 0; j < V.nb; j++) all.push(ecs[j][k]);
+      for (k = 0; k < maxd; k++) for (j = 0; j < blocks.length; j++) if (k < blocks[j].length) all.push(blocks[j][k]);
+      for (k = 0; k < V.ec; k++) for (j = 0; j < blocks.length; j++) all.push(ecs[j][k]);
       var stream = [];
       all.forEach(function (b) { put2(b); });
       function put2(b) { for (var q = 7; q >= 0; q--) stream.push((b >> q) & 1); }
-      if (v > 1) for (k = 0; k < 7; k++) stream.push(0);
+      if (v > 1 && v < 7) for (k = 0; k < 7; k++) stream.push(0);
       var n = V.n, m = [], fn = [], r, c;
       for (r = 0; r < n; r++) { m[r] = []; fn[r] = []; for (c = 0; c < n; c++) { m[r][c] = 0; fn[r][c] = false; } }
       function setF(row, col, dark) { if (row < 0 || col < 0 || row >= n || col >= n) return; m[row][col] = dark ? 1 : 0; fn[row][col] = true; }
@@ -1932,7 +1943,17 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       }
       finder(0, 0); finder(0, n - 7); finder(n - 7, 0);
       for (k = 8; k < n - 8; k++) { setF(6, k, k % 2 === 0); setF(k, 6, k % 2 === 0); }
-      if (V.al) for (var ar = -2; ar <= 2; ar++) for (var ac = -2; ac <= 2; ac++) setF(V.al + ar, V.al + ac, Math.max(Math.abs(ar), Math.abs(ac)) !== 1);
+      var AL = V.al, ai, aj;
+      for (ai = 0; ai < AL.length; ai++) for (aj = 0; aj < AL.length; aj++) {
+        if ((ai === 0 && aj === 0) || (ai === 0 && aj === AL.length - 1) || (ai === AL.length - 1 && aj === 0)) continue;
+        for (var ar = -2; ar <= 2; ar++) for (var ac = -2; ac <= 2; ac++) setF(AL[ai] + ar, AL[aj] + ac, Math.max(Math.abs(ar), Math.abs(ac)) !== 1);
+      }
+      if (v >= 7) {
+        var vr = v << 12, vq;
+        for (vq = 17; vq >= 12; vq--) if ((vr >> vq) & 1) vr ^= 0x1f25 << (vq - 12);
+        var vb = (v << 12) | vr;
+        for (vq = 0; vq < 18; vq++) { var vd = (vb >> vq) & 1; setF(Math.floor(vq / 3), n - 11 + vq % 3, vd); setF(n - 11 + vq % 3, Math.floor(vq / 3), vd); }
+      }
       /* reserve the format areas (written for real below) */
       for (k = 0; k < 9; k++) if (k !== 6) { setF(8, k, false); setF(k, 8, false); }   /* row and column 6 are the timing lines and stay as they are */
       for (k = 0; k < 8; k++) { setF(8, n - 1 - k, false); setF(n - 1 - k, 8, false); }
@@ -2319,7 +2340,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<form id="f"><label>' + (kind === "sale" ? "Customer" : "Supplier") + ' (optional)<input id="o-party" list="parties" autocomplete="off"></label><datalist id="parties">' +
       S.contacts.filter(function (c) { return c.kind === (kind === "sale" ? "customer" : "supplier"); }).map(function (c) { return '<option value="' + esc(c.name) + '">'; }).join("") + '</datalist>' + dateField("o-date") + locSelect("o-loc", kind === "sale" ? "Take stock from" : "Receive stock into", locSel === "all" ? S.locs[0].id : locSel) +
       (kind === "sale" && S.products.some(function (p) { return p.wp > 0; }) ? '<label>Price level<select id="o-lvl"><option value="">Retail prices</option><option value="w">Wholesale prices</option></select></label>' : '') +
-      '<label>Scan a barcode to add an item<input id="o-scan" placeholder="Scan or type a code, then Enter" autocomplete="off" autocapitalize="off"></label><button type="button" class="btn ghost sm" id="o-cam" style="margin:-4px 0 14px">Scan with camera</button>' +
+      '<label>Search an item or scan a barcode<input id="o-scan" placeholder="Type a name, SKU or code" autocomplete="off" autocapitalize="off" enterkeyhint="search"></label><div class="sug" id="o-sug" hidden></div><button type="button" class="btn ghost sm" id="o-cam" style="margin:-4px 0 14px">Scan with camera</button>' +
       '<div class="label" style="margin-bottom:8px">Items, quantity, unit price</div><div id="lines"></div>' +
       '<button type="button" class="btn ghost sm" id="addl" style="margin-bottom:8px">Add another item</button>' + (kind === "sale" ? '<div class="label" style="margin:6px 0 8px">Services, quantity, price (labour, delivery, repair...)</div><div id="svcs"></div><button type="button" class="btn ghost sm" id="adds" style="margin-bottom:12px">Add a service</button>' : '') + (kind === "purchase" ? '<div class="sub" id="o-hist" style="margin:0 0 12px"></div>' : (S.kits.length ? '<div class="two" style="align-items:end;margin-bottom:12px"><label>Add a kit<select id="o-kit">' + S.kits.map(function (k) { return '<option value="' + k.id + '">' + esc(k.name) + ' (' + kitStock(k) + ')</option>'; }).join("") + '</select></label><button type="button" class="btn ghost" id="o-kitadd">Add kit</button></div>' : '<div style="margin-bottom:6px"></div>')) +
       '<label>Discount (optional, amount or %)<input id="o-disc" inputmode="decimal" placeholder="e.g. 500 or 10%" autocomplete="off"></label><div class="sub" id="o-brk" style="margin:-6px 0 10px"></div>' +
@@ -2404,6 +2425,9 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         function scanIn(code) {
           var hit = lookupCode(code);
           if (!hit) { $("#err", root).textContent = "No item has the barcode " + code + "."; return {ok: false, msg: T("No item has the barcode") + " " + code + "."}; }
+          return addProd(hit);
+        }
+        function addProd(hit) {   /* adds the item as a new line, or one more of it when it is already on the list */
           $("#err", root).textContent = "";
           var found = null;
           root.querySelectorAll(".line").forEach(function (l) {
@@ -2417,13 +2441,41 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
           sumNow();
           return {ok: true, msg: hit.name + " × " + qn + (kind === "sale" && qn > have ? " · " + T("Only " + have + " in stock.") : "")};
         }
+        /* typing a name, SKU or code lists the matching items; tap one to add it */
+        var sug = $("#o-sug", root);
+        function foldTxt(x) { return String(x || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+        function matches(q) {
+          var ws = foldTxt(q).split(/\s+/).filter(Boolean); if (!ws.length) return [];
+          var out = [];
+          S.products.forEach(function (p) {
+            var nm = foldTxt(p.name), hay = nm + " " + foldTxt(p.grp) + " " + foldTxt(p.vr) + " " + foldTxt(p.sku) + " " + foldTxt(p.code);
+            if (!ws.every(function (w) { return hay.indexOf(w) > -1; })) return;
+            out.push({p: p, r: nm.indexOf(ws[0]) === 0 ? 0 : 1});
+          });
+          out.sort(function (a, b) { return a.r - b.r || a.p.name.localeCompare(b.p.name); });
+          return out.map(function (x) { return x.p; });
+        }
+        function showSug() {
+          var q = sc.value.trim(); if (!q) { sug.hidden = true; sug.innerHTML = ""; return; }
+          var m = matches(q);
+          if (!m.length) { sug.innerHTML = '<div class="sub" style="padding:10px 12px">' + esc(T("No item matches") + " “" + q + "”") + '</div>'; sug.hidden = false; return; }
+          sug.innerHTML = m.slice(0, 8).map(function (p) {
+            return '<button type="button" class="sugi" data-pid="' + p.id + '"><span class="sn">' + esc(p.name) + '</span><span class="ss mono">' + esc(money(kind === "sale" ? p.price : p.cost)) + ' · ' + p.qty + (p.unit ? ' ' + esc(p.unit) : '') + '</span></button>';
+          }).join("") + (m.length > 8 ? '<div class="sub" style="padding:6px 12px">' + esc((m.length - 8) + " " + T("more, keep typing")) + '</div>' : "");
+          sug.hidden = false;
+        }
+        function pickItem(p) {
+          addProd(p); sc.value = ""; sug.hidden = true; sug.innerHTML = ""; toast(p.name + " added"); sc.focus();
+        }
+        sc.addEventListener("input", showSug);
+        sug.addEventListener("click", function (e) { var b = e.target.closest(".sugi"); if (b) { var p = prod(+b.dataset.pid); if (p) pickItem(p); } });
         sc.onkeydown = function (e) {
           if (e.key !== "Enter") return;
           e.preventDefault();   /* a scanner presses Enter; never let that submit the order */
           var code = sc.value.trim(); if (!code) return;
-          var r = scanIn(code);
-          if (!r.ok) { sc.select(); return; }
-          sc.value = ""; toast(prod(lookupCode(code).id).name + " added");
+          var hit = lookupCode(code) || matches(code)[0];
+          if (!hit) { $("#err", root).textContent = /^\d{6,}$/.test(code) ? "No item has the barcode " + code + "." : "No item matches “" + code + "”."; sc.select(); return; }
+          pickItem(hit);
         };
         $("#o-cam", root).onclick = function () { camScan("Scan items", scanIn); };
         function build() {
@@ -3612,6 +3664,31 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (o.inote) t.push("", o.inote);
     return t.join("\n");
   }
+  /* a plain-text summary for the invoice QR code; shortened name by name until it fits the biggest code (213 bytes) */
+  function invQRText(o) {
+    var sp = function (x) { return String(x).replace(/[\u00a0\u202f]/g, " "); };
+    function build(biz, cust) {
+      var t = [invNo(o), biz, T("Invoice date") + colon() + ymd(o.idt)];
+      if (cust) t.push(T("Bill to") + colon() + cust);
+      t.push(T("Total") + colon() + sp(money(orderTotal(o))), T("Paid") + colon() + sp(money(paidOf(o))), T("Balance due") + colon() + sp(money(balOf(o))));
+      if (balOf(o) > 0) t.push(T("Due date") + colon() + ymd(o.due));
+      return t.join("\n");
+    }
+    var biz = String(S.biz || ""), cust = String(o.party || "");
+    function sz(x) { return unescape(encodeURIComponent(x)).length; }
+    while (sz(build(biz, cust)) > 213 && (cust.length > 8 || biz.length > 8)) { if (cust.length >= biz.length) cust = cust.slice(0, -1); else biz = biz.slice(0, -1); }
+    return build(biz, cust);
+  }
+  /* the code as a crisp PNG picture (4 blank modules around it); "" if it cannot be made */
+  function invQRImg(o, px) {
+    try {
+      var q = QR.make(invQRText(o)); if (!q) return "";
+      var z = 4, n = q.n + 2 * z, sc = Math.max(1, Math.round(px / n)), c = document.createElement("canvas"), g;
+      c.width = c.height = n * sc; g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.fillStyle = "#000";
+      for (var r = 0; r < q.n; r++) for (var k = 0; k < q.n; k++) if (q.m[r][k]) g.fillRect((k + z) * sc, (r + z) * sc, sc, sc);
+      return c.toDataURL("image/png");
+    } catch (e) { return ""; }
+  }
   function invoiceSheet(o) {
     if (!o.inv) { if (LICRO()) { toast("Your licence has ended. Enter a code to continue."); licSheet(); return; } invoiceForm(o); } else invoiceView(o);
   }
@@ -3634,7 +3711,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       });
   }
   function invoiceView(o) {
-    var st = invStatus(o), ex = extraRows(o), ct = findContact(o.party, o.kind), bal = balOf(o);
+    var st = invStatus(o), ex = extraRows(o), ct = findContact(o.party, o.kind), bal = balOf(o), qrSrc = invQRImg(o, 300);
     var lines = sellerLines().map(function (x) { return '<div class="sub">' + esc(x) + '</div>'; }).join("");
     openSheet(invNo(o),
       '<div class="receipt">' + (S.logo ? '<img class="rlogo" src="' + esc(S.logo) + '" alt="">' : '') + '<div class="rbiz">' + esc(S.biz) + '</div>' + lines +
@@ -3645,7 +3722,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       ex.filter(function (e) { return !e[2]; }).map(exHtml).join("") + '<div class="rrow rtot"><span>Total</span><b class="mono">' + esc(money(orderTotal(o))) + '</b></div>' + wordsHtml(o, true) + ex.filter(function (e) { return e[2]; }).map(exHtml).join("") +
       '<div class="rrow"><span>Paid</span><b class="mono">' + esc(money(paidOf(o))) + '</b></div><div class="rrow rtot"><span>Balance due</span><b class="mono">' + esc(money(bal)) + '</b></div>' +
       (S.ibank ? '<div class="label" style="margin:14px 0 4px">Payment details</div><div class="sub" style="white-space:pre-line">' + esc(S.ibank) + '</div>' : '') +
-      (o.inote ? '<div class="sub" style="margin-top:12px;white-space:pre-line">' + esc(o.inote) + '</div>' : '') + '</div>' +
+      (o.inote ? '<div class="sub" style="margin-top:12px;white-space:pre-line">' + esc(o.inote) + '</div>' : '') +
+      (qrSrc ? '<div style="text-align:center;margin-top:16px"><img id="iqr" src="' + qrSrc + '" alt="QR" style="width:150px;height:150px;image-rendering:pixelated;background:#fff"><div class="sub">' + esc(T("Scan to read the invoice summary")) + '</div></div>' : '') + '</div>' +
       '<div class="row" style="margin-top:14px"><button class="btn" id="vp">Save PDF</button><button class="btn ghost" id="ve">Edit invoice</button></div><div class="row" style="margin-top:10px"><button class="btn ghost" id="vw">WhatsApp</button><button class="btn ghost" id="vc">Copy text</button></div><div class="err" id="err" style="margin-top:8px"></div>',
       function (root) {
         if (!hasPDF()) $("#vp", root).hidden = true;
@@ -3751,6 +3829,12 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (balOf(o) > 0) block("", T("Payment due by") + " " + dateTxt(o.due));
     if (S.ibank) block(T("Payment details"), S.ibank);
     if (o.inote) block(T("Note"), o.inote);
+    var qi = invQRImg(o, 400);
+    if (qi) {
+      room(40); try { d.addImage(qi, "PNG", M, y, 32, 32); } catch (e) { }
+      d.setFont("helvetica", "normal"); d.setFontSize(8); ink(MUTE); d.splitTextToSize(pdfSafe(T("Scan to read the invoice summary")), 60).forEach(function (ln, i) { d.text(ln, M + 36, y + 16 + i * 4); });
+      y += 36;
+    }
     saveFile("invoice-" + invNo(o) + ".pdf", d.output("blob"));
   }
 
