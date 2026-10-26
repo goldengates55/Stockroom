@@ -104,8 +104,8 @@ footer a{color:inherit}
   var ua=navigator.userAgent||"", ios=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1), android=/Android/i.test(ua);
   var inapp=/FBAN|FBAV|Instagram|WhatsApp|Line\/|Telegram|TikTok|Snapchat|MicroMessenger|; wv\)/i.test(ua);
   var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
-  if(android&&!ios) $("#iphone").classList.add("hide");
-  if(ios) $("#android").classList.add("hide");
+  /* both sets of steps are always shown; the visitor's own phone comes first */
+  if(ios) $("#android").parentNode.insertBefore($("#iphone"),$("#android"));
   if(standalone) $("#done").classList.remove("hide");
   if(inapp&&!standalone) $("#inapp").classList.remove("hide");
   $("#copy").onclick=function(){
