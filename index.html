@@ -171,6 +171,7 @@ textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--li
 .rrow span{min-width:0;overflow-wrap:anywhere}
 .rrow small{display:block;color:var(--mute);font-size:12px}
 .rtot{font-size:18px;font-weight:600}
+.rtot .wl{flex:1;align-self:center;font-size:12px;font-weight:400;font-style:italic;color:var(--mute);text-align:left}.rtot .tr{display:flex;gap:10px;flex:none;align-items:baseline}
 .tabs button{font-size:11px}
 .scanbox{margin-bottom:18px}
 .hint{font-size:13px;color:var(--mute);margin:10px 0 0}
@@ -206,6 +207,7 @@ a.btn{display:grid;place-items:center;text-decoration:none}
 .about .alabel{font:600 11px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:#9db2dd}
 .about .acon{font:600 18px/1.3 var(--mono);margin-top:4px;color:#fff}
 .about .aver{margin-top:12px;font-size:13px;color:#9db2dd}
+.about a.plink{display:inline-flex;align-items:center;vertical-align:baseline}
 .about .plink{background:none;border:0;color:#ffc247;text-decoration:underline;padding:10px 4px;min-height:44px;font-size:13px}
 /* accessibility and printing */
 .skip{position:absolute;left:-9999px;top:8px;background:#ffc247;color:#1a1200;padding:12px 16px;border-radius:10px;z-index:100;font-weight:600;text-decoration:none}
@@ -257,7 +259,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.26", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.36", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
@@ -620,7 +622,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   RULES.push([/^No item matches “(.+)”\.?$/, function (m) { return "Aucun article ne correspond à “" + m[1] + "”."; }]);
   RULES.push([/^Adjusted (\d+) times?$/, function (m) { return "Modifiée " + plu(m[1], "fois", "fois"); }], [/^(.+) returned$/, function (m) { return m[1] + " retourné(s)"; }], [/^Paid so far (.+) · balance (.+)$/, function (m) { return "Payé jusqu'ici " + m[1] + " · reste " + m[2]; }], [/^Paid so far (.+) · the client paid (.+) too much$/, function (m) { return "Payé jusqu'ici " + m[1] + " · le client a payé " + m[2] + " de trop"; }], [/^That is more than the (.+) the client paid too much\.$/, function (m) { return "C'est plus que les " + m[1] + " payés en trop par le client."; }]);
   Object.assign(FR, {"Search an item or scan a barcode": "Chercher un article ou scanner un code-barres", "Type a name, SKU or code": "Saisissez un nom, une référence ou un code", "No item matches": "Aucun article ne correspond à", "more, keep typing": "de plus, continuez à saisir"});
-  Object.assign(FR, {"Scan to read the invoice summary": "Scannez pour lire le résumé de la facture"});
+  Object.assign(FR, {"Use this app honestly": "Utilisez cette application honnêtement", "I understand": "J'ai compris", "Honest use": "Utilisation honnête", "Golden Gates Stock Inventory is made to help you keep a true record of your business.": "Golden Gates Stock Inventory est conçue pour vous aider à tenir un registre fidèle de votre activité.", "Enter only real items, real sales, real prices and real payments. Do not invent, change or backdate records to make a business look bigger, older or more active than it is.": "Saisissez uniquement de vrais articles, de vraies ventes, de vrais prix et de vrais paiements. N'inventez pas, ne modifiez pas et n'antidatez pas des écritures pour faire paraître une activité plus grande, plus ancienne ou plus active qu'elle ne l'est.", "Records made up to support a visa, a loan or any official application can lead to refusal, a ban or legal action. Keep your real receipts and your bank or mobile money statements, and be ready to show them.": "Des écritures fabriquées pour appuyer une demande de visa, un prêt ou toute démarche officielle peuvent conduire à un refus, à une interdiction ou à des poursuites. Gardez vos vrais reçus et vos relevés bancaires ou de mobile money, et soyez prêt à les présenter.", "Honest records protect you and strengthen your application. The seller is not responsible for false or misleading use of the app.": "Des écritures honnêtes vous protègent et renforcent votre dossier. Le vendeur n'est pas responsable d'un usage faux ou trompeur de l'application."});
+  Object.assign(FR, {"Referral bonus: 20%": "Bonus de parrainage : 20 %", "Your referral code is": "Votre code de parrainage est", "and it is inside the message. When a friend buys a licence and gives your code to the seller, you get a bonus of 20% of what they buy. You choose: extra time on your licence, or cash. Ask your seller for it.": "et il est dans le message. Quand un ami achète une licence et donne votre code au vendeur, vous recevez un bonus de 20 % de son achat. Vous choisissez : du temps en plus sur votre licence, ou de l'argent. Demandez-le à votre vendeur.", "Referral code (optional, from the friend who shared the app)": "Code de parrainage (facultatif, de l'ami qui vous a partagé l'application)"});
+  Object.assign(FR, {"Jobs abroad and some schools": "Emplois à l'étranger et quelques écoles", "Open the guide to jobs and schools abroad. It opens in your browser and needs internet.": "Ouvrez le guide des emplois et des écoles à l'étranger. Il s'ouvre dans votre navigateur et demande internet."});
+  Object.assign(FR, {"QR code on invoices": "Code QR sur les factures", "Total in words on invoices": "Total en lettres sur les factures", "Show": "Afficher", "Scan to read the invoice summary": "Scannez pour lire le résumé de la facture"});
   function trPart(c) { var r = FR[c]; return r !== undefined ? r : trRule(c); }
   /* keeps spaces and a leading or trailing middle dot as they are, and also translates the pieces of "a · b · c" one by one */
   function tr(s) {
@@ -754,6 +759,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     if (s.logo && !/^data:image\/png;base64,[A-Za-z0-9+\/=]+$/.test(s.logo)) { delete s.logo; delete s.logoW; delete s.logoH; }   /* only our own small PNGs are accepted from a backup */
     s.ordN = s.ordN || 0;
     ["iaddr", "iphone", "itid", "ibank", "inote"].forEach(function (k, i) { s[k] = typeof s[k] === "string" ? s[k].slice(0, [200, 60, 40, 400, 300][i]) : ""; });
+    s.iqr = s.iqr !== false; s.iwd = s.iwd !== false;
     s.iterms = isFinite(s.iterms) && s.iterms >= 0 && s.iterms <= 365 ? Math.round(s.iterms) : 14;
     if (!Array.isArray(s.locs) || !s.locs.length) s.locs = [{id: 1, name: "Main"}];
     s.locs = s.locs.filter(function (l) { return l && isFinite(l.id) && typeof l.name === "string"; });
@@ -1106,7 +1112,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       (S.examples && S.products.some(function (p) { return p.ex; })
         ? '<div class="banner"><span>These are example items so you can see how it works.</span><button data-act="clear-examples">Remove examples</button></div>' : "");
     saveUI();
-    $("#view").innerHTML = (tab === "home" && S.examples ? '<div class="banner"><span>New here? Read the short user manual.</span><button data-act="manual">User manual</button></div>' : "") + views[tab]() + (tab === "home" ? '<div class="about"><div class="aname">Golden Gates Stock Inventory</div><div class="atag">Designed for Travel Applicants and Factory/Warehouse owners</div><div class="alabel">WhatsApp and calls</div><div class="acon">' + CONTACT_TXT + '</div><div class="aver">Version ' + APP_VERSION + ' · <button class="plink" data-act="manual">User manual</button> · <button class="plink" data-act="share-app">Share the app</button> · <button class="plink" data-act="qr-app">QR code</button> · <button class="plink" data-act="privacy">Privacy and terms</button></div></div>' : "");
+    $("#view").innerHTML = (tab === "home" && S.examples ? '<div class="banner"><span>New here? Read the short user manual.</span><button data-act="manual">User manual</button></div>' : "") + views[tab]() + (tab === "home" ? '<div class="about"><div class="aname">Golden Gates Stock Inventory</div><div class="atag">Designed for Travel Applicants and Factory/Warehouse owners</div><div class="alabel">WhatsApp and calls</div><div class="acon">' + CONTACT_TXT + '</div><div class="aver">Version ' + APP_VERSION + ' · <button class="plink" data-act="manual">User manual</button> · <button class="plink" data-act="share-app">Share the app</button> · <button class="plink" data-act="qr-app">QR code</button> · <button class="plink" data-act="privacy">Privacy and terms</button> · <a class="plink" href="https://goldengates55.github.io/Canada-guide-and-beyond-V/#jobs" target="_blank" rel="noopener">Jobs abroad and some schools</a></div></div>' : "");
     var qi = $("#q");
     if (qi) {
       qi.oninput = function () { q = qi.value; $("#list").innerHTML = stockList(); saveUI(); };
@@ -1873,12 +1879,18 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
 
   /* ---------- share the app: a ready-made install message for WhatsApp ---------- */
   var SHARE_FALLBACK = "https://goldengates55.github.io/Stockroom/";
-  var SHARE_MSG = {en: "Hello! 👋 Welcome to *Golden Gates Stock Inventory*, the app to manage your stock, sales, debts and reports, and to build a clear record of your business. It works offline.\n\n🔗 Open this link on your phone:\n{URL}\n\n📱 *Android (Chrome)*\n1. Open the link in Chrome.\n2. Tap the menu (3 dots, top right).\n3. Tap *Install app* (or *Add to Home screen*).\n\n🍎 *iPhone (Safari only)*\n1. Open the link in Safari (not Chrome, not inside WhatsApp).\n2. Tap the Share button.\n3. Scroll down and tap *Add to Home Screen*, then *Add*.\n\nThen open the app from its new icon on your home screen. It opens full screen, like a normal app.\n\n🔑 To activate it, open Settings > Licence, copy the 6-character phone code and send it to me. I will send your activation code.\n\n💾 Tip: save a PDF backup from Settings every week. On iPhone, always use the Home Screen icon, so your data is not deleted by Safari.\n\nQuestions? WhatsApp or call: {TEL}", fr: "Bonjour ! 👋 Bienvenue sur *Golden Gates Stock Inventory*, l'application pour gérer votre stock, vos ventes, vos dettes et vos rapports, et pour garder une trace claire de votre activité. Elle fonctionne sans internet.\n\n🔗 Ouvrez ce lien sur votre téléphone :\n{URL}\n\n📱 *Android (Chrome)*\n1. Ouvrez le lien dans Chrome.\n2. Touchez le menu (3 points, en haut à droite).\n3. Touchez *Installer l'application* (ou *Ajouter à l'écran d'accueil*).\n\n🍎 *iPhone (Safari uniquement)*\n1. Ouvrez le lien dans Safari (pas Chrome, pas dans WhatsApp).\n2. Touchez le bouton Partager.\n3. Faites défiler et touchez *Sur l'écran d'accueil*, puis *Ajouter*.\n\nOuvrez ensuite l'application depuis sa nouvelle icône sur l'écran d'accueil. Elle s'ouvre en plein écran, comme une vraie application.\n\n🔑 Pour l'activer, ouvrez Réglages > Licence, copiez le code téléphone de 6 caractères et envoyez-le-moi. Je vous enverrai votre code d'activation.\n\n💾 Conseil : enregistrez une sauvegarde PDF depuis Réglages chaque semaine. Sur iPhone, utilisez toujours l'icône de l'écran d'accueil, pour que Safari n'efface pas vos données.\n\nUne question ? WhatsApp ou appel : {TEL}"};
+  var SHARE_MSG = {en: "Hello! 👋 Welcome to *Golden Gates Stock Inventory*, the app to manage your stock, sales, debts and reports, and to build a clear record of your business. It works offline.\n\n✈️ If you are preparing a visa application, your honest stock and sales records can guide you and give a solid foundation to show your proof of funds, together with your bank statements. Enter only real information.\n\n🔗 Open this link on your phone:\n{URL}\n\n🌐 The first time, if the link is slow or does not open, try a VPN or another network. After it is installed, the app works offline.\n\n📱 *Android (Chrome)*\n1. Open the link in Chrome.\n2. Tap the menu (3 dots, top right).\n3. Tap *Install app* (or *Add to Home screen*).\n\n🍎 *iPhone (Safari only)*\n1. Open the link in Safari (not Chrome, not inside WhatsApp).\n2. Tap the Share button.\n3. Scroll down and tap *Add to Home Screen*, then *Add*.\n\nThen open the app from its new icon on your home screen. It opens full screen, like a normal app.\n\n🔑 To activate it, open Settings > Licence, copy the 6-character phone code and send it to me. I will send your activation code.\n\n🎁 When you ask for your code, say you were referred by *{REF}*.\n\n💰 Then share the app with your own referral link: tap *Share the app* at the bottom of the home screen. For every friend who buys with your code, you earn a 20% bonus of what they buy, in added time or in cash. You choose.\n\n💾 Tip: save a PDF backup from Settings every week. On iPhone, always use the Home Screen icon, so your data is not deleted by Safari.\n\nQuestions? WhatsApp or call: {TEL}", fr: "Bonjour ! 👋 Bienvenue sur *Golden Gates Stock Inventory*, l'application pour gérer votre stock, vos ventes, vos dettes et vos rapports, et pour garder une trace claire de votre activité. Elle fonctionne sans internet.\n\n✈️ Si vous préparez une demande de visa, vos registres honnêtes de stock et de ventes peuvent vous guider et constituer une base solide pour justifier vos fonds, avec vos relevés bancaires. Saisissez uniquement des informations réelles.\n\n🔗 Ouvrez ce lien sur votre téléphone :\n{URL}\n\n🌐 La première fois, si le lien est lent ou ne s'ouvre pas, essayez un VPN ou un autre réseau. Une fois installée, l'application fonctionne sans internet.\n\n📱 *Android (Chrome)*\n1. Ouvrez le lien dans Chrome.\n2. Touchez le menu (3 points, en haut à droite).\n3. Touchez *Installer l'application* (ou *Ajouter à l'écran d'accueil*).\n\n🍎 *iPhone (Safari uniquement)*\n1. Ouvrez le lien dans Safari (pas Chrome, pas dans WhatsApp).\n2. Touchez le bouton Partager.\n3. Faites défiler et touchez *Sur l'écran d'accueil*, puis *Ajouter*.\n\nOuvrez ensuite l'application depuis sa nouvelle icône sur l'écran d'accueil. Elle s'ouvre en plein écran, comme une vraie application.\n\n🔑 Pour l'activer, ouvrez Réglages > Licence, copiez le code téléphone de 6 caractères et envoyez-le-moi. Je vous enverrai votre code d'activation.\n\n🎁 Quand vous demandez votre code, dites que vous avez été référé par *{REF}*.\n\n💰 Partagez ensuite l'application avec votre propre lien de parrainage : touchez *Partager l'application* en bas de l'écran d'accueil. Pour chaque ami qui achète avec votre code, vous gagnez un bonus de 20 % de son achat, en temps ajouté ou en argent. Vous choisissez.\n\n💾 Conseil : enregistrez une sauvegarde PDF depuis Réglages chaque semaine. Sur iPhone, utilisez toujours l'icône de l'écran d'accueil, pour que Safari n'efface pas vos données.\n\nUne question ? WhatsApp ou appel : {TEL}"};
   function shareUrl() {
     try { var l = window.location; if (l.protocol === "https:" && !/(^|\.)(claude\.ai|claudeusercontent\.com)$/.test(l.hostname)) return l.origin + l.pathname.replace(/index\.html$/, ""); } catch (e) {}
     return SHARE_FALLBACK;
   }
-  function shareText(lang) { return SHARE_MSG[lang === "fr" ? "fr" : "en"].replace("{URL}", shareUrl()).replace("{TEL}", CONTACT_TXT); }
+  /* referral: a friend's phone code, kept from the shared link or typed in the Licence screen; it only goes into the message to the seller */
+  var REF_KEY = "stockroom.ref";
+  function refOK(v) { v = String(v || "").trim().toUpperCase(); return /^[A-Z0-9]{3}-?[A-Z0-9]{3}$/.test(v) && v.replace("-", "") !== devCode().replace("-", "") ? v.replace(/^([A-Z0-9]{3})-?/, "$1-") : ""; }
+  function refGet() { try { return refOK(localStorage.getItem(REF_KEY)); } catch (e) { return ""; } }
+  function refSet(v) { try { var r = refOK(v); if (r) localStorage.setItem(REF_KEY, r); else localStorage.removeItem(REF_KEY); } catch (e) {} }
+  try { var rq = /[?&]ref=([^&#]+)/.exec(window.location.search); if (rq && !refGet()) refSet(decodeURIComponent(rq[1])); } catch (e) {}
+  function shareText(lang) { return SHARE_MSG[lang === "fr" ? "fr" : "en"].replace("{URL}", shareUrl() + "?ref=" + encodeURIComponent(devCode())).replace("{REF}", devCode()).replace("{TEL}", CONTACT_TXT); }
 /* QR-BEGIN */
   /* A small QR code writer (byte mode, error level M, versions 1 to 10: up to 213 bytes). */
   var QR = (function () {
@@ -2020,7 +2032,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     fr: {scan: "Scannez pour installer l'application", sub: "Dirigez l'appareil photo du téléphone vers le carré", an: "ANDROID (Chrome)", a: ["Ouvrez le lien dans Chrome.", "Touchez le menu (3 points, en haut à droite).", "Touchez Installer l'application (ou Ajouter à l'écran d'accueil)."], io: "IPHONE (Safari uniquement)", i: ["Ouvrez le lien dans Safari.", "Touchez le bouton Partager.", "Touchez Sur l'écran d'accueil, puis Ajouter."], tip: "Ouvrez ensuite l'application depuis sa nouvelle icône. Elle fonctionne sans internet.", call: "WhatsApp et appels"}
   };
   function qrPoster(lang) {
-    var t = QRP[lang === "fr" ? "fr" : "en"], W = 1240, H = 1754, cv = document.createElement("canvas"), g, url = shareUrl(), q;
+    var t = QRP[lang === "fr" ? "fr" : "en"], W = 1240, H = 1754, cv = document.createElement("canvas"), g, url = shareUrl().replace(/\/?$/, "/") + "install.html", q;
     cv.width = W; cv.height = H; g = cv.getContext("2d");
     q = QR.make(url);
     var F = '"Helvetica Neue",Helvetica,Arial,sans-serif';
@@ -2077,6 +2089,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     var lg = LANG === "fr" ? "fr" : "en";
     openSheet("Share the app",
       '<p style="margin:0 0 12px;color:var(--mute);font-size:14px">Send this message to a customer or a friend. It explains how to install the app on Android and on iPhone.</p>' +
+      '<div class="banner" style="display:block;margin-bottom:12px"><b>Referral bonus: 20%</b><br><span style="font-size:14px">Your referral code is <b class="mono">' + esc(devCode()) + '</b> and it is inside the message. When a friend buys a licence and gives your code to the seller, you get a bonus of 20% of what they buy. You choose: extra time on your licence, or cash. Ask your seller for it.</span></div>' +
       '<div class="chips"><button type="button" class="chip" data-l="en">English</button><button type="button" class="chip" data-l="fr">Français</button></div>' +
       '<textarea id="sh-t" rows="12" readonly aria-label="Message" style="margin-bottom:12px"></textarea>' +
       '<button type="button" class="btn block" id="sh-wa" style="margin-bottom:8px">Send on WhatsApp</button>' +
@@ -3516,7 +3529,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   /* the "Total in words" line: on invoices, pro-formas and quotes (force = always, for the invoice screens) */
   function wordsLine(o, force) {
-    if (o.kind !== "sale" || !(force || RMODE === "quote" || RMODE === "proforma" || RMODE === "invoice")) return "";
+    if (S.iwd === false || o.kind !== "sale" || !(force || RMODE === "quote" || RMODE === "proforma" || RMODE === "invoice")) return "";
     var w = amtWords(orderTotal(o)); return w ? T("Total in words") + colon() + w : "";
   }
   function wordsHtml(o, force) { var w = wordsLine(o, force); return w ? '<div class="sub" style="padding:6px 0 8px;font-style:italic">' + esc(w) + '</div>' : ""; }
@@ -3682,6 +3695,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   /* the code as a crisp PNG picture (4 blank modules around it); "" if it cannot be made */
   function invQRImg(o, px) {
     try {
+      if (S.iqr === false) return "";
       var q = QR.make(invQRText(o)); if (!q) return "";
       var z = 4, n = q.n + 2 * z, sc = Math.max(1, Math.round(px / n)), c = document.createElement("canvas"), g;
       c.width = c.height = n * sc; g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.fillStyle = "#000";
@@ -3710,6 +3724,11 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         };
       });
   }
+  /* the Total row of an invoice: the amount in words sits at the far left of the same line */
+  function totRow(o) {
+    var w = wordsLine(o, true), amt = esc(money(orderTotal(o)));
+    return w ? '<div class="rrow rtot"><em class="wl">' + esc(w) + '</em><span class="tr"><span>Total</span><b class="mono">' + amt + '</b></span></div>' : '<div class="rrow rtot"><span>Total</span><b class="mono">' + amt + '</b></div>';
+  }
   function invoiceView(o) {
     var st = invStatus(o), ex = extraRows(o), ct = findContact(o.party, o.kind), bal = balOf(o), qrSrc = invQRImg(o, 300);
     var lines = sellerLines().map(function (x) { return '<div class="sub">' + esc(x) + '</div>'; }).join("");
@@ -3719,7 +3738,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<div class="rrow"><span>Status</span><b' + (st === "Overdue" ? ' style="color:var(--alert)"' : '') + '>' + esc(T(st)) + '</b></div>' +
       (o.party ? '<div class="rrow"><span>Bill to</span><b>' + esc(o.party) + (ct && ct.phone ? '<small class="mono"> ' + esc(ct.phone) + '</small>' : '') + '</b></div>' : '') +
       '<div class="rl">' + allLines(o).map(function (l) { return '<div class="rrow"><span>' + esc(l.name) + '<small class="mono">' + l.qty + ' × ' + esc(money(l.price)) + '</small></span><b class="mono">' + esc(money(l.qty * l.price)) + '</b></div>'; }).join("") + '</div>' +
-      ex.filter(function (e) { return !e[2]; }).map(exHtml).join("") + '<div class="rrow rtot"><span>Total</span><b class="mono">' + esc(money(orderTotal(o))) + '</b></div>' + wordsHtml(o, true) + ex.filter(function (e) { return e[2]; }).map(exHtml).join("") +
+      ex.filter(function (e) { return !e[2]; }).map(exHtml).join("") + totRow(o) + ex.filter(function (e) { return e[2]; }).map(exHtml).join("") +
       '<div class="rrow"><span>Paid</span><b class="mono">' + esc(money(paidOf(o))) + '</b></div><div class="rrow rtot"><span>Balance due</span><b class="mono">' + esc(money(bal)) + '</b></div>' +
       (S.ibank ? '<div class="label" style="margin:14px 0 4px">Payment details</div><div class="sub" style="white-space:pre-line">' + esc(S.ibank) + '</div>' : '') +
       (o.inote ? '<div class="sub" style="margin-top:12px;white-space:pre-line">' + esc(o.inote) + '</div>' : '') +
@@ -3814,9 +3833,15 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     y += 3;
     function tot(label, val, bold, big) { room(8); d.setFont("helvetica", bold ? "bold" : "normal"); d.setFontSize(big ? 12 : 9.5); ink(DARK); d.text(pdfSafe(label), 125, y); d.text(pdfSafe(val), X2, y, {align: "right"}); y += big ? 8 : 6; }
     var ex = extraRows(o); ex.forEach(function (e) { if (!e[2]) tot(e[0], e[1]); });
-    tot(T("Total"), money(orderTotal(o)), true, true);
     var iw = wordsLine(o, true);
-    if (iw) { d.setFont("helvetica", "italic"); d.setFontSize(9); ink(MUTE); d.splitTextToSize(pdfSafe(iw), W - M * 2 - 10).forEach(function (ln) { room(5); d.text(ln, X2, y, {align: "right"}); y += 4.5; }); y += 2; }
+    room(8); var y0 = y;
+    tot(T("Total"), money(orderTotal(o)), true, true);
+    if (iw) {
+      d.setFont("helvetica", "italic"); d.setFontSize(8.5); ink(MUTE);
+      var wl = d.splitTextToSize(pdfSafe(iw), 105);
+      wl.forEach(function (ln, i) { d.text(ln, M, y0 + i * 4); });
+      y = Math.max(y, y0 + wl.length * 4 + 1);
+    }
     ex.forEach(function (e) { if (e[2]) tot(e[0], e[1]); });
     tot(T("Paid"), money(paidOf(o)));
     tot(T("Balance due"), money(balOf(o)), true, true);
@@ -4071,6 +4096,14 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<div class="mono" style="font-size:18px;margin-bottom:6px">' + CONTACT_TXT + '</div>');
   }
 
+  /* ---------- honest use: shown once on each phone, and kept in Privacy and terms ---------- */
+  var HONEST = ["Golden Gates Stock Inventory is made to help you keep a true record of your business.", "Enter only real items, real sales, real prices and real payments. Do not invent, change or backdate records to make a business look bigger, older or more active than it is.", "Records made up to support a visa, a loan or any official application can lead to refusal, a ban or legal action. Keep your real receipts and your bank or mobile money statements, and be ready to show them.", "Honest records protect you and strengthen your application. The seller is not responsible for false or misleading use of the app."];
+  function honestSheet() {
+    var p = '<p style="margin:0 0 10px">';
+    openSheet("Use this app honestly", HONEST.map(function (x) { return p + esc(x) + '</p>'; }).join("") + '<button class="btn block" id="hn-ok" style="margin-top:14px">I understand</button>', function (root) {
+      $("#hn-ok", root).onclick = function () { try { localStorage.setItem("stockroom.honest", "1"); } catch (e) {} closeSheet(); };
+    });
+  }
   /* ---------- privacy, your data ---------- */
   function privacySheet() {
     var h3 = '<h3 style="font-size:20px;text-transform:uppercase;margin:16px 0 6px">', p = '<p style="margin:0 0 8px;color:var(--mute)">';
@@ -4080,6 +4113,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       h3 + 'What loads from the internet</h3>' + p + 'The first time you open the app online it loads a font from Google Fonts and the PDF and barcode tools from public servers (cdnjs and jsDelivr). If you use sync, the app also connects to your sync server. Like any website, those servers can see your phone\'s internet address. After that the app works with no internet.</p>' +
       h3 + 'Your controls</h3>' + p + 'In Settings you can download all your data, save and restore a backup, or erase everything on this phone, at any time. Clearing the data of the app, or uninstalling it, also erases it.</p>' +
       h3 + 'Licence</h3>' + p + 'A licence code works on one phone for the time it was sold for. It is checked on the phone itself and nothing about it is sent anywhere.</p>' +
+      h3 + 'Honest use</h3>' + HONEST.map(function (x) { return p + esc(x) + '</p>'; }).join("") +
       h3 + 'Terms of use</h3>' + p + 'The app is provided as it is. You are responsible for keeping backups, and for checking prices, tax and totals before you rely on them. The app is not accounting, legal or tax advice.</p>' +
       h3 + 'Questions or requests about your data</h3>' + p + 'Write or call on WhatsApp:</p><div class="mono" style="font-size:18px;margin-bottom:6px">' + CONTACT_TXT + '</div>' +
       '<div class="label" style="margin-top:14px">Version ' + esc(APP_VERSION) + '</div>');
@@ -4114,6 +4148,8 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<label>Tax or business ID (shown on invoices)<input id="s-itid" maxlength="40" value="' + esc(S.itid) + '" autocomplete="off"></label>' +
       '<label>Payment details (bank, mobile money)<textarea id="s-ibank" rows="3" maxlength="400">' + esc(S.ibank) + '</textarea></label>' +
       '<label>Days to pay an invoice (0 = due when issued)<input id="s-iterms" inputmode="numeric" value="' + esc(String(S.iterms)) + '" autocomplete="off"></label>' +
+      '<label>QR code on invoices<select id="s-iqr"><option value="1">Show</option><option value="">Hide</option></select></label>' +
+      '<label>Total in words on invoices<select id="s-iwd"><option value="1">Show</option><option value="">Hide</option></select></label>' +
       '<label>Note at the bottom of invoices<textarea id="s-inote" rows="2" maxlength="300">' + esc(S.inote) + '</textarea></label>' +
       '<label>Warn about expiry this many days ahead<input id="s-warn" inputmode="numeric" value="' + S.warn + '"></label><div class="err" id="serr"></div><button class="btn block">Save settings</button></form>' +
       licBlock() + '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Install on your phone</h3><button type="button" class="btn ghost block" id="inst-open">Home screen icon</button><button type="button" class="btn ghost block" id="sh-open" style="margin-top:8px">Share the app with a customer</button><button type="button" class="btn ghost block" id="qr-open" style="margin-top:8px">Install QR code</button>' + pinBlock() + syncBlock() +
@@ -4162,6 +4198,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         };
         if ($("#lg-del", root)) $("#lg-del", root).onclick = function () { delete S.logo; delete S.logoW; delete S.logoH; save(); render(); settings(); toast("Logo removed"); };
         $("#s-incl", root).value = S.taxIncl ? "1" : "";
+        $("#s-iqr", root).value = S.iqr === false ? "" : "1"; $("#s-iwd", root).value = S.iwd === false ? "" : "1";
         $("#f", root).onsubmit = function (e) {
           e.preventDefault();
           var tx = $("#s-tax", root).value.trim(), tv = tx === "" ? 0 : num(tx);
@@ -4176,7 +4213,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
           var itm = Math.round(num($("#s-iterms", root).value === "" ? "14" : $("#s-iterms", root).value));
           if (isNaN(itm) || itm < 0 || itm > 365) { $("#serr", root).textContent = "Enter the days to pay as a number from 0 to 365."; return; }
           S.iaddr = $("#s-iaddr", root).value.trim().slice(0, 200); S.iphone = $("#s-iphone", root).value.trim().slice(0, 60); S.itid = $("#s-itid", root).value.trim().slice(0, 40);
-          S.ibank = $("#s-ibank", root).value.trim().slice(0, 400); S.inote = $("#s-inote", root).value.trim().slice(0, 300); S.iterms = itm;
+          S.ibank = $("#s-ibank", root).value.trim().slice(0, 400); S.inote = $("#s-inote", root).value.trim().slice(0, 300); S.iterms = itm; S.iqr = $("#s-iqr", root).value === "1"; S.iwd = $("#s-iwd", root).value === "1";
           S.tax = tv; S.taxIncl = $("#s-incl", root).value === "1"; S.warn = wd; closeSheet(); commit("Saved");
         };
         $("#copy", root).onclick = function () {
@@ -4252,7 +4289,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   function bodyM(x) {
     var logo = typeof x.logo === "string" && x.logo.length < 180000 && /^data:image\/png;base64,[A-Za-z0-9+\/=]+$/.test(x.logo) ? x.logo : "";
     var b = {iaddr: str(x.iaddr, 200), iphone: str(x.iphone, 60), itid: str(x.itid, 40), ibank: str(x.ibank, 400), inote: str(x.inote, 300), iterms: Math.min(365, Math.max(0, Math.round(fin(x.iterms, 14)))),
-      biz: str(x.biz, 80), town: str(x.town, 80), cur: str(x.cur, 6), tax: fin(x.tax), taxIncl: !!x.taxIncl, warn: Math.min(365, Math.max(1, Math.round(fin(x.warn, 30)) || 30)),
+      biz: str(x.biz, 80), town: str(x.town, 80), cur: str(x.cur, 6), tax: fin(x.tax), taxIncl: !!x.taxIncl, iqr: x.iqr !== false, iwd: x.iwd !== false, warn: Math.min(365, Math.max(1, Math.round(fin(x.warn, 30)) || 30)),
       locs: (Array.isArray(x.locs) ? x.locs : []).slice(0, 40).filter(function (l) { return l && isFinite(+l.id); }).map(function (l) { return {id: +l.id, name: str(l.name, 30)}; }),
       dl: (Array.isArray(x.dl) ? x.dl : []).slice(0, 100).map(Number).filter(isFinite)};
     if (logo) { b.logo = logo; b.logoW = fin(x.logoW); b.logoH = fin(x.logoH); }
@@ -4438,7 +4475,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     }
     if (!locs.length) locs = D.locs;
     if (wins) {
-      ["biz", "town", "cur", "tax", "taxIncl", "warn", "iaddr", "iphone", "itid", "ibank", "inote", "iterms"].forEach(function (k) { if (D[k] !== rb[k]) { D[k] = rb[k]; changed = true; } });
+      ["biz", "town", "cur", "tax", "taxIncl", "warn", "iaddr", "iphone", "itid", "ibank", "inote", "iterms", "iqr", "iwd"].forEach(function (k) { if (D[k] !== rb[k]) { D[k] = rb[k]; changed = true; } });
       if (rb.logo) { if (D.logo !== rb.logo) { D.logo = rb.logo; D.logoW = rb.logoW; D.logoH = rb.logoH; changed = true; } } else if (D.logo) { delete D.logo; delete D.logoW; delete D.logoH; changed = true; }
       sy.mu = u;
     }
@@ -5022,19 +5059,20 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   var RO_ACTS = ["adjust", "pf-pay", "new-order", "restock", "pay", "complete", "cancel", "return", "new-contact", "new-product", "new-group", "group", "group-from", "add-variant", "open-product", "stocktake", "import", "new-kit", "edit-kit", "writeoff", "exp-add", "exp-edit", "inc-add", "inc-edit", "cash-day", "clear-examples", "bc-add", "bc-gen-all", "bc-photo", "bc-upload"];
   function licSheet() {
-    var msg = "Hello, I would like a Golden Gates Stock Inventory activation code. My phone code is " + devCode() + ".";
+    var msg = function () { var r = refOK($("#lic-ref") ? $("#lic-ref").value : refGet()); return "Hello, I would like a Golden Gates Stock Inventory activation code. My phone code is " + devCode() + "." + (r ? " I was referred by " + r + "." : ""); };
     openSheet("Licence",
       '<p style="margin:0 0 4px;font-weight:600">' + esc(licText()) + '</p>' +
       '<p style="margin:0 0 14px;color:var(--mute);font-size:14px">Send this phone code to your seller. You get an activation code back. Paste it below.</p>' +
       '<div class="label">Phone code</div><div style="font-family:var(--mono);font-size:28px;letter-spacing:2px;margin:2px 0 10px" id="lic-dev">' + esc(devCode()) + '</div>' +
       '<div class="row" style="margin-bottom:14px"><button type="button" class="btn ghost" id="lic-copy">Copy code</button></div>' +
       '<div class="label">WhatsApp and calls</div><div class="mono" style="font-size:18px;margin:4px 0 8px">' + esc(CONTACT_TXT) + '</div><div class="row" style="margin-bottom:14px"><button type="button" class="btn ghost" id="lic-wa">Message on WhatsApp</button><a class="btn ghost" href="tel:+' + LIC_CONTACT + '">Call</a></div>' +
+      '<label>Referral code (optional, from the friend who shared the app)<input id="lic-ref" maxlength="7" autocomplete="off" autocapitalize="characters" placeholder="K7Q-293" value="' + esc(refGet()) + '"></label>' +
       '<label>Activation code<textarea id="lic-in" rows="3" placeholder="Paste the activation code here" autocomplete="off" spellcheck="false"></textarea></label><div class="err" id="lic-err"></div>' +
       '<button type="button" class="btn block" id="lic-go">Activate</button>' +
       '<p style="margin:12px 0 0;color:var(--mute);font-size:13px">A code works on this phone only. If you clear the data of the app or change phone, ask your seller for a new code.</p>',
       function (root) {
         $("#lic-copy", root).onclick = function () { var t = devCode(); try { navigator.clipboard.writeText(t).then(function () { toast("Copied"); }, function () { toast(t); }); } catch (e) { toast(t); } };
-        if (LIC_CONTACT) $("#lic-wa", root).onclick = function () { openWA(waLink("+" + LIC_CONTACT.replace(/\D/g, ""), msg)); };
+        if (LIC_CONTACT) $("#lic-wa", root).onclick = function () { refSet($("#lic-ref", root).value); openWA(waLink("+" + LIC_CONTACT.replace(/\D/g, ""), msg())); };
         $("#lic-go", root).onclick = function () {
           var er = $("#lic-err", root); er.textContent = "";
           licCheck($("#lic-in", root).value).then(function (r) {
@@ -5244,6 +5282,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   startTr();
   if (pinCfg()) { LOCKED = true; ROLE = "staff"; showLock(); }   /* locked until a PIN is entered; nothing sensitive is shown meanwhile */
   render();
+  try { if (!LOCKED && !localStorage.getItem("stockroom.honest")) setTimeout(function () { if (!document.querySelector(".sheet")) honestSheet(); }, 600); } catch (e) {}
 })();
 </script>
 
