@@ -260,7 +260,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.37", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.38", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
@@ -5267,6 +5267,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   else { try { localStorage.setItem("stockroom.probe", "1"); localStorage.removeItem("stockroom.probe"); lastSaved = Date.now(); saveErr = false; } catch (e) { saveErr = true; } }
   document.documentElement.lang = LANG;
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}   /* asks the browser not to clear this data when space runs low */
+  try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("portrait").catch(function () {}); } catch (e) {}   /* keeps the screen upright where the phone allows it */
   startTr();
   if (pinCfg()) { LOCKED = true; ROLE = "staff"; showLock(); }   /* locked until a PIN is entered; nothing sensitive is shown meanwhile */
   render();
