@@ -99,6 +99,8 @@ section.block{margin-bottom:26px}
 .qty small{display:block;font:500 11px/1.4 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
 .qty.low{color:var(--alert)}
 #lock{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}#lock .box{width:100%;max-width:340px;text-align:center}
+#expired{position:fixed;inset:0;z-index:70;overflow:auto;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(110% 70% at 85% 0%,#1f5fe0 0%,#0a2370 40%,#050b24 78%);color:#fff}#expired[hidden]{display:none}#expired .box{width:100%;max-width:360px;text-align:center;margin:auto}#expired textarea{font:14px var(--mono);margin:10px 0 6px;color:#14213d;background:#fff;-webkit-text-fill-color:#14213d;border:2px solid #fca311;text-align:left}#expired textarea::placeholder{color:#6b7280;-webkit-text-fill-color:#6b7280}#expired .dev{font:600 30px var(--mono);letter-spacing:2px;margin:6px 0 12px;user-select:all;-webkit-user-select:all}#expired .err{color:#ffb4a8;min-height:18px}#expired .btn.ghost{color:#fff;border-color:rgba(255,255,255,.55);background:transparent}
+body.expired .app,body.expired .tabs,body.expired header.top,body.expired #overlay,body.expired #toast{display:none!important}
 #lock input{text-align:center;font:600 28px var(--mono);letter-spacing:.3em;margin:14px 0 8px}
 body.locked .app,body.locked .tabs,body.locked #overlay,body.locked #toast{display:none!important}
 .line2{display:flex;gap:8px;align-items:center;margin-bottom:8px}.line2 input{flex:1;margin:0}.line2 .sub{white-space:nowrap}
@@ -246,6 +248,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
 </nav>
 <div id="lock" hidden></div>
 <div id="overlay"></div>
+<div id="expired" hidden></div>
 <div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
 <div id="toast" class="toast" hidden></div>
 <datalist id="cur-list"><option value="XAF"><option value="XOF"><option value="FCFA"><option value="USD"><option value="EUR"><option value="GBP"><option value="NGN"><option value="GHS"><option value="KES"><option value="ZAR"><option value="MAD"><option value="EGP"><option value="TND"><option value="CAD"><option value="AUD"><option value="INR"><option value="CNY"><option value="JPY"><option value="AED"><option value="SAR"><option value="BRL"><option value="MXN"><option value="CHF"><option value="TRY"></datalist>
@@ -260,7 +263,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
      The screens are written in English in the code. With French on, a translator rewrites every piece of text the page shows,
      and the text that goes into receipts, PDFs and CSV files, using the word list and patterns below.
      The choice belongs to this phone and browser, so it is kept apart from your business data and backups. */
-  var APP_VERSION = "2.38", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
+  var APP_VERSION = "2.44", LANG_KEY = "stockroom.lang", LOCALE_KEY = "stockroom.locale", LANG = "en", LOCALE = "";
   try {
     var savedLang = localStorage.getItem(LANG_KEY);
     if (savedLang === "fr" || savedLang === "en") LANG = savedLang;
@@ -626,6 +629,9 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   Object.assign(FR, {"Use this app honestly": "Utilisez cette application honnêtement", "I understand": "J'ai compris", "Honest use": "Utilisation honnête", "Golden Gates Stock Inventory is made to help you keep a true record of your business.": "Golden Gates Stock Inventory est conçue pour vous aider à tenir un registre fidèle de votre activité.", "Enter only real items, real sales, real prices and real payments. Do not invent, change or backdate records to make a business look bigger, older or more active than it is.": "Saisissez uniquement de vrais articles, de vraies ventes, de vrais prix et de vrais paiements. N'inventez pas, ne modifiez pas et n'antidatez pas des écritures pour faire paraître une activité plus grande, plus ancienne ou plus active qu'elle ne l'est.", "Records made up to support a visa, a loan or any official application can lead to refusal, a ban or legal action. Keep your real receipts and your bank or mobile money statements, and be ready to show them.": "Des écritures fabriquées pour appuyer une demande de visa, un prêt ou toute démarche officielle peuvent conduire à un refus, à une interdiction ou à des poursuites. Gardez vos vrais reçus et vos relevés bancaires ou de mobile money, et soyez prêt à les présenter.", "Honest records protect you and strengthen your application. The seller is not responsible for false or misleading use of the app.": "Des écritures honnêtes vous protègent et renforcent votre dossier. Le vendeur n'est pas responsable d'un usage faux ou trompeur de l'application."});
   Object.assign(FR, {"Referral bonus: 20%": "Bonus de parrainage : 20 %", "Your referral code is": "Votre code de parrainage est", "and it is inside the message. When a friend buys a licence and gives your code to the seller, you get a bonus of 20% of what they buy. You choose: extra time on your licence, or cash. Ask your seller for it.": "et il est dans le message. Quand un ami achète une licence et donne votre code au vendeur, vous recevez un bonus de 20 % de son achat. Vous choisissez : du temps en plus sur votre licence, ou de l'argent. Demandez-le à votre vendeur.", "Referral code (optional, from the friend who shared the app)": "Code de parrainage (facultatif, de l'ami qui vous a partagé l'application)"});
   Object.assign(FR, {"Jobs abroad and some schools": "Emplois à l'étranger et quelques écoles", "Open the guide to jobs and schools abroad. It opens in your browser and needs internet.": "Ouvrez le guide des emplois et des écoles à l'étranger. Il s'ouvre dans votre navigateur et demande internet."});
+  Object.assign(FR, {"For help, message your seller on WhatsApp.": "Pour de l'aide, écrivez à votre vendeur sur WhatsApp.", "Message your seller on WhatsApp.": "Écrivez à votre vendeur sur WhatsApp."});
+  Object.assign(FR, {"Your licence has ended": "Votre licence est terminée", "Your records are safe on this phone. Send this phone code to your seller to renew.": "Vos données sont en sécurité sur ce téléphone. Envoyez ce code téléphone à votre vendeur pour renouveler.", "Save a copy of my data": "Enregistrer une copie de mes données", "Your data belongs to you. You can always save a copy of it here.": "Vos données vous appartiennent. Vous pouvez toujours en enregistrer une copie ici."});
+  Object.assign(FR, {"Select the code above and copy it": "Sélectionnez le code ci-dessus et copiez-le"});
   Object.assign(FR, {"QR code on invoices": "Code QR sur les factures", "Total in words on invoices": "Total en lettres sur les factures", "Show": "Afficher", "Scan to read the invoice summary": "Scannez pour lire le résumé de la facture"});
   function trPart(c) { var r = FR[c]; return r !== undefined ? r : trRule(c); }
   /* keeps spaces and a leading or trailing middle dot as they are, and also translates the pieces of "a · b · c" one by one */
@@ -2067,8 +2073,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     y += 290 + 50;
     wrap(t.tip, W / 2, y, 1040, 36, "28px " + F, "#555", "center");
     g.fillStyle = "#14213d"; g.fillRect(0, H - 120, W, 120);
-    g.textAlign = "center"; g.fillStyle = "#fca311"; g.font = "26px " + F; g.fillText(t.call, W / 2, H - 76);
-    g.fillStyle = "#fff"; g.font = "bold 50px " + F; g.fillText(CONTACT_TXT, W / 2, H - 26);
+    g.textAlign = "center"; g.fillStyle = "#fca311"; g.font = "bold 46px " + F; g.fillText("Golden Gates Stock Inventory", W / 2, H - 50);
     return cv;
   }
   function qrSheet() {
@@ -4081,7 +4086,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
     });
     openSheet("User manual",
       '<div class="about" style="margin:0 0 10px"><div class="aname">Golden Gates Stock Inventory</div><div class="atag">Designed for Travel Applicants and Factory/Warehouse owners</div></div>' + out +
-      '<h3 style="font-size:20px;text-transform:uppercase;margin:16px 0 6px">Need help?</h3><p ' + c + '>Write or call on WhatsApp:</p><div class="mono" style="font-size:18px;margin-bottom:6px">' + CONTACT_TXT + '</div>');
+      '<h3 style="font-size:20px;text-transform:uppercase;margin:16px 0 6px">Need help?</h3><p ' + c + '>For help, message your seller on WhatsApp.</p><a class="btn ghost" target="_blank" rel="noopener" href="' + esc(waLink("+" + LIC_CONTACT, "")) + '">Message on WhatsApp</a>');
   }
 
   /* ---------- honest use: shown once on each phone, and kept in Privacy and terms ---------- */
@@ -4103,7 +4108,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       h3 + 'Licence</h3>' + p + 'A licence code works on one phone for the time it was sold for. It is checked on the phone itself and nothing about it is sent anywhere.</p>' +
       h3 + 'Honest use</h3>' + HONEST.map(function (x) { return p + esc(x) + '</p>'; }).join("") +
       h3 + 'Terms of use</h3>' + p + 'The app is provided as it is. You are responsible for keeping backups, and for checking prices, tax and totals before you rely on them. The app is not accounting, legal or tax advice.</p>' +
-      h3 + 'Questions or requests about your data</h3>' + p + 'Write or call on WhatsApp:</p><div class="mono" style="font-size:18px;margin-bottom:6px">' + CONTACT_TXT + '</div>' +
+      h3 + 'Questions or requests about your data</h3>' + p + 'Message your seller on WhatsApp.</p><a class="btn ghost" target="_blank" rel="noopener" href="' + esc(waLink("+" + LIC_CONTACT, "")) + '" style="margin-bottom:6px">Message on WhatsApp</a>' +
       '<div class="label" style="margin-top:14px">Version ' + esc(APP_VERSION) + '</div>');
   }
   function downloadAllData() {
@@ -4309,6 +4314,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   }
   function schedulePush(ms) {
     clearTimeout(pushTimer);
+    if (LICRO()) return;   /* no syncing through the server once the licence has ended */
     pushTimer = setTimeout(function () { Object.keys(LIVE).forEach(function (g) { pushCo(LIVE[g]); }); }, ms == null ? 700 : ms);
   }
   function syncStart(c) {
@@ -4578,7 +4584,10 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         });
       });
   }
+  /* when the seller's own server is built into the app and the customer has not chosen another, the server address box and the setup guide stay hidden */
+  function builtinSync() { var u = ""; try { u = localStorage.getItem(SYNC_KEY) || ""; } catch (e) {} return !normUrl(u) && !!normUrl(SYNC_URL); }
   function syncServerBlock() {
+    if (builtinSync()) return "";
     var u = syncUrl();
     return '<label style="margin-top:10px">Sync server address<input id="sy-url" inputmode="url" autocapitalize="off" autocomplete="off" placeholder="https://your-project-default-rtdb.firebaseio.com" value="' + esc(u) + '"></label>' +
       '<div class="row"><button type="button" class="btn ghost" id="sy-save">Save server</button>' + (u ? '<button type="button" class="btn ghost" id="sy-clear">Remove server</button>' : '') + '</div><div class="err" id="sy-uerr"></div><button type="button" class="btn ghost block" id="sy-help" style="margin-top:8px">How to set up the sync server</button>';
@@ -5059,7 +5068,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
       '<button type="button" class="btn block" id="lic-go">Activate</button>' +
       '<p style="margin:12px 0 0;color:var(--mute);font-size:13px">A code works on this phone only. If you clear the data of the app or change phone, ask your seller for a new code.</p>',
       function (root) {
-        $("#lic-copy", root).onclick = function () { var t = devCode(); try { navigator.clipboard.writeText(t).then(function () { toast("Copied"); }, function () { toast(t); }); } catch (e) { toast(t); } };
+        $("#lic-copy", root).onclick = function () { var t = devCode(); copyText(t, function (good) { toast(good ? "Copied" : t); }); };
         if (LIC_CONTACT) $("#lic-wa", root).onclick = function () { refSet($("#lic-ref", root).value); openWA(waLink("+" + LIC_CONTACT.replace(/\D/g, ""), msg())); };
         $("#lic-go", root).onclick = function () {
           var er = $("#lic-err", root); er.textContent = "";
@@ -5070,12 +5079,51 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
         };
       });
   }
+  /* when the licence has ended the records are not shown: only this screen, to renew or to save a copy of the data */
+  /* copies text with the clipboard when the phone allows it, otherwise with the older select-and-copy way; ok(true/false) says how it went */
+  function copyText(t, ok) {
+    function old() {
+      var ta = document.createElement("textarea"), done = false;
+      ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;font-size:16px";
+      document.body.appendChild(ta); ta.focus(); ta.select(); try { ta.setSelectionRange(0, t.length); } catch (e) {}
+      try { done = document.execCommand("copy"); } catch (e) {}
+      ta.remove(); ok(done);
+    }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(function () { ok(true); }, old); return; } } catch (e) {}
+    old();
+  }
+  function expiredGate() {
+    var el = $("#expired"), msg;
+    if (!el) return;
+    if (!LICRO()) { if (!el.hidden) { el.hidden = true; el.innerHTML = ""; document.body.classList.remove("expired"); } return; }
+    if (!el.hidden) return;
+    document.body.classList.add("expired"); el.hidden = false;
+    msg = "Hello, I would like to renew my Golden Gates Stock Inventory licence. My phone code is " + devCode() + ".";
+    el.innerHTML = '<div class="box"><div class="brandtag">Golden Gates Stock Inventory</div><h2 style="font-size:30px;text-transform:uppercase;margin:6px 0 10px">Your licence has ended</h2>' +
+      '<p style="margin:0 0 6px;opacity:.9">Your records are safe on this phone. Send this phone code to your seller to renew.</p><div class="label" style="opacity:.8">Phone code</div><div class="dev">' + esc(devCode()) + '</div>' +
+      '<div class="row" style="margin-bottom:12px"><button type="button" class="btn ghost" id="ex-copy">Copy code</button><button type="button" class="btn ghost" id="ex-wa">Message on WhatsApp</button></div>' +
+      '<textarea id="ex-in" rows="3" placeholder="Paste the activation code here" autocomplete="off" spellcheck="false"></textarea><div class="err" id="ex-err"></div><button type="button" class="btn block" id="ex-go">Activate</button>' +
+      '<button type="button" class="btn ghost block" id="ex-data" style="margin-top:14px">Save a copy of my data</button><p style="margin:10px 0 0;font-size:13px;opacity:.8">Your data belongs to you. You can always save a copy of it here.</p></div>';
+    $("#ex-copy", el).onclick = function () {
+      var bt = this, t = devCode(), lab = bt.textContent;
+      copyText(t, function (good) { bt.textContent = T(good ? "Copied" : "Select the code above and copy it"); setTimeout(function () { bt.textContent = lab; }, 2500); });
+    };
+    $("#ex-wa", el).onclick = function () { openWA(waLink("+" + LIC_CONTACT.replace(/\D/g, ""), msg)); };
+    $("#ex-data", el).onclick = function () { try { downloadAllData(); } catch (e) { toast("Could not save the file"); } };
+    $("#ex-go", el).onclick = function () {
+      var er = $("#ex-err", el); er.textContent = "";
+      licCheck($("#ex-in", el).value).then(function (r) {
+        if (r.err) { er.textContent = T(r.err); return; }
+        licApply(r); expiredGate(); render(); toast("Licence activated");
+      });
+    };
+  }
   function licBlock() {
     if (!LIC_ON) return "";
     return '<div class="sep"></div><h3 style="font-size:20px;text-transform:uppercase;margin-bottom:6px">Licence</h3><p style="margin:0 0 10px">' + esc(licText()) + '</p><button type="button" class="btn ghost block" id="lic-open">Enter code or renew</button>';
   }
   var licKind = "";
-  setInterval(function () { var k = licState().kind; if (licKind && k !== licKind) { render(); } licKind = k; }, 30000);
+  setInterval(function () { var k = licState().kind; if (licKind && k !== licKind) { render(); } licKind = k; expiredGate(); }, 30000);
   licKind = licState().kind;
 
   /* ---------- phone install: icon, full-screen mode and a short how-to ---------- */
@@ -5269,6 +5317,7 @@ header.top :focus-visible,.tabs :focus-visible,#lock :focus-visible,.about :focu
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}   /* asks the browser not to clear this data when space runs low */
   try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("portrait").catch(function () {}); } catch (e) {}   /* keeps the screen upright where the phone allows it */
   startTr();
+  expiredGate();
   if (pinCfg()) { LOCKED = true; ROLE = "staff"; showLock(); }   /* locked until a PIN is entered; nothing sensitive is shown meanwhile */
   render();
   try { if (!LOCKED && !localStorage.getItem("stockroom.honest")) setTimeout(function () { if (!document.querySelector(".sheet")) honestSheet(); }, 600); } catch (e) {}
